@@ -135,7 +135,7 @@
 
   <div class="layout">
     <div class="card chart-card">
-      <svg id="matrix" viewBox="-330 -350 660 690" role="img" aria-label="Octograma de la Matriz del Destino"></svg>
+      <svg id="matrix" viewBox="-330 -355 660 715" role="img" aria-label="Octograma de la Matriz del Destino"></svg>
       <div class="legend">
         <span><i class="dot" style="background:var(--violet)"></i>Cuadrado personal (día·mes·año·misión)</span>
         <span><i class="dot" style="background:var(--gold)"></i>Línea del linaje</span>
@@ -279,9 +279,11 @@ function drawMatrix(m){
         +`font-size="7.5" fill="var(--muted)">${ageP%1?ageP.toFixed(2).replace(/0$/,''):ageP}</text>`;
     }
   });
-  // Círculo de la misión (arriba) = arcano de la misión (S)
+  // Círculos de eje: misión (corona, =S) y propósito espiritual (raíz)
   s+=node(0,-R-98,m.S,"var(--paper)",22,"var(--ink)");
   s+=lbl(0,-R-98,"Misión",0,-30);
+  s+=node(0,R+98,m.espiritual,"var(--paper)",20,"var(--ink)");
+  s+=lbl(0,R+98,"Espiritual",0,32);
   // Dos cuadrados del octograma
   const sq1=["N","E","S","W"], sq2=["NE","SE","SW","NW"];
   const poly=(ks,c)=>`<polygon points="${ks.map(k=>pos[k].join(",")).join(" ")}" fill="none" stroke="${c}" stroke-width="1.6" opacity=".55"/>`;
