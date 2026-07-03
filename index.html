@@ -1,0 +1,305 @@
+<title>Matriz del Destino — Calculadora</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#f4efe6; --panel:#fbf8f2; --ink:#2a2440; --muted:#6b6480;
+    --line:#d8cdb8; --gold:#b8894a; --gold-strong:#9a6d33;
+    --violet:#4b3b7a; --violet-soft:#7a6bb0; --star:#3b2f66;
+    --pt-outer:#4b3b7a; --pt-diag:#b8894a; --pt-center:#8a2f4a; --pt-mid:#5a7a6a;
+    --shadow:0 1px 2px rgba(42,36,64,.08),0 8px 30px rgba(42,36,64,.10);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#15121f; --panel:#1e1a2c; --ink:#ece7f5; --muted:#a99fc4;
+      --line:#332a4a; --gold:#d7a75f; --gold-strong:#e8bd77;
+      --violet:#b6a6e6; --violet-soft:#8a7bc0; --star:#c9bdf0;
+      --pt-outer:#a394dd; --pt-diag:#d7a75f; --pt-center:#e08099; --pt-mid:#86c3a4;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 40px rgba(0,0,0,.45);
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#f4efe6; --panel:#fbf8f2; --ink:#2a2440; --muted:#6b6480; --line:#d8cdb8;
+    --gold:#b8894a; --gold-strong:#9a6d33; --violet:#4b3b7a; --violet-soft:#7a6bb0;
+    --star:#3b2f66; --pt-outer:#4b3b7a; --pt-diag:#b8894a; --pt-center:#8a2f4a; --pt-mid:#5a7a6a;
+    --shadow:0 1px 2px rgba(42,36,64,.08),0 8px 30px rgba(42,36,64,.10);
+  }
+  :root[data-theme="dark"]{
+    --bg:#15121f; --panel:#1e1a2c; --ink:#ece7f5; --muted:#a99fc4; --line:#332a4a;
+    --gold:#d7a75f; --gold-strong:#e8bd77; --violet:#b6a6e6; --violet-soft:#8a7bc0;
+    --star:#c9bdf0; --pt-outer:#a394dd; --pt-diag:#d7a75f; --pt-center:#e08099; --pt-mid:#86c3a4;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 40px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:
+    radial-gradient(1200px 600px at 50% -10%, color-mix(in srgb,var(--gold) 12%,transparent), transparent 60%),
+    var(--bg);
+    color:var(--ink);font-family:var(--sans);line-height:1.55;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1060px;margin:0 auto;padding:clamp(20px,4vw,48px) 20px 64px;}
+  header{text-align:center;margin-bottom:28px;}
+  .eyebrow{font-family:var(--sans);text-transform:uppercase;letter-spacing:.32em;
+    font-size:11px;color:var(--gold-strong);font-weight:600;margin:0 0 10px;}
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(30px,5vw,46px);
+    margin:0 0 8px;letter-spacing:.01em;text-wrap:balance;}
+  header p{max-width:52ch;margin:6px auto 0;color:var(--muted);font-size:15px;}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);}
+  form.controls{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;
+    justify-content:center;padding:18px 20px;margin:0 auto 26px;max-width:620px;}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field label{font-size:11px;text-transform:uppercase;letter-spacing:.14em;
+    color:var(--muted);font-weight:600;}
+  input[type=date]{font-family:var(--sans);font-size:16px;padding:11px 13px;
+    border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);
+    min-width:180px;}
+  input[type=date]:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+  button{font-family:var(--sans);font-weight:600;font-size:15px;cursor:pointer;
+    padding:12px 22px;border-radius:10px;border:1px solid var(--gold-strong);
+    background:var(--gold);color:#fff8ee;transition:transform .08s ease,filter .15s;}
+  button:hover{filter:brightness(1.06)}
+  button:active{transform:translateY(1px)}
+  button:focus-visible{outline:2px solid var(--star);outline-offset:2px;}
+
+  .layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:26px;align-items:start;}
+  @media (max-width:840px){.layout{grid-template-columns:1fr}}
+
+  .chart-card{padding:14px;overflow-x:auto;}
+  svg{display:block;width:100%;height:auto;max-width:520px;margin:0 auto;}
+  .node text{font-family:var(--sans);font-weight:700;paint-order:stroke;}
+  .lbl{font-family:var(--sans);font-size:10px;fill:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
+
+  .legend{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;
+    font-size:12px;color:var(--muted);padding:6px 10px 12px;}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .dot{width:11px;height:11px;border-radius:50%;display:inline-block;}
+
+  .read{padding:20px 22px;}
+  .read h2{font-family:var(--serif);font-size:20px;margin:0 0 4px;font-weight:600;}
+  .read .sub{color:var(--muted);font-size:13px;margin:0 0 16px;}
+  .rows{display:flex;flex-direction:column;gap:2px;}
+  .row{display:grid;grid-template-columns:34px 1fr auto;gap:12px;align-items:baseline;
+    padding:9px 8px;border-radius:9px;}
+  .row:nth-child(odd){background:color-mix(in srgb,var(--line) 30%,transparent);}
+  .num{font-weight:800;font-variant-numeric:tabular-nums;font-size:15px;
+    text-align:center;color:var(--gold-strong);}
+  .rn-name{font-weight:600;}
+  .rn-name small{display:block;font-weight:400;color:var(--muted);font-size:12px;
+    line-height:1.4;margin-top:1px;}
+  .rn-tag{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);
+    white-space:nowrap;align-self:center;}
+
+  .purpose{margin-top:18px;padding:16px 18px;border:1px dashed var(--line);border-radius:12px;
+    background:color-mix(in srgb,var(--gold) 8%,transparent);}
+  .purpose h3{margin:0 0 10px;font-family:var(--serif);font-size:16px;font-weight:600;}
+  .purpose .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;}
+  .purpose .pitem{display:flex;justify-content:space-between;gap:10px;font-size:13px;
+    border-bottom:1px solid var(--line);padding-bottom:6px;}
+  .purpose .pitem b{color:var(--gold-strong);font-variant-numeric:tabular-nums;}
+  .purpose .big{grid-column:1/-1;font-size:15px;margin-top:2px;border-bottom:none;}
+
+  .empty{color:var(--muted);text-align:center;padding:40px 20px;font-size:15px;}
+  footer{margin-top:40px;text-align:center;color:var(--muted);font-size:12px;line-height:1.7;}
+  footer a{color:var(--gold-strong);}
+  .disclaimer{max-width:60ch;margin:8px auto 0;}
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Autoconocimiento · 22 Arcanos</p>
+    <h1>Matriz del Destino</h1>
+    <p>Introduce tu fecha de nacimiento y obtén tu octograma con las 22 energías
+       de los Arcanos Mayores, calculado íntegramente en tu navegador.</p>
+  </header>
+
+  <form class="controls card" id="form" autocomplete="off">
+    <div class="field">
+      <label for="dob">Fecha de nacimiento</label>
+      <input type="date" id="dob" name="dob" min="1900-01-01" max="2100-12-31" required>
+    </div>
+    <button type="submit">Calcular matriz</button>
+  </form>
+
+  <div class="layout">
+    <div class="card chart-card">
+      <svg id="matrix" viewBox="-260 -260 520 520" role="img" aria-label="Octograma de la Matriz del Destino"></svg>
+      <div class="legend">
+        <span><i class="dot" style="background:var(--pt-outer)"></i>Cuadrado personal</span>
+        <span><i class="dot" style="background:var(--pt-diag)"></i>Línea del linaje</span>
+        <span><i class="dot" style="background:var(--pt-mid)"></i>Chakras / propósito</span>
+        <span><i class="dot" style="background:var(--pt-center)"></i>Centro (alma)</span>
+      </div>
+    </div>
+
+    <div class="card read" id="read">
+      <div class="empty" id="empty">Tu lectura aparecerá aquí tras calcular la matriz.</div>
+      <div id="result" hidden>
+        <h2 id="rTitle">Tu Matriz</h2>
+        <p class="sub" id="rSub"></p>
+        <div class="rows" id="rows"></div>
+        <div class="purpose">
+          <h3>Línea del propósito</h3>
+          <div class="pgrid" id="purpose"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="disclaimer">La Matriz del Destino es una herramienta de autoconocimiento
+    basada en los 22 Arcanos Mayores; no predice el futuro. Método de Natalia Ladini,
+    divulgado en español por Dinara Axanova. Este cálculo es una demostración técnica libre.</div>
+  </footer>
+</div>
+
+<script>
+/* ---------- 22 Arcanos Mayores ---------- */
+const ARCANA = {
+  1:["El Mago","Voluntad, iniciativa, comunicación"],
+  2:["La Sacerdotisa","Intuición, sabiduría interior, secretos"],
+  3:["La Emperatriz","Abundancia, creatividad, feminidad"],
+  4:["El Emperador","Estructura, poder, estabilidad"],
+  5:["El Sumo Sacerdote","Tradición, guía espiritual, ética"],
+  6:["Los Enamorados","Elección, amor, vínculos"],
+  7:["El Carro","Voluntad victoriosa, avance, control"],
+  8:["La Justicia","Equilibrio, causa-efecto, verdad"],
+  9:["El Ermitaño","Introspección, búsqueda, soledad fértil"],
+  10:["La Rueda de la Fortuna","Ciclos, destino, cambios"],
+  11:["La Fuerza","Coraje interior, dominio, pasión"],
+  12:["El Colgado","Entrega, pausa, otra perspectiva"],
+  13:["La Muerte","Transformación, cierre, renacer"],
+  14:["La Templanza","Armonía, mesura, sanación"],
+  15:["El Diablo","Deseo, apego, sombra material"],
+  16:["La Torre","Ruptura, liberación, revelación súbita"],
+  17:["La Estrella","Esperanza, inspiración, propósito"],
+  18:["La Luna","Emociones, ilusión, inconsciente"],
+  19:["El Sol","Éxito, vitalidad, claridad"],
+  20:["El Juicio","Vocación, despertar, renacimiento"],
+  21:["El Mundo","Plenitud, logro, integración"],
+  22:["El Loco","Libertad, potencial puro, fe en el camino"]
+};
+
+/* ---------- Cálculo ---------- */
+// Reduce cualquier número al rango 1..22 (regla del método: restar 22).
+function reduce22(n){ while(n>22) n-=22; return n; }
+// Suma de dígitos (para el año) y luego reduce a 1..22.
+function digitSum(n){ let s=0; String(n).split("").forEach(d=>s+=+d); return s; }
+function yearArcana(y){ let s=digitSum(y); return reduce22(s); }
+
+function computeMatrix(day, month, year){
+  const W = reduce22(day);        // izquierda  · cuerpo físico / zona de confort
+  const N = reduce22(month);      // arriba     · línea del cielo / energía social
+  const E = yearArcana(year);     // derecha    · base kármica / linaje
+  const S = reduce22(W+N+E);      // abajo      · misión / cometa
+  const C = reduce22(W+N+E+S);    // centro     · alma / núcleo
+
+  // Cuadrado diagonal (linaje / programas del género)
+  const NW = reduce22(W+N), NE = reduce22(N+E), SE = reduce22(E+S), SW = reduce22(S+W);
+
+  // Puntos medios corner↔centro (chakras / camino al propósito)
+  const mW = reduce22(W+C), mN = reduce22(N+C), mE = reduce22(E+C), mS = reduce22(S+C);
+
+  // Línea del propósito
+  const pCielo   = reduce22(N+S);          // propósito del cielo (masc/fem espiritual)
+  const pTierra  = reduce22(W+E);          // propósito de la tierra (material)
+  const pPersonal= reduce22(W+N);          // propósito personal (primer 40 años, aprox.)
+  const pSocial  = reduce22(E+S);          // propósito social
+  const pGeneral = reduce22(pCielo+pTierra);// propósito general de vida
+
+  return {W,N,E,S,C,NW,NE,SE,SW,mW,mN,mE,mS,
+          pCielo,pTierra,pPersonal,pSocial,pGeneral};
+}
+
+/* ---------- Render SVG ---------- */
+const R=200, rMid=100;
+function P(angleDeg,r){ const a=(angleDeg-90)*Math.PI/180; return [r*Math.cos(a), r*Math.sin(a)]; }
+// Ángulos: 0=arriba, 90=derecha, 180=abajo, 270=izquierda
+const pos = {
+  N:P(0,R), E:P(90,R), S:P(180,R), W:P(270,R),
+  NE:P(45,R), SE:P(135,R), SW:P(225,R), NW:P(315,R),
+  mN:P(0,rMid), mE:P(90,rMid), mS:P(180,rMid), mW:P(270,rMid),
+  C:[0,0]
+};
+
+function node(x,y,val,color,r){
+  return `<g class="node">
+    <circle cx="${x}" cy="${y}" r="${r}" fill="${color}"
+            stroke="var(--panel)" stroke-width="2"/>
+    <text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="central"
+          font-size="${r*0.95}" fill="#fff8ee"
+          stroke="rgba(0,0,0,.12)" stroke-width=".5">${val}</text>
+  </g>`;
+}
+
+function drawMatrix(m){
+  const svg=document.getElementById("matrix");
+  const line=(a,b,w=1.5,c="var(--star)",op=.5)=>
+    `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}"
+       stroke="${c}" stroke-width="${w}" opacity="${op}"/>`;
+  let s="";
+  // Dos cuadrados del octograma
+  s+=line(pos.N,pos.E)+line(pos.E,pos.S)+line(pos.S,pos.W)+line(pos.W,pos.N);
+  s+=line(pos.NE,pos.SE)+line(pos.SE,pos.SW)+line(pos.SW,pos.NW)+line(pos.NW,pos.NE);
+  // Ejes al centro
+  s+=line(pos.N,pos.S,1,"var(--gold)",.55)+line(pos.W,pos.E,1,"var(--gold)",.55);
+
+  // Etiquetas exteriores
+  const L=(x,y,t,dx=0,dy=0)=>`<text class="lbl" x="${x+dx}" y="${y+dy}" text-anchor="middle">${t}</text>`;
+  s+=L(pos.N[0],pos.N[1],"Cielo",0,-26);
+  s+=L(pos.S[0],pos.S[1],"Misión",0,30);
+  s+=L(pos.W[0],pos.W[1],"Día",-6,-24);
+  s+=L(pos.E[0],pos.E[1],"Año",6,-24);
+
+  // Nodos: medios, diagonal, exteriores, centro
+  s+=node(...pos.mN,m.mN,"var(--pt-mid)",13)+node(...pos.mE,m.mE,"var(--pt-mid)",13)
+    +node(...pos.mS,m.mS,"var(--pt-mid)",13)+node(...pos.mW,m.mW,"var(--pt-mid)",13);
+  s+=node(...pos.NW,m.NW,"var(--pt-diag)",15)+node(...pos.NE,m.NE,"var(--pt-diag)",15)
+    +node(...pos.SE,m.SE,"var(--pt-diag)",15)+node(...pos.SW,m.SW,"var(--pt-diag)",15);
+  s+=node(...pos.N,m.N,"var(--pt-outer)",18)+node(...pos.E,m.E,"var(--pt-outer)",18)
+    +node(...pos.S,m.S,"var(--pt-outer)",18)+node(...pos.W,m.W,"var(--pt-outer)",18);
+  s+=node(...pos.C,m.C,"var(--pt-center)",24);
+  svg.innerHTML=s;
+}
+
+/* ---------- Lectura ---------- */
+function arcRow(num,tag){
+  const [name,mean]=ARCANA[num];
+  return `<div class="row">
+      <div class="num">${num}</div>
+      <div class="rn-name">${name}<small>${mean}</small></div>
+      <div class="rn-tag">${tag}</div>
+    </div>`;
+}
+function renderRead(m,dob){
+  document.getElementById("empty").hidden=true;
+  document.getElementById("result").hidden=false;
+  document.getElementById("rTitle").textContent="Tu Matriz del Destino";
+  document.getElementById("rSub").textContent="Nacimiento: "+dob+" · Arcano central "+m.C+" ("+ARCANA[m.C][0]+")";
+  document.getElementById("rows").innerHTML =
+      arcRow(m.C,"Centro · Alma")
+    + arcRow(m.W,"Día · Cuerpo")
+    + arcRow(m.N,"Cielo · Social")
+    + arcRow(m.E,"Año · Linaje")
+    + arcRow(m.S,"Misión · Cometa");
+  const p=(t,v)=>`<div class="pitem"><span>${t}</span><b>${v} · ${ARCANA[v][0]}</b></div>`;
+  document.getElementById("purpose").innerHTML =
+      p("Cielo",m.pCielo)+p("Tierra",m.pTierra)
+    + p("Personal",m.pPersonal)+p("Social",m.pSocial)
+    + `<div class="pitem big"><span><b>Propósito general de vida</b></span><b>${m.pGeneral} · ${ARCANA[m.pGeneral][0]}</b></div>`;
+}
+
+/* ---------- Wire ---------- */
+document.getElementById("form").addEventListener("submit",e=>{
+  e.preventDefault();
+  const v=document.getElementById("dob").value;
+  if(!v) return;
+  const [y,mo,d]=v.split("-").map(Number);
+  const m=computeMatrix(d,mo,y);
+  drawMatrix(m);
+  renderRead(m,v.split("-").reverse().join("/"));
+});
+// Estado inicial vacío del octograma
+drawMatrix(computeMatrix(0,0,0));
+</script>
