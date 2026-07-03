@@ -86,11 +86,22 @@
   td b{font-variant-numeric:tabular-nums;color:var(--gold-strong);}
   .cross{font-variant-numeric:tabular-nums;}
 
-  .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;margin-top:4px;}
-  .pitem{display:flex;justify-content:space-between;gap:10px;font-size:13px;border-bottom:1px solid var(--line);padding-bottom:6px;}
-  .pitem b{color:var(--gold-strong);font-variant-numeric:tabular-nums;}
-  .pitem.big{grid-column:1/-1;font-size:14px;border-bottom:none;background:color-mix(in srgb,var(--gold) 10%,transparent);
-    padding:8px 10px;border-radius:8px;}
+  tfoot td{font-weight:700;border-top:2px solid var(--line);border-bottom:none;color:var(--muted);}
+  tfoot td b{color:var(--gold-strong);}
+  .purposes{display:flex;flex-direction:column;gap:10px;margin-top:4px;}
+  .purpose{border:1px solid var(--line);border-radius:11px;padding:12px 14px;background:var(--paper);}
+  .purpose .ph{display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
+  .purpose .ph b{font-size:14px;} .purpose .ph .age{font-size:11px;color:var(--muted);}
+  .purpose .pb{display:flex;align-items:center;gap:12px;margin-top:8px;flex-wrap:wrap;}
+  .brace{display:flex;align-items:center;gap:8px;}
+  .brace .pair{display:flex;flex-direction:column;gap:4px;}
+  .chip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);}
+  .chip .v{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:26px;
+    border-radius:50%;border:1.5px solid var(--gold);color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums;font-size:13px;}
+  .eq{font-size:18px;color:var(--muted);}
+  .res{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:34px;border-radius:50%;
+    background:var(--gold);color:#fff8ee;font-weight:800;font-variant-numeric:tabular-nums;}
+  .res-arc{font-size:12.5px;color:var(--muted);}
 
   .empty{color:var(--muted);text-align:center;padding:50px 20px;font-size:15px;}
   details{margin-top:14px;border:1px solid var(--line);border-radius:10px;padding:2px 12px;background:var(--paper);}
@@ -145,21 +156,17 @@
         </div>
 
         <div class="block">
-          <h3>Línea del propósito</h3>
-          <div class="pgrid" id="purpose"></div>
-        </div>
-
-        <div class="block">
-          <h3>Canales de amor y dinero</h3>
-          <div class="pgrid" id="channels"></div>
-        </div>
-
-        <div class="block">
           <h3>Tabla de salud · 7 chakras</h3>
           <table id="health">
             <thead><tr><th>Chakra</th><th>Físico</th><th>Energía</th><th>Emoción</th></tr></thead>
             <tbody></tbody>
+            <tfoot><tr id="healthTotal"><td>Total</td><td></td><td></td><td></td></tr></tfoot>
           </table>
+        </div>
+
+        <div class="block">
+          <h3>Propósitos de vida</h3>
+          <div class="purposes" id="purposes"></div>
         </div>
 
         <details>
@@ -169,7 +176,12 @@
              <b>Diamante:</b> Día(izq), Mes(arriba), Año(der), Misión = Día+Mes+Año, Centro = suma de los cuatro.<br>
              <b>Linaje:</b> cada esquina diagonal = suma de los dos vértices vecinos.<br>
              <b>Chakras:</b> en cada radio, punto medio = vértice+centro; y sus dos subdivisiones.<br>
-             Verificado contra el ejemplo 31/01/2003 de dinaraaxanova.com: coincide en todos los puntos.</p>
+             <b>Tabla de salud:</b> Físico recorre el eje horizontal (día→centro→año) y Energía el vertical
+             (mes→centro→misión); Emoción = Físico+Energía; el Total reduce la suma de cada columna.<br>
+             <b>Propósitos:</b> personal = (Cielo=mes+misión)+(Tierra=día+año); social = suma de las dos
+             diagonales del linaje; espiritual = personal+social.<br>
+             Verificado punto por punto contra el ejemplo 31/01/2003 de dinaraaxanova.com: octograma,
+             tabla de salud (7 chakras + total) y los tres propósitos coinciden exactamente.</p>
         </details>
       </div>
     </div>
@@ -212,13 +224,11 @@ function computeMatrix(day,month,year){
   // Un radio -> [vértice, outer, medio(chakra), inner]
   const spoke=v=>{const M=reduce(v+C);return {v,outer:reduce(v+M),mid:M,inner:reduce(C+M)};};
   const sp={N:spoke(N),E:spoke(E),S:spoke(S),W:spoke(W),NW:spoke(NW),NE:spoke(NE),SE:spoke(SE),SW:spoke(SW)};
-  // Propósito
-  const pSky=reduce(N+S), pEarth=reduce(W+E);
-  const pPersonal=reduce(W+N), pSocial=reduce(E+S), pGeneral=reduce(pSky+pEarth);
-  // Canales: amor (corazón) y dinero — sobre las diagonales
-  const love=reduce(sp.NW.inner+sp.SE.inner);   // eje corazón
-  const money=reduce(sp.NE.inner+sp.SW.inner);  // eje material
-  return {W,N,E,S,C,NW,NE,SE,SW,sp,pSky,pEarth,pPersonal,pSocial,pGeneral,love,money};
+  // Propósitos (verificado: personal=20, social=4, espiritual=6 para 31/01/2003)
+  const cielo=reduce(N+S), tierra=reduce(W+E), personal=reduce(cielo+tierra);
+  const hombre=reduce(NW+SE), mujer=reduce(NE+SW), social=reduce(hombre+mujer);
+  const espiritual=reduce(personal+social);
+  return {W,N,E,S,C,NW,NE,SE,SW,sp,cielo,tierra,personal,hombre,mujer,social,espiritual};
 }
 
 /* ===== Geometría del octograma ===== */
@@ -284,21 +294,26 @@ function mainRow(num,tag){const[n,mean]=ARCANA[num];
   return `<div class="row"><div class="num">${num}</div>
     <div class="rn-name">${n}<small>${mean}</small></div><div class="rn-tag">${tag}</div></div>`;}
 
+// Chakras con nombre y tema exactos de dinaraaxanova.com (7=corona ... 1=raíz)
 const CHAKRAS=[
-  ["Sahasrara","Corona · misión","var(--c-crown)","N","W"],
-  ["Ajna","Tercer ojo · destino","var(--c-brow)","N","W"],
-  ["Vishuddha","Garganta · vínculos","var(--c-throat)","N","W"],
-  ["Anahata","Corazón · relaciones","var(--c-heart)","C","C"],
-  ["Manipura","Plexo · estatus","var(--c-solar)","S","E"],
-  ["Svadhisthana","Sacro · familia","var(--c-sacral)","S","E"],
-  ["Muladhara","Raíz · cuerpo","var(--c-root)","S","E"]
+  ["Sahasrara","Mission","var(--c-crown)"],
+  ["Ajna","Destino, Egregores","var(--c-brow)"],
+  ["Vishuddha","Destino, Egregores","var(--c-throat)"],
+  ["Anahata","Relaciones, Cosmovisión","var(--c-heart)"],
+  ["Manipura","Estatus, Posesión","var(--c-solar)"],
+  ["Svadhisthana","Amor y alegría infantil","var(--c-sacral)"],
+  ["Muladhara","Cuerpo, Materia","var(--c-root)"]
 ];
-// niveles verticales (energía) y horizontales (físico), de corona a raíz
+// Fórmula verificada contra la Tabla de Salud de la página.
+// Físico  = eje horizontal: [W, W.outer, W.mid, W.inner, Centro, E.mid, E]
+// Energía = eje vertical:   [N, N.outer, N.mid, N.inner, Centro, S.mid, S]
 function chakraValues(m){
-  const eneCol=[m.N, m.sp.N.mid, m.sp.N.inner, m.C, m.sp.S.inner, m.sp.S.mid, m.S]; // N->C->S
-  const fisCol=[m.W, m.sp.W.mid, m.sp.W.inner, m.C, m.sp.E.inner, m.sp.E.mid, m.E]; // W->C->E
-  return CHAKRAS.map((c,i)=>({name:c[0],theme:c[1],col:c[2],
+  const fisCol=[m.W, m.sp.W.outer, m.sp.W.mid, m.sp.W.inner, m.C, m.sp.E.mid, m.E];
+  const eneCol=[m.N, m.sp.N.outer, m.sp.N.mid, m.sp.N.inner, m.C, m.sp.S.mid, m.S];
+  const rows=CHAKRAS.map((c,i)=>({name:c[0],theme:c[1],col:c[2],
     fis:fisCol[i], ene:eneCol[i], emo:reduce(fisCol[i]+eneCol[i])}));
+  const sum=a=>reduce(a.reduce((x,y)=>x+y,0));
+  return {rows, totFis:sum(fisCol), totEne:sum(eneCol), totEmo:sum(rows.map(r=>r.emo))};
 }
 
 let gender="H";
@@ -312,17 +327,37 @@ function render(m,d,mo,y){
     + mainRow(m.E,"Año · Linaje")+mainRow(m.S,"Misión")
     + mainRow(m.NW,"Linaje ↖")+mainRow(m.NE,"Linaje ↗")
     + mainRow(m.SE,"Linaje ↘")+mainRow(m.SW,"Linaje ↙");
-  const p=(t,v)=>`<div class="pitem"><span>${t}</span><b>${arc(v)}</b></div>`;
-  document.getElementById("purpose").innerHTML=
-      p("Cielo (espiritual)",m.pSky)+p("Tierra (material)",m.pEarth)
-    + p("Personal",m.pPersonal)+p("Social",m.pSocial)
-    + `<div class="pitem big"><span><b>Propósito general de vida</b></span><b>${arc(m.pGeneral)}</b></div>`;
-  document.getElementById("channels").innerHTML=
-      p("♥ Amor y relaciones",m.love)+p("$ Dinero y recursos",m.money);
+  // Tabla de salud + total
+  const h=chakraValues(m);
   document.getElementById("health").querySelector("tbody").innerHTML=
-    chakraValues(m).map(c=>`<tr>
-      <td><span class="chk" style="background:${c.col}"></span>${c.name}<br><small style="color:var(--muted)">${c.theme}</small></td>
+    h.rows.map((c,i)=>`<tr>
+      <td><span class="chk" style="background:${c.col}"></span>${7-i}. ${c.name}<br><small style="color:var(--muted)">${c.theme}</small></td>
       <td class="cross">${c.fis}</td><td class="cross">${c.ene}</td><td><b>${c.emo}</b></td></tr>`).join("");
+  document.getElementById("healthTotal").innerHTML=
+    `<td>Total</td><td><b>${h.totFis}</b></td><td><b>${h.totEne}</b></td><td><b>${h.totEmo}</b></td>`;
+  // Propósitos (formato de la página): dos entradas -> resultado
+  const pair=(l1,v1,l2,v2,res,age)=>`
+    <div class="purpose">
+      <div class="ph"><b>${res.title}</b><span class="age">${age}</span></div>
+      <div class="pb">
+        <div class="brace">
+          <div class="pair"><span class="chip">${l1}<span class="v">${v1}</span></span>
+            <span class="chip">${l2}<span class="v">${v2}</span></span></div>
+          <span class="eq">›</span>
+          <span class="res">${res.v}</span>
+        </div>
+        <span class="res-arc">${ARCANA[res.v][0]}</span>
+      </div>
+    </div>`;
+  const single=(title,v,age)=>`
+    <div class="purpose">
+      <div class="ph"><b>${title}</b><span class="age">${age}</span></div>
+      <div class="pb"><span class="res">${v}</span><span class="res-arc">${ARCANA[v][0]}</span></div>
+    </div>`;
+  document.getElementById("purposes").innerHTML=
+      pair("Cielo",m.cielo,"Tierra",m.tierra,{title:"♥ Propósito personal",v:m.personal},"20 – 40 años")
+    + pair("Hombre",m.hombre,"Mujer",m.mujer,{title:"✦ Propósito social",v:m.social},"40 – 60 años")
+    + single("✦ Propósito espiritual",m.espiritual,"Siempre activo");
 }
 
 /* ===== Interacción ===== */
