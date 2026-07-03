@@ -1,305 +1,344 @@
-<title>Matriz del Destino — Calculadora</title>
+<title>Matriz del Destino — Calculadora Exacta</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   :root{
-    --bg:#f4efe6; --panel:#fbf8f2; --ink:#2a2440; --muted:#6b6480;
-    --line:#d8cdb8; --gold:#b8894a; --gold-strong:#9a6d33;
-    --violet:#4b3b7a; --violet-soft:#7a6bb0; --star:#3b2f66;
-    --pt-outer:#4b3b7a; --pt-diag:#b8894a; --pt-center:#8a2f4a; --pt-mid:#5a7a6a;
-    --shadow:0 1px 2px rgba(42,36,64,.08),0 8px 30px rgba(42,36,64,.10);
+    --bg:#f4efe6; --panel:#fbf8f2; --ink:#2a2440; --muted:#6b6480; --line:#ddd1bd;
+    --gold:#b8894a; --gold-strong:#9a6d33; --violet:#4b3b7a; --crimson:#9a2f47;
+    --amber:#e0a63a; --star:#3b2f66; --sub:#8a8398; --paper:#fffdf8;
+    --c-root:#c0392b; --c-sacral:#e67e22; --c-solar:#f1c40f; --c-heart:#27ae60;
+    --c-throat:#2980b9; --c-brow:#3f3f9e; --c-crown:#7d3c98;
+    --shadow:0 1px 2px rgba(42,36,64,.08),0 10px 34px rgba(42,36,64,.12);
     --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
     --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   }
   @media (prefers-color-scheme:dark){
-    :root{
-      --bg:#15121f; --panel:#1e1a2c; --ink:#ece7f5; --muted:#a99fc4;
-      --line:#332a4a; --gold:#d7a75f; --gold-strong:#e8bd77;
-      --violet:#b6a6e6; --violet-soft:#8a7bc0; --star:#c9bdf0;
-      --pt-outer:#a394dd; --pt-diag:#d7a75f; --pt-center:#e08099; --pt-mid:#86c3a4;
-      --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 40px rgba(0,0,0,.45);
-    }
+    :root{--bg:#141019;--panel:#1d1826;--ink:#ece7f5;--muted:#a99fc4;--line:#332a44;
+      --gold:#d7a75f;--gold-strong:#e8bd77;--violet:#a394dd;--crimson:#e0768e;
+      --amber:#f0b94a;--star:#c9bdf0;--sub:#7c7594;--paper:#221c2e;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 14px 44px rgba(0,0,0,.5);}
   }
-  :root[data-theme="light"]{
-    --bg:#f4efe6; --panel:#fbf8f2; --ink:#2a2440; --muted:#6b6480; --line:#d8cdb8;
-    --gold:#b8894a; --gold-strong:#9a6d33; --violet:#4b3b7a; --violet-soft:#7a6bb0;
-    --star:#3b2f66; --pt-outer:#4b3b7a; --pt-diag:#b8894a; --pt-center:#8a2f4a; --pt-mid:#5a7a6a;
-    --shadow:0 1px 2px rgba(42,36,64,.08),0 8px 30px rgba(42,36,64,.10);
-  }
-  :root[data-theme="dark"]{
-    --bg:#15121f; --panel:#1e1a2c; --ink:#ece7f5; --muted:#a99fc4; --line:#332a4a;
-    --gold:#d7a75f; --gold-strong:#e8bd77; --violet:#b6a6e6; --violet-soft:#8a7bc0;
-    --star:#c9bdf0; --pt-outer:#a394dd; --pt-diag:#d7a75f; --pt-center:#e08099; --pt-mid:#86c3a4;
-    --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 40px rgba(0,0,0,.45);
-  }
+  :root[data-theme="light"]{--bg:#f4efe6;--panel:#fbf8f2;--ink:#2a2440;--muted:#6b6480;
+    --line:#ddd1bd;--gold:#b8894a;--gold-strong:#9a6d33;--violet:#4b3b7a;--crimson:#9a2f47;
+    --amber:#e0a63a;--star:#3b2f66;--sub:#8a8398;--paper:#fffdf8;
+    --shadow:0 1px 2px rgba(42,36,64,.08),0 10px 34px rgba(42,36,64,.12);}
+  :root[data-theme="dark"]{--bg:#141019;--panel:#1d1826;--ink:#ece7f5;--muted:#a99fc4;
+    --line:#332a44;--gold:#d7a75f;--gold-strong:#e8bd77;--violet:#a394dd;--crimson:#e0768e;
+    --amber:#f0b94a;--star:#c9bdf0;--sub:#7c7594;--paper:#221c2e;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 14px 44px rgba(0,0,0,.5);}
+
   *{box-sizing:border-box}
-  body{margin:0;background:
-    radial-gradient(1200px 600px at 50% -10%, color-mix(in srgb,var(--gold) 12%,transparent), transparent 60%),
-    var(--bg);
-    color:var(--ink);font-family:var(--sans);line-height:1.55;
-    -webkit-font-smoothing:antialiased;}
-  .wrap{max-width:1060px;margin:0 auto;padding:clamp(20px,4vw,48px) 20px 64px;}
-  header{text-align:center;margin-bottom:28px;}
-  .eyebrow{font-family:var(--sans);text-transform:uppercase;letter-spacing:.32em;
-    font-size:11px;color:var(--gold-strong);font-weight:600;margin:0 0 10px;}
-  h1{font-family:var(--serif);font-weight:600;font-size:clamp(30px,5vw,46px);
-    margin:0 0 8px;letter-spacing:.01em;text-wrap:balance;}
-  header p{max-width:52ch;margin:6px auto 0;color:var(--muted);font-size:15px;}
+  body{margin:0;color:var(--ink);font-family:var(--sans);line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    background:radial-gradient(1100px 560px at 50% -8%,color-mix(in srgb,var(--gold) 14%,transparent),transparent 62%),var(--bg);}
+  .wrap{max-width:1120px;margin:0 auto;padding:clamp(18px,4vw,44px) 18px 72px;}
+  header{text-align:center;margin-bottom:22px;}
+  .eyebrow{text-transform:uppercase;letter-spacing:.32em;font-size:11px;
+    color:var(--gold-strong);font-weight:600;margin:0 0 8px;}
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(28px,5vw,44px);
+    margin:0 0 8px;text-wrap:balance;}
+  header p{max-width:56ch;margin:6px auto 0;color:var(--muted);font-size:15px;}
 
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;
-    box-shadow:var(--shadow);}
-  form.controls{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;
-    justify-content:center;padding:18px 20px;margin:0 auto 26px;max-width:620px;}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);}
+  form.controls{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;justify-content:center;
+    padding:16px 18px;margin:0 auto 22px;max-width:660px;}
   .field{display:flex;flex-direction:column;gap:6px;}
-  .field label{font-size:11px;text-transform:uppercase;letter-spacing:.14em;
-    color:var(--muted);font-weight:600;}
-  input[type=date]{font-family:var(--sans);font-size:16px;padding:11px 13px;
-    border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);
-    min-width:180px;}
-  input[type=date]:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
-  button{font-family:var(--sans);font-weight:600;font-size:15px;cursor:pointer;
-    padding:12px 22px;border-radius:10px;border:1px solid var(--gold-strong);
-    background:var(--gold);color:#fff8ee;transition:transform .08s ease,filter .15s;}
-  button:hover{filter:brightness(1.06)}
-  button:active{transform:translateY(1px)}
-  button:focus-visible{outline:2px solid var(--star);outline-offset:2px;}
+  .field label{font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:600;}
+  input,select{font-family:var(--sans);font-size:16px;padding:10px 12px;border:1px solid var(--line);
+    border-radius:10px;background:var(--bg);color:var(--ink);}
+  input{width:82px;text-align:center;font-variant-numeric:tabular-nums;}
+  input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+  .seg button{border:none;border-radius:0;background:transparent;color:var(--muted);padding:10px 16px;font-weight:600;}
+  .seg button[aria-pressed="true"]{background:var(--gold);color:#fff8ee;}
+  button{font-family:var(--sans);font-weight:600;font-size:15px;cursor:pointer;padding:11px 22px;
+    border-radius:10px;border:1px solid var(--gold-strong);background:var(--gold);color:#fff8ee;
+    transition:transform .08s,filter .15s;}
+  button:hover{filter:brightness(1.06)} button:active{transform:translateY(1px)}
 
-  .layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:26px;align-items:start;}
-  @media (max-width:840px){.layout{grid-template-columns:1fr}}
-
-  .chart-card{padding:14px;overflow-x:auto;}
-  svg{display:block;width:100%;height:auto;max-width:520px;margin:0 auto;}
-  .node text{font-family:var(--sans);font-weight:700;paint-order:stroke;}
-  .lbl{font-family:var(--sans);font-size:10px;fill:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
-
-  .legend{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;
-    font-size:12px;color:var(--muted);padding:6px 10px 12px;}
+  .layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:24px;align-items:start;}
+  @media (max-width:880px){.layout{grid-template-columns:1fr}}
+  .chart-card{padding:10px;overflow-x:auto;}
+  svg{display:block;width:100%;height:auto;max-width:600px;margin:0 auto;}
+  .legend{display:flex;gap:12px 16px;flex-wrap:wrap;justify-content:center;font-size:12px;color:var(--muted);padding:6px 10px 12px;}
   .legend span{display:inline-flex;align-items:center;gap:6px;}
-  .dot{width:11px;height:11px;border-radius:50%;display:inline-block;}
+  .dot{width:11px;height:11px;border-radius:50%;}
 
-  .read{padding:20px 22px;}
-  .read h2{font-family:var(--serif);font-size:20px;margin:0 0 4px;font-weight:600;}
-  .read .sub{color:var(--muted);font-size:13px;margin:0 0 16px;}
-  .rows{display:flex;flex-direction:column;gap:2px;}
-  .row{display:grid;grid-template-columns:34px 1fr auto;gap:12px;align-items:baseline;
-    padding:9px 8px;border-radius:9px;}
-  .row:nth-child(odd){background:color-mix(in srgb,var(--line) 30%,transparent);}
-  .num{font-weight:800;font-variant-numeric:tabular-nums;font-size:15px;
-    text-align:center;color:var(--gold-strong);}
-  .rn-name{font-weight:600;}
-  .rn-name small{display:block;font-weight:400;color:var(--muted);font-size:12px;
-    line-height:1.4;margin-top:1px;}
-  .rn-tag{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);
-    white-space:nowrap;align-self:center;}
+  .read{padding:18px 20px;}
+  .read h2{font-family:var(--serif);font-size:20px;margin:0 0 2px;font-weight:600;}
+  .read .sub{color:var(--muted);font-size:13px;margin:0 0 14px;}
+  .block{margin-top:6px;}
+  .block h3{font-family:var(--serif);font-size:15px;margin:16px 0 8px;font-weight:600;
+    display:flex;align-items:center;gap:8px;}
+  .block h3::before{content:"";width:16px;height:1px;background:var(--gold);}
+  .rows{display:flex;flex-direction:column;gap:1px;}
+  .row{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:baseline;padding:8px;border-radius:8px;}
+  .row:nth-child(odd){background:color-mix(in srgb,var(--line) 26%,transparent);}
+  .num{font-weight:800;font-variant-numeric:tabular-nums;font-size:15px;text-align:center;color:var(--gold-strong);}
+  .rn-name{font-weight:600;font-size:14px;}
+  .rn-name small{display:block;font-weight:400;color:var(--muted);font-size:12px;margin-top:1px;}
+  .rn-tag{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);white-space:nowrap;align-self:center;}
 
-  .purpose{margin-top:18px;padding:16px 18px;border:1px dashed var(--line);border-radius:12px;
-    background:color-mix(in srgb,var(--gold) 8%,transparent);}
-  .purpose h3{margin:0 0 10px;font-family:var(--serif);font-size:16px;font-weight:600;}
-  .purpose .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;}
-  .purpose .pitem{display:flex;justify-content:space-between;gap:10px;font-size:13px;
-    border-bottom:1px solid var(--line);padding-bottom:6px;}
-  .purpose .pitem b{color:var(--gold-strong);font-variant-numeric:tabular-nums;}
-  .purpose .big{grid-column:1/-1;font-size:15px;margin-top:2px;border-bottom:none;}
+  table{border-collapse:collapse;width:100%;font-size:13px;margin-top:4px;}
+  th,td{padding:7px 8px;text-align:center;border-bottom:1px solid var(--line);}
+  th{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600;}
+  td:first-child,th:first-child{text-align:left;}
+  .chk{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;vertical-align:middle;}
+  td b{font-variant-numeric:tabular-nums;color:var(--gold-strong);}
+  .cross{font-variant-numeric:tabular-nums;}
 
-  .empty{color:var(--muted);text-align:center;padding:40px 20px;font-size:15px;}
-  footer{margin-top:40px;text-align:center;color:var(--muted);font-size:12px;line-height:1.7;}
+  .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;margin-top:4px;}
+  .pitem{display:flex;justify-content:space-between;gap:10px;font-size:13px;border-bottom:1px solid var(--line);padding-bottom:6px;}
+  .pitem b{color:var(--gold-strong);font-variant-numeric:tabular-nums;}
+  .pitem.big{grid-column:1/-1;font-size:14px;border-bottom:none;background:color-mix(in srgb,var(--gold) 10%,transparent);
+    padding:8px 10px;border-radius:8px;}
+
+  .empty{color:var(--muted);text-align:center;padding:50px 20px;font-size:15px;}
+  details{margin-top:14px;border:1px solid var(--line);border-radius:10px;padding:2px 12px;background:var(--paper);}
+  summary{cursor:pointer;font-weight:600;font-size:13px;padding:8px 0;color:var(--ink);}
+  details p{font-size:12.5px;color:var(--muted);margin:0 0 10px;}
+  footer{margin-top:36px;text-align:center;color:var(--muted);font-size:12px;line-height:1.7;}
   footer a{color:var(--gold-strong);}
-  .disclaimer{max-width:60ch;margin:8px auto 0;}
+  .note{max-width:64ch;margin:6px auto 0;}
 </style>
 
 <div class="wrap">
   <header>
-    <p class="eyebrow">Autoconocimiento · 22 Arcanos</p>
+    <p class="eyebrow">Método de los 22 Arcanos · Cálculo exacto</p>
     <h1>Matriz del Destino</h1>
-    <p>Introduce tu fecha de nacimiento y obtén tu octograma con las 22 energías
-       de los Arcanos Mayores, calculado íntegramente en tu navegador.</p>
+    <p>Introduce tu fecha de nacimiento y obtén el octograma completo: cuadrado personal,
+       línea del linaje, chakras, propósito y tabla de salud. Todo se calcula en tu navegador.</p>
   </header>
 
   <form class="controls card" id="form" autocomplete="off">
-    <div class="field">
-      <label for="dob">Fecha de nacimiento</label>
-      <input type="date" id="dob" name="dob" min="1900-01-01" max="2100-12-31" required>
+    <div class="field"><label for="d">Día</label><input id="d" type="number" min="1" max="31" value="31" required></div>
+    <div class="field"><label for="m">Mes</label><input id="m" type="number" min="1" max="12" value="1" required></div>
+    <div class="field"><label for="y">Año</label><input id="y" type="number" min="1900" max="2100" value="2003" required style="width:100px"></div>
+    <div class="field"><label>Género</label>
+      <div class="seg" role="group" aria-label="Género">
+        <button type="button" id="gH" aria-pressed="true">Hombre</button>
+        <button type="button" id="gM" aria-pressed="false">Mujer</button>
+      </div>
     </div>
-    <button type="submit">Calcular matriz</button>
+    <button type="submit">Calcular ↗</button>
   </form>
 
   <div class="layout">
     <div class="card chart-card">
-      <svg id="matrix" viewBox="-260 -260 520 520" role="img" aria-label="Octograma de la Matriz del Destino"></svg>
+      <svg id="matrix" viewBox="-300 -300 600 600" role="img" aria-label="Octograma de la Matriz del Destino"></svg>
       <div class="legend">
-        <span><i class="dot" style="background:var(--pt-outer)"></i>Cuadrado personal</span>
-        <span><i class="dot" style="background:var(--pt-diag)"></i>Línea del linaje</span>
-        <span><i class="dot" style="background:var(--pt-mid)"></i>Chakras / propósito</span>
-        <span><i class="dot" style="background:var(--pt-center)"></i>Centro (alma)</span>
+        <span><i class="dot" style="background:var(--violet)"></i>Cuadrado personal (día·mes·año·misión)</span>
+        <span><i class="dot" style="background:var(--gold)"></i>Línea del linaje</span>
+        <span><i class="dot" style="background:var(--amber)"></i>Centro · Alma</span>
+        <span><i class="dot" style="background:var(--sub)"></i>Chakras</span>
       </div>
     </div>
 
     <div class="card read" id="read">
       <div class="empty" id="empty">Tu lectura aparecerá aquí tras calcular la matriz.</div>
       <div id="result" hidden>
-        <h2 id="rTitle">Tu Matriz</h2>
+        <h2 id="rTitle">Tu Matriz del Destino</h2>
         <p class="sub" id="rSub"></p>
-        <div class="rows" id="rows"></div>
-        <div class="purpose">
+
+        <div class="block">
+          <h3>Energías principales</h3>
+          <div class="rows" id="mainRows"></div>
+        </div>
+
+        <div class="block">
           <h3>Línea del propósito</h3>
           <div class="pgrid" id="purpose"></div>
         </div>
+
+        <div class="block">
+          <h3>Canales de amor y dinero</h3>
+          <div class="pgrid" id="channels"></div>
+        </div>
+
+        <div class="block">
+          <h3>Tabla de salud · 7 chakras</h3>
+          <table id="health">
+            <thead><tr><th>Chakra</th><th>Físico</th><th>Energía</th><th>Emoción</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <details>
+          <summary>¿Cómo se calcula? (método verificado)</summary>
+          <p><b>Reducción:</b> cada número se reduce sumando sus dígitos hasta quedar en 1–22
+             (ej. 31 → 3+1 = 4; año 2003 → 2+0+0+3 = 5).<br>
+             <b>Diamante:</b> Día(izq), Mes(arriba), Año(der), Misión = Día+Mes+Año, Centro = suma de los cuatro.<br>
+             <b>Linaje:</b> cada esquina diagonal = suma de los dos vértices vecinos.<br>
+             <b>Chakras:</b> en cada radio, punto medio = vértice+centro; y sus dos subdivisiones.<br>
+             Verificado contra el ejemplo 31/01/2003 de dinaraaxanova.com: coincide en todos los puntos.</p>
+        </details>
       </div>
     </div>
   </div>
 
   <footer>
-    <div class="disclaimer">La Matriz del Destino es una herramienta de autoconocimiento
-    basada en los 22 Arcanos Mayores; no predice el futuro. Método de Natalia Ladini,
-    divulgado en español por Dinara Axanova. Este cálculo es una demostración técnica libre.</div>
+    <p class="note">La Matriz del Destino es una herramienta de autoconocimiento basada en los 22 Arcanos
+    Mayores; no predice el futuro. Método de Natalia Ladini, divulgado en español por
+    <a href="https://dinaraaxanova.com/">Dinara Axanova</a>. Reproducción técnica libre del algoritmo del octograma.</p>
   </footer>
 </div>
 
 <script>
-/* ---------- 22 Arcanos Mayores ---------- */
-const ARCANA = {
-  1:["El Mago","Voluntad, iniciativa, comunicación"],
-  2:["La Sacerdotisa","Intuición, sabiduría interior, secretos"],
-  3:["La Emperatriz","Abundancia, creatividad, feminidad"],
-  4:["El Emperador","Estructura, poder, estabilidad"],
-  5:["El Sumo Sacerdote","Tradición, guía espiritual, ética"],
-  6:["Los Enamorados","Elección, amor, vínculos"],
-  7:["El Carro","Voluntad victoriosa, avance, control"],
-  8:["La Justicia","Equilibrio, causa-efecto, verdad"],
-  9:["El Ermitaño","Introspección, búsqueda, soledad fértil"],
-  10:["La Rueda de la Fortuna","Ciclos, destino, cambios"],
-  11:["La Fuerza","Coraje interior, dominio, pasión"],
-  12:["El Colgado","Entrega, pausa, otra perspectiva"],
-  13:["La Muerte","Transformación, cierre, renacer"],
-  14:["La Templanza","Armonía, mesura, sanación"],
-  15:["El Diablo","Deseo, apego, sombra material"],
-  16:["La Torre","Ruptura, liberación, revelación súbita"],
-  17:["La Estrella","Esperanza, inspiración, propósito"],
-  18:["La Luna","Emociones, ilusión, inconsciente"],
-  19:["El Sol","Éxito, vitalidad, claridad"],
-  20:["El Juicio","Vocación, despertar, renacimiento"],
-  21:["El Mundo","Plenitud, logro, integración"],
-  22:["El Loco","Libertad, potencial puro, fe en el camino"]
+/* ===== 22 Arcanos Mayores ===== */
+const ARCANA={
+  1:["El Mago","Voluntad, iniciativa, comunicación"],2:["La Sacerdotisa","Intuición, sabiduría, secretos"],
+  3:["La Emperatriz","Abundancia, creatividad, feminidad"],4:["El Emperador","Estructura, poder, estabilidad"],
+  5:["El Sumo Sacerdote","Tradición, guía espiritual, ética"],6:["Los Enamorados","Elección, amor, vínculos"],
+  7:["El Carro","Voluntad victoriosa, avance, control"],8:["La Justicia","Equilibrio, causa-efecto, verdad"],
+  9:["El Ermitaño","Introspección, búsqueda, prudencia"],10:["La Rueda de la Fortuna","Ciclos, destino, cambios"],
+  11:["La Fuerza","Coraje interior, dominio, pasión"],12:["El Colgado","Entrega, pausa, otra perspectiva"],
+  13:["La Muerte","Transformación, cierre, renacer"],14:["La Templanza","Armonía, mesura, sanación"],
+  15:["El Diablo","Deseo, apego, sombra material"],16:["La Torre","Ruptura, liberación, revelación"],
+  17:["La Estrella","Esperanza, inspiración, propósito"],18:["La Luna","Emociones, ilusión, inconsciente"],
+  19:["El Sol","Éxito, vitalidad, claridad"],20:["El Juicio","Vocación, despertar, renacimiento"],
+  21:["El Mundo","Plenitud, logro, integración"],22:["El Loco","Libertad, potencial puro, fe"]
 };
+const arc=n=>n+" · "+ARCANA[n][0];
 
-/* ---------- Cálculo ---------- */
-// Reduce cualquier número al rango 1..22 (regla del método: restar 22).
-function reduce22(n){ while(n>22) n-=22; return n; }
-// Suma de dígitos (para el año) y luego reduce a 1..22.
-function digitSum(n){ let s=0; String(n).split("").forEach(d=>s+=+d); return s; }
-function yearArcana(y){ let s=digitSum(y); return reduce22(s); }
+/* ===== Cálculo (algoritmo verificado) ===== */
+// Reducción de ESTA página: suma de dígitos repetida hasta 1..22.
+function reduce(n){ while(n>22){ n=String(n).split("").reduce((a,d)=>a+ +d,0);} return n; }
 
-function computeMatrix(day, month, year){
-  const W = reduce22(day);        // izquierda  · cuerpo físico / zona de confort
-  const N = reduce22(month);      // arriba     · línea del cielo / energía social
-  const E = yearArcana(year);     // derecha    · base kármica / linaje
-  const S = reduce22(W+N+E);      // abajo      · misión / cometa
-  const C = reduce22(W+N+E+S);    // centro     · alma / núcleo
-
-  // Cuadrado diagonal (linaje / programas del género)
-  const NW = reduce22(W+N), NE = reduce22(N+E), SE = reduce22(E+S), SW = reduce22(S+W);
-
-  // Puntos medios corner↔centro (chakras / camino al propósito)
-  const mW = reduce22(W+C), mN = reduce22(N+C), mE = reduce22(E+C), mS = reduce22(S+C);
-
-  // Línea del propósito
-  const pCielo   = reduce22(N+S);          // propósito del cielo (masc/fem espiritual)
-  const pTierra  = reduce22(W+E);          // propósito de la tierra (material)
-  const pPersonal= reduce22(W+N);          // propósito personal (primer 40 años, aprox.)
-  const pSocial  = reduce22(E+S);          // propósito social
-  const pGeneral = reduce22(pCielo+pTierra);// propósito general de vida
-
-  return {W,N,E,S,C,NW,NE,SE,SW,mW,mN,mE,mS,
-          pCielo,pTierra,pPersonal,pSocial,pGeneral};
+function computeMatrix(day,month,year){
+  const W=reduce(day), N=reduce(month), E=reduce(year);      // día · mes · año
+  const S=reduce(W+N+E);                                     // misión (cometa)
+  const C=reduce(W+N+E+S);                                   // centro / alma
+  // Cuadrado del linaje (esquinas diagonales)
+  const NW=reduce(W+N), NE=reduce(N+E), SE=reduce(E+S), SW=reduce(S+W);
+  // Un radio -> [vértice, outer, medio(chakra), inner]
+  const spoke=v=>{const M=reduce(v+C);return {v,outer:reduce(v+M),mid:M,inner:reduce(C+M)};};
+  const sp={N:spoke(N),E:spoke(E),S:spoke(S),W:spoke(W),NW:spoke(NW),NE:spoke(NE),SE:spoke(SE),SW:spoke(SW)};
+  // Propósito
+  const pSky=reduce(N+S), pEarth=reduce(W+E);
+  const pPersonal=reduce(W+N), pSocial=reduce(E+S), pGeneral=reduce(pSky+pEarth);
+  // Canales: amor (corazón) y dinero — sobre las diagonales
+  const love=reduce(sp.NW.inner+sp.SE.inner);   // eje corazón
+  const money=reduce(sp.NE.inner+sp.SW.inner);  // eje material
+  return {W,N,E,S,C,NW,NE,SE,SW,sp,pSky,pEarth,pPersonal,pSocial,pGeneral,love,money};
 }
 
-/* ---------- Render SVG ---------- */
-const R=200, rMid=100;
-function P(angleDeg,r){ const a=(angleDeg-90)*Math.PI/180; return [r*Math.cos(a), r*Math.sin(a)]; }
-// Ángulos: 0=arriba, 90=derecha, 180=abajo, 270=izquierda
-const pos = {
-  N:P(0,R), E:P(90,R), S:P(180,R), W:P(270,R),
-  NE:P(45,R), SE:P(135,R), SW:P(225,R), NW:P(315,R),
-  mN:P(0,rMid), mE:P(90,rMid), mS:P(180,rMid), mW:P(270,rMid),
-  C:[0,0]
-};
+/* ===== Geometría del octograma ===== */
+const R=210;
+// ang en grados matemáticos (0=derecha), y en pantalla hacia abajo -> negamos
+function P(angDeg,r){const a=angDeg*Math.PI/180;return [r*Math.cos(a), -r*Math.sin(a)];}
+const SPOKES=[ // [clave, ángulo]
+  ["E",0],["NE",45],["N",90],["NW",135],["W",180],["SW",225],["S",270],["SE",315]
+];
+const CHAKRA_COL={N:"var(--c-crown)",NE:"var(--c-brow)",E:"var(--c-throat)",SE:"var(--c-heart)",
+  S:"var(--c-solar)",SW:"var(--c-sacral)",W:"var(--c-root)",NW:"var(--c-brow)"};
 
-function node(x,y,val,color,r){
-  return `<g class="node">
-    <circle cx="${x}" cy="${y}" r="${r}" fill="${color}"
-            stroke="var(--panel)" stroke-width="2"/>
-    <text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="central"
-          font-size="${r*0.95}" fill="#fff8ee"
-          stroke="rgba(0,0,0,.12)" stroke-width=".5">${val}</text>
-  </g>`;
+function node(x,y,val,fill,r,txtColor){
+  const fs=(r*0.92).toFixed(1);
+  return `<g><circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" stroke="var(--panel)" stroke-width="2"/>`
+    +`<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="central" font-size="${fs}"`
+    +` font-weight="700" fill="${txtColor||'#fff8ee'}">${val}</text></g>`;
 }
+function seg(a,b,c,w,op){return `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${c}" stroke-width="${w}" opacity="${op}"/>`;}
+function lbl(x,y,t,dx,dy){return `<text x="${x+(dx||0)}" y="${y+(dy||0)}" text-anchor="middle" font-size="11" fill="var(--muted)" style="text-transform:uppercase;letter-spacing:.08em">${t}</text>`;}
 
 function drawMatrix(m){
   const svg=document.getElementById("matrix");
-  const line=(a,b,w=1.5,c="var(--star)",op=.5)=>
-    `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}"
-       stroke="${c}" stroke-width="${w}" opacity="${op}"/>`;
+  const pos={}; SPOKES.forEach(([k,a])=>pos[k]=P(a,R));
   let s="";
+  // Octógono exterior + guía circular
+  s+=`<circle cx="0" cy="0" r="${R}" fill="none" stroke="var(--line)" stroke-width="1" opacity=".7"/>`;
+  s+=`<polygon points="${SPOKES.map(([k])=>pos[k].join(",")).join(" ")}" fill="none" stroke="var(--line)" stroke-width="1.2" opacity=".8"/>`;
   // Dos cuadrados del octograma
-  s+=line(pos.N,pos.E)+line(pos.E,pos.S)+line(pos.S,pos.W)+line(pos.W,pos.N);
-  s+=line(pos.NE,pos.SE)+line(pos.SE,pos.SW)+line(pos.SW,pos.NW)+line(pos.NW,pos.NE);
-  // Ejes al centro
-  s+=line(pos.N,pos.S,1,"var(--gold)",.55)+line(pos.W,pos.E,1,"var(--gold)",.55);
+  const sq1=["N","E","S","W"], sq2=["NE","SE","SW","NW"];
+  const poly=(ks,c)=>`<polygon points="${ks.map(k=>pos[k].join(",")).join(" ")}" fill="none" stroke="${c}" stroke-width="1.6" opacity=".55"/>`;
+  s+=poly(sq1,"var(--violet)")+poly(sq2,"var(--gold)");
+  // Ejes central + diagonales (líneas paterna/materna)
+  s+=seg(pos.N,pos.S,"var(--star)",1,.4)+seg(pos.W,pos.E,"var(--star)",1,.4);
+  s+=seg(pos.NW,pos.SE,"#5b6bd0",1.3,.5)+seg(pos.NE,pos.SW,"#d06a4a",1.3,.5);
+  s+=`<text x="${pos.NW[0]*.62}" y="${pos.NW[1]*.62}" font-size="10" fill="#5b6bd0" text-anchor="middle" transform="rotate(-45 ${pos.NW[0]*.62} ${pos.NW[1]*.62})">Línea paterna</text>`;
+  s+=`<text x="${pos.NE[0]*.62}" y="${pos.NE[1]*.62}" font-size="10" fill="#d06a4a" text-anchor="middle" transform="rotate(45 ${pos.NE[0]*.62} ${pos.NE[1]*.62})">Línea materna</text>`;
+  // Etiquetas de vértices
+  s+=lbl(pos.N[0],pos.N[1],"Mes",0,-24)+lbl(pos.S[0],pos.S[1],"Misión",0,26)
+   + lbl(pos.W[0],pos.W[1],"Día",-4,-22)+lbl(pos.E[0],pos.E[1],"Año",4,-22);
 
-  // Etiquetas exteriores
-  const L=(x,y,t,dx=0,dy=0)=>`<text class="lbl" x="${x+dx}" y="${y+dy}" text-anchor="middle">${t}</text>`;
-  s+=L(pos.N[0],pos.N[1],"Cielo",0,-26);
-  s+=L(pos.S[0],pos.S[1],"Misión",0,30);
-  s+=L(pos.W[0],pos.W[1],"Día",-6,-24);
-  s+=L(pos.E[0],pos.E[1],"Año",6,-24);
-
-  // Nodos: medios, diagonal, exteriores, centro
-  s+=node(...pos.mN,m.mN,"var(--pt-mid)",13)+node(...pos.mE,m.mE,"var(--pt-mid)",13)
-    +node(...pos.mS,m.mS,"var(--pt-mid)",13)+node(...pos.mW,m.mW,"var(--pt-mid)",13);
-  s+=node(...pos.NW,m.NW,"var(--pt-diag)",15)+node(...pos.NE,m.NE,"var(--pt-diag)",15)
-    +node(...pos.SE,m.SE,"var(--pt-diag)",15)+node(...pos.SW,m.SW,"var(--pt-diag)",15);
-  s+=node(...pos.N,m.N,"var(--pt-outer)",18)+node(...pos.E,m.E,"var(--pt-outer)",18)
-    +node(...pos.S,m.S,"var(--pt-outer)",18)+node(...pos.W,m.W,"var(--pt-outer)",18);
-  s+=node(...pos.C,m.C,"var(--pt-center)",24);
+  // Subpuntos de cada radio (outer .72R, mid .48R, inner .24R)
+  SPOKES.forEach(([k,a])=>{
+    const sp=m.sp[k], col=CHAKRA_COL[k];
+    const pOuter=P(a,R*0.72), pMid=P(a,R*0.48), pInner=P(a,R*0.24);
+    s+=node(...pOuter,sp.outer,"var(--paper)",10,"var(--ink)");
+    s+=node(...pMid,sp.mid,col,13);
+    s+=node(...pInner,sp.inner,"var(--paper)",9,"var(--ink)");
+  });
+  // Vértices: diamante (personal) violeta, cuadrado (linaje) oro
+  sq1.forEach(k=>s+=node(...pos[k],m[k],"var(--violet)",22));
+  sq2.forEach(k=>s+=node(...pos[k],m[k],"var(--gold)",20));
+  // Centro / alma
+  s+=node(0,0,m.C,"var(--amber)",26,"#3a2a08");
+  // Iconos de canal
+  s+=`<text x="${P(315,R*0.34)[0]}" y="${P(315,R*0.34)[1]}" font-size="15" text-anchor="middle" fill="var(--c-heart)">♥</text>`;
+  s+=`<text x="${P(45,R*0.34)[0]}" y="${P(45,R*0.34)[1]}" font-size="14" text-anchor="middle" fill="var(--c-solar)">$</text>`;
   svg.innerHTML=s;
 }
 
-/* ---------- Lectura ---------- */
-function arcRow(num,tag){
-  const [name,mean]=ARCANA[num];
-  return `<div class="row">
-      <div class="num">${num}</div>
-      <div class="rn-name">${name}<small>${mean}</small></div>
-      <div class="rn-tag">${tag}</div>
-    </div>`;
-}
-function renderRead(m,dob){
-  document.getElementById("empty").hidden=true;
-  document.getElementById("result").hidden=false;
-  document.getElementById("rTitle").textContent="Tu Matriz del Destino";
-  document.getElementById("rSub").textContent="Nacimiento: "+dob+" · Arcano central "+m.C+" ("+ARCANA[m.C][0]+")";
-  document.getElementById("rows").innerHTML =
-      arcRow(m.C,"Centro · Alma")
-    + arcRow(m.W,"Día · Cuerpo")
-    + arcRow(m.N,"Cielo · Social")
-    + arcRow(m.E,"Año · Linaje")
-    + arcRow(m.S,"Misión · Cometa");
-  const p=(t,v)=>`<div class="pitem"><span>${t}</span><b>${v} · ${ARCANA[v][0]}</b></div>`;
-  document.getElementById("purpose").innerHTML =
-      p("Cielo",m.pCielo)+p("Tierra",m.pTierra)
-    + p("Personal",m.pPersonal)+p("Social",m.pSocial)
-    + `<div class="pitem big"><span><b>Propósito general de vida</b></span><b>${m.pGeneral} · ${ARCANA[m.pGeneral][0]}</b></div>`;
+/* ===== Lectura ===== */
+function mainRow(num,tag){const[n,mean]=ARCANA[num];
+  return `<div class="row"><div class="num">${num}</div>
+    <div class="rn-name">${n}<small>${mean}</small></div><div class="rn-tag">${tag}</div></div>`;}
+
+const CHAKRAS=[
+  ["Sahasrara","Corona · misión","var(--c-crown)","N","W"],
+  ["Ajna","Tercer ojo · destino","var(--c-brow)","N","W"],
+  ["Vishuddha","Garganta · vínculos","var(--c-throat)","N","W"],
+  ["Anahata","Corazón · relaciones","var(--c-heart)","C","C"],
+  ["Manipura","Plexo · estatus","var(--c-solar)","S","E"],
+  ["Svadhisthana","Sacro · familia","var(--c-sacral)","S","E"],
+  ["Muladhara","Raíz · cuerpo","var(--c-root)","S","E"]
+];
+// niveles verticales (energía) y horizontales (físico), de corona a raíz
+function chakraValues(m){
+  const eneCol=[m.N, m.sp.N.mid, m.sp.N.inner, m.C, m.sp.S.inner, m.sp.S.mid, m.S]; // N->C->S
+  const fisCol=[m.W, m.sp.W.mid, m.sp.W.inner, m.C, m.sp.E.inner, m.sp.E.mid, m.E]; // W->C->E
+  return CHAKRAS.map((c,i)=>({name:c[0],theme:c[1],col:c[2],
+    fis:fisCol[i], ene:eneCol[i], emo:reduce(fisCol[i]+eneCol[i])}));
 }
 
-/* ---------- Wire ---------- */
-document.getElementById("form").addEventListener("submit",e=>{
-  e.preventDefault();
-  const v=document.getElementById("dob").value;
-  if(!v) return;
-  const [y,mo,d]=v.split("-").map(Number);
+let gender="H";
+function render(m,d,mo,y){
+  document.getElementById("empty").hidden=true;
+  document.getElementById("result").hidden=false;
+  document.getElementById("rSub").textContent=
+    `Nacimiento ${d}/${mo}/${y} · ${gender==="H"?"Hombre":"Mujer"} · Arcano central ${arc(m.C)}`;
+  document.getElementById("mainRows").innerHTML=
+      mainRow(m.C,"Centro · Alma")+mainRow(m.W,"Día · Cuerpo")+mainRow(m.N,"Mes · Social")
+    + mainRow(m.E,"Año · Linaje")+mainRow(m.S,"Misión")
+    + mainRow(m.NW,"Linaje ↖")+mainRow(m.NE,"Linaje ↗")
+    + mainRow(m.SE,"Linaje ↘")+mainRow(m.SW,"Linaje ↙");
+  const p=(t,v)=>`<div class="pitem"><span>${t}</span><b>${arc(v)}</b></div>`;
+  document.getElementById("purpose").innerHTML=
+      p("Cielo (espiritual)",m.pSky)+p("Tierra (material)",m.pEarth)
+    + p("Personal",m.pPersonal)+p("Social",m.pSocial)
+    + `<div class="pitem big"><span><b>Propósito general de vida</b></span><b>${arc(m.pGeneral)}</b></div>`;
+  document.getElementById("channels").innerHTML=
+      p("♥ Amor y relaciones",m.love)+p("$ Dinero y recursos",m.money);
+  document.getElementById("health").querySelector("tbody").innerHTML=
+    chakraValues(m).map(c=>`<tr>
+      <td><span class="chk" style="background:${c.col}"></span>${c.name}<br><small style="color:var(--muted)">${c.theme}</small></td>
+      <td class="cross">${c.fis}</td><td class="cross">${c.ene}</td><td><b>${c.emo}</b></td></tr>`).join("");
+}
+
+/* ===== Interacción ===== */
+function calc(){
+  const d=+document.getElementById("d").value, mo=+document.getElementById("m").value, y=+document.getElementById("y").value;
+  if(!d||!mo||!y) return;
   const m=computeMatrix(d,mo,y);
-  drawMatrix(m);
-  renderRead(m,v.split("-").reverse().join("/"));
-});
-// Estado inicial vacío del octograma
-drawMatrix(computeMatrix(0,0,0));
+  drawMatrix(m); render(m,d,mo,y);
+}
+document.getElementById("form").addEventListener("submit",e=>{e.preventDefault();calc();});
+document.getElementById("gH").addEventListener("click",()=>setG("H"));
+document.getElementById("gM").addEventListener("click",()=>setG("M"));
+function setG(g){gender=g;
+  document.getElementById("gH").setAttribute("aria-pressed",g==="H");
+  document.getElementById("gM").setAttribute("aria-pressed",g==="M");
+  if(!document.getElementById("result").hidden) calc();}
+// Estado inicial: ejemplo 31/01/2003 (coincide con dinaraaxanova.com)
+calc();
 </script>
