@@ -279,9 +279,7 @@ function drawMatrix(m){
         +`font-size="7.5" fill="var(--muted)">${ageP%1?ageP.toFixed(2).replace(/0$/,''):ageP}</text>`;
     }
   });
-  // Círculos de eje: misión (corona, =S) y propósito espiritual (raíz)
-  s+=node(0,-R-98,m.S,"var(--paper)",22,"var(--ink)");
-  s+=lbl(0,-R-98,"Misión",0,-30);
+  // Círculo del propósito espiritual (raíz) — verificado en 31/01/2003 y 26/04/2001
   s+=node(0,R+98,m.espiritual,"var(--paper)",20,"var(--ink)");
   s+=lbl(0,R+98,"Espiritual",0,32);
   // Dos cuadrados del octograma
