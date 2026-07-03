@@ -8,6 +8,9 @@
     --amber:#e0a63a; --star:#3b2f66; --sub:#8a8398; --paper:#fffdf8;
     --c-root:#c0392b; --c-sacral:#e67e22; --c-solar:#f1c40f; --c-heart:#27ae60;
     --c-throat:#2980b9; --c-brow:#3f3f9e; --c-crown:#7d3c98;
+    /* Colores de los 7 chakras (constantes en ambos temas) */
+    --k-crown:#6d3f9c; --k-ajna:#2f66c7; --k-vish:#1596a3; --k-ana:#2fa457;
+    --k-manip:#e0a63a; --k-svad:#e2761c; --k-root:#c0392b;
     --shadow:0 1px 2px rgba(42,36,64,.08),0 10px 34px rgba(42,36,64,.12);
     --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
     --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
@@ -138,10 +141,13 @@
     <div class="card chart-card">
       <svg id="matrix" viewBox="-330 -355 660 715" role="img" aria-label="Octograma de la Matriz del Destino"></svg>
       <div class="legend">
-        <span><i class="dot" style="background:var(--violet)"></i>Cuadrado personal (día·mes·año·misión)</span>
-        <span><i class="dot" style="background:var(--gold)"></i>Línea del linaje</span>
-        <span><i class="dot" style="background:var(--amber)"></i>Centro · Alma</span>
-        <span><i class="dot" style="background:var(--sub)"></i>Chakras</span>
+        <span><i class="dot" style="background:var(--k-crown)"></i>Corona (día · mes)</span>
+        <span><i class="dot" style="background:var(--k-ajna)"></i>Ajna</span>
+        <span><i class="dot" style="background:var(--k-vish)"></i>Vishuddha</span>
+        <span><i class="dot" style="background:var(--k-ana)"></i>Anahata</span>
+        <span><i class="dot" style="background:var(--k-manip)"></i>Centro · Alma</span>
+        <span><i class="dot" style="background:var(--k-svad)"></i>Svadhisthana</span>
+        <span><i class="dot" style="background:var(--k-root)"></i>Raíz (año · misión)</span>
       </div>
     </div>
 
@@ -242,8 +248,21 @@ function P(angDeg,r){const a=angDeg*Math.PI/180;return [r*Math.cos(a), -r*Math.s
 const SPOKES=[ // [clave, ángulo]
   ["E",0],["NE",45],["N",90],["NW",135],["W",180],["SW",225],["S",270],["SE",315]
 ];
-const CHAKRA_COL={N:"var(--c-crown)",NE:"var(--c-brow)",E:"var(--c-throat)",SE:"var(--c-heart)",
-  S:"var(--c-solar)",SW:"var(--c-sacral)",W:"var(--c-root)",NW:"var(--c-brow)"};
+// Esquema de color de la referencia: los 7 chakras se proyectan sobre los ejes
+// vertical (energía: N=corona … S=raíz) y horizontal (físico: W=corona … E=raíz).
+// N y W son corona (morado); E y S son raíz (rojo); las esquinas diagonales son blancas.
+const WHITE="var(--paper)";
+function vertexColor(k){
+  if(k==="N"||k==="W") return "var(--k-crown)";
+  if(k==="E"||k==="S") return "var(--k-root)";
+  return WHITE;                       // NW, NE, SE, SW (linaje)
+}
+// color de cada subpunto del radio según chakra
+function dotColor(k,pos){            // pos: 'outer' | 'mid' | 'inner'
+  if(k==="N"||k==="W") return pos==="outer"?"var(--k-ajna)":pos==="mid"?"var(--k-vish)":"var(--k-ana)";
+  if(k==="S"||k==="E") return pos==="mid"?"var(--k-svad)":WHITE;
+  return WHITE;                       // diagonales: blancas
+}
 
 function node(x,y,val,fill,r,txtColor){
   const fs=(r*0.92).toFixed(1);
@@ -258,9 +277,9 @@ function drawMatrix(m){
   const svg=document.getElementById("matrix");
   const pos={}; SPOKES.forEach(([k,a])=>pos[k]=P(a,R));
   let s="";
-  // Octógono exterior + guía circular
-  s+=`<circle cx="0" cy="0" r="${R}" fill="none" stroke="var(--line)" stroke-width="1" opacity=".7"/>`;
+  // Octógono exterior (recorrido de la línea de la vida) + anillo interior
   s+=`<polygon points="${SPOKES.map(([k])=>pos[k].join(",")).join(" ")}" fill="none" stroke="var(--star)" stroke-width="1.4" opacity=".85"/>`;
+  s+=`<circle cx="0" cy="0" r="${R*0.58}" fill="none" stroke="var(--star)" stroke-width="1" opacity=".55"/>`;
 
   // === Línea de la vida (0-80 años) sobre el perímetro ===
   // Esquinas en orden horario desde W(0): W,NW,N,NE,E,SE,S,SW  (cada arista = 10 años)
@@ -280,34 +299,49 @@ function drawMatrix(m){
         +`font-size="7.5" fill="var(--muted)">${ageP%1?ageP.toFixed(2).replace(/0$/,''):ageP}</text>`;
     }
   });
-  // Círculo del propósito espiritual (raíz) — verificado en 31/01/2003 y 26/04/2001
+  // Círculos de eje: misión (corona) = reduce(social+espiritual); espiritual (raíz).
+  // Ambas fórmulas verificadas en 31/01/2003, 26/04/2001 y 01/01/2003.
+  const mision=reduce(m.social+m.espiritual);
+  s+=node(0,-R-98,mision,"var(--paper)",20,"var(--ink)");
+  s+=lbl(0,-R-98,"Misión",0,-30);
   s+=node(0,R+98,m.espiritual,"var(--paper)",20,"var(--ink)");
   s+=lbl(0,R+98,"Espiritual",0,32);
-  // Dos cuadrados del octograma
+  // Dos cuadrados del octograma (neutros, como la referencia)
   const sq1=["N","E","S","W"], sq2=["NE","SE","SW","NW"];
-  const poly=(ks,c)=>`<polygon points="${ks.map(k=>pos[k].join(",")).join(" ")}" fill="none" stroke="${c}" stroke-width="1.6" opacity=".55"/>`;
-  s+=poly(sq1,"var(--violet)")+poly(sq2,"var(--gold)");
+  const poly=ks=>`<polygon points="${ks.map(k=>pos[k].join(",")).join(" ")}" fill="none" stroke="var(--star)" stroke-width="1.2" opacity=".5"/>`;
+  s+=poly(sq1)+poly(sq2);
   // Ejes central + diagonales (líneas paterna/materna)
-  s+=seg(pos.N,pos.S,"var(--star)",1,.4)+seg(pos.W,pos.E,"var(--star)",1,.4);
+  s+=seg(pos.N,pos.S,"var(--star)",1,.35)+seg(pos.W,pos.E,"var(--star)",1,.35);
   s+=seg(pos.NW,pos.SE,"#5b6bd0",1.3,.5)+seg(pos.NE,pos.SW,"#d06a4a",1.3,.5);
+  // Línea punteada del dinero ($), del centro hacia el sureste
+  s+=`<line x1="${P(20,R*0.30)[0]}" y1="${P(20,R*0.30)[1]}" x2="${P(325,R*0.66)[0]}" y2="${P(325,R*0.66)[1]}" stroke="var(--muted)" stroke-width="1" stroke-dasharray="4 3" opacity=".7"/>`;
   s+=`<text x="${pos.NW[0]*.62}" y="${pos.NW[1]*.62}" font-size="10" fill="#5b6bd0" text-anchor="middle" transform="rotate(-45 ${pos.NW[0]*.62} ${pos.NW[1]*.62})">Línea paterna</text>`;
   s+=`<text x="${pos.NE[0]*.62}" y="${pos.NE[1]*.62}" font-size="10" fill="#d06a4a" text-anchor="middle" transform="rotate(45 ${pos.NE[0]*.62} ${pos.NE[1]*.62})">Línea materna</text>`;
-  // Subpuntos de cada radio (outer .72R, mid .48R, inner .24R)
+  // Canal del amor (♥): dos puntos a la derecha del centro
+  //   L1 = reduce(2·Centro), L2 = reduce(Centro+social) — verificado en varias fechas
+  const love1=reduce(m.C+m.C), love2=reduce(m.C+m.social);
+  s+=node(...P(0,R*0.20),love1,WHITE,10,"var(--ink)");
+  s+=node(...P(0,R*0.34),love2,WHITE,10,"var(--ink)");
+  // Subpuntos de cada radio (outer .72R, mid .48R, inner .24R) con color por chakra
   SPOKES.forEach(([k,a])=>{
-    const sp=m.sp[k], col=CHAKRA_COL[k];
+    const sp=m.sp[k];
     const pOuter=P(a,R*0.72), pMid=P(a,R*0.48), pInner=P(a,R*0.24);
-    s+=node(...pOuter,sp.outer,"var(--paper)",10,"var(--ink)");
-    s+=node(...pMid,sp.mid,col,13);
-    s+=node(...pInner,sp.inner,"var(--paper)",9,"var(--ink)");
+    const co=dotColor(k,"outer"), cm=dotColor(k,"mid"), ci=dotColor(k,"inner");
+    s+=node(...pOuter,sp.outer,co,10,co===WHITE?"var(--ink)":"#fff8ee");
+    s+=node(...pMid,sp.mid,cm,12,cm===WHITE?"var(--ink)":"#fff8ee");
+    if(!(k==="E"||k==="S"))   // en la referencia, E y S no llevan punto interior (lo ocupan amor/dinero)
+      s+=node(...pInner,sp.inner,ci,9,ci===WHITE?"var(--ink)":"#fff8ee");
   });
-  // Vértices: diamante (personal) violeta, cuadrado (linaje) oro
-  sq1.forEach(k=>s+=node(...pos[k],m[k],"var(--violet)",22));
-  sq2.forEach(k=>s+=node(...pos[k],m[k],"var(--gold)",20));
-  // Centro / alma
-  s+=node(0,0,m.C,"var(--amber)",26,"#3a2a08");
+  // Vértices: N y W = corona (morado), E y S = raíz (rojo), diagonales = blancas
+  [...sq1,...sq2].forEach(k=>{
+    const c=vertexColor(k), big=(k.length===1);
+    s+=node(...pos[k],m[k],c,big?22:19,c===WHITE?"var(--ink)":"#fff8ee");
+  });
+  // Centro / alma (Manipura, dorado)
+  s+=node(0,0,m.C,"var(--k-manip)",26,"#3a2a08");
   // Iconos de canal
-  s+=`<text x="${P(315,R*0.34)[0]}" y="${P(315,R*0.34)[1]}" font-size="15" text-anchor="middle" fill="var(--c-heart)">♥</text>`;
-  s+=`<text x="${P(45,R*0.34)[0]}" y="${P(45,R*0.34)[1]}" font-size="14" text-anchor="middle" fill="var(--c-solar)">$</text>`;
+  s+=`<text x="${P(315,R*0.30)[0]}" y="${P(315,R*0.30)[1]}" font-size="15" text-anchor="middle" fill="var(--c-heart)">♥</text>`;
+  s+=`<text x="${P(45,R*0.30)[0]}" y="${P(45,R*0.30)[1]}" font-size="14" text-anchor="middle" fill="var(--c-solar)">$</text>`;
   svg.innerHTML=s;
 }
 
