@@ -139,7 +139,7 @@
 
   <div class="layout">
     <div class="card chart-card">
-      <svg id="matrix" viewBox="-330 -355 660 715" role="img" aria-label="Octograma de la Matriz del Destino"></svg>
+      <svg id="matrix" viewBox="-350 -368 700 736" role="img" aria-label="Octograma de la Matriz del Destino"></svg>
       <div class="legend">
         <span><i class="dot" style="background:var(--k-crown)"></i>Corona (día · mes)</span>
         <span><i class="dot" style="background:var(--k-ajna)"></i>Ajna</span>
@@ -277,6 +277,9 @@ function drawMatrix(m){
   const svg=document.getElementById("matrix");
   const pos={}; SPOKES.forEach(([k,a])=>pos[k]=P(a,R));
   let s="";
+  s+=`<defs>`
+    +`<marker id="arrPat" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#5b6bd0"/></marker>`
+    +`<marker id="arrMat" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#d06a4a"/></marker></defs>`;
   // Octógono exterior (recorrido de la línea de la vida) + anillo interior
   s+=`<polygon points="${SPOKES.map(([k])=>pos[k].join(",")).join(" ")}" fill="none" stroke="var(--star)" stroke-width="1.4" opacity=".85"/>`;
   s+=`<circle cx="0" cy="0" r="${R*0.58}" fill="none" stroke="var(--star)" stroke-width="1" opacity=".55"/>`;
@@ -306,22 +309,38 @@ function drawMatrix(m){
   s+=lbl(0,-R-98,"Misión",0,-30);
   s+=node(0,R+98,m.espiritual,"var(--paper)",20,"var(--ink)");
   s+=lbl(0,R+98,"Espiritual",0,32);
+  // === Círculos generacionales (orla exterior) — verificado en 31/01/2003 y 01/01/2008 ===
+  //  Arriba-der = propósito personal {cielo,tierra,personal}; abajo-der = social {hombre,mujer,social}
+  //  Arriba-izq = {NW,SE,hombre}; abajo-izq = {NE,SW,mujer}. El 3er valor (combinado) es el círculo mayor.
+  const GEN={ NW:[m.NW,m.SE,m.hombre], NE:[m.cielo,m.tierra,m.personal],
+              SW:[m.NE,m.SW,m.mujer],  SE:[m.hombre,m.mujer,m.social] };
+  // g0 hacia el eje vertical, g1 hacia el eje horizontal, g2 (combinado) recto y mayor
+  const GA={NW:[135,112,158],NE:[45,68,22],SW:[225,248,202],SE:[315,292,338]};
+  Object.keys(GEN).forEach(k=>{
+    const g=GEN[k], [ac,a0,a1]=GA[k];
+    s+=node(...P(a0,R*1.44),g[0],WHITE,11,"var(--ink)");
+    s+=node(...P(a1,R*1.44),g[1],WHITE,11,"var(--ink)");
+    s+=node(...P(ac,R*1.28),g[2],WHITE,13,"var(--ink)");
+  });
   // Dos cuadrados del octograma (neutros, como la referencia)
   const sq1=["N","E","S","W"], sq2=["NE","SE","SW","NW"];
   const poly=ks=>`<polygon points="${ks.map(k=>pos[k].join(",")).join(" ")}" fill="none" stroke="var(--star)" stroke-width="1.2" opacity=".5"/>`;
   s+=poly(sq1)+poly(sq2);
-  // Ejes central + diagonales (líneas paterna/materna)
+  // Ejes central (vertical + horizontal)
   s+=seg(pos.N,pos.S,"var(--star)",1,.35)+seg(pos.W,pos.E,"var(--star)",1,.35);
-  s+=seg(pos.NW,pos.SE,"#5b6bd0",1.3,.5)+seg(pos.NE,pos.SW,"#d06a4a",1.3,.5);
-  // Línea punteada del dinero ($), del centro hacia el sureste
-  s+=`<line x1="${P(20,R*0.30)[0]}" y1="${P(20,R*0.30)[1]}" x2="${P(325,R*0.66)[0]}" y2="${P(325,R*0.66)[1]}" stroke="var(--muted)" stroke-width="1" stroke-dasharray="4 3" opacity=".7"/>`;
-  s+=`<text x="${pos.NW[0]*.62}" y="${pos.NW[1]*.62}" font-size="10" fill="#5b6bd0" text-anchor="middle" transform="rotate(-45 ${pos.NW[0]*.62} ${pos.NW[1]*.62})">Línea paterna</text>`;
-  s+=`<text x="${pos.NE[0]*.62}" y="${pos.NE[1]*.62}" font-size="10" fill="#d06a4a" text-anchor="middle" transform="rotate(45 ${pos.NE[0]*.62} ${pos.NE[1]*.62})">Línea materna</text>`;
+  // Flechas de las líneas paterna (NW-SE, azul) y materna (NE-SW, roja), desde el centro
+  const arrow=(ang,col,mk)=>{const e=P(ang,R*0.60);return `<line x1="0" y1="0" x2="${e[0]}" y2="${e[1]}" stroke="${col}" stroke-width="1.4" opacity=".85" marker-end="url(#${mk})"/>`;};
+  s+=arrow(135,"#5b6bd0","arrPat")+arrow(315,"#5b6bd0","arrPat")+arrow(45,"#d06a4a","arrMat")+arrow(225,"#d06a4a","arrMat");
+  // Línea punteada del dinero ($): del centro-derecha hacia el sureste
+  s+=`<line x1="${P(18,R*0.34)[0]}" y1="${P(18,R*0.34)[1]}" x2="${P(330,R*0.58)[0]}" y2="${P(330,R*0.58)[1]}" stroke="var(--muted)" stroke-width="1" stroke-dasharray="4 3" opacity=".7"/>`;
+  const lp=P(135,R*0.42), lm=P(45,R*0.42);
+  s+=`<text x="${lp[0]}" y="${lp[1]}" font-size="10" fill="#5b6bd0" text-anchor="middle" transform="rotate(-45 ${lp[0]} ${lp[1]})">Línea Paterna</text>`;
+  s+=`<text x="${lm[0]}" y="${lm[1]}" font-size="10" fill="#d06a4a" text-anchor="middle" transform="rotate(45 ${lm[0]} ${lm[1]})">Línea Materna</text>`;
   // Canal del amor (♥): dos puntos a la derecha del centro
   //   L1 = reduce(2·Centro), L2 = reduce(Centro+social) — verificado en varias fechas
   const love1=reduce(m.C+m.C), love2=reduce(m.C+m.social);
-  s+=node(...P(0,R*0.20),love1,WHITE,10,"var(--ink)");
-  s+=node(...P(0,R*0.34),love2,WHITE,10,"var(--ink)");
+  s+=node(...P(0,R*0.21),love1,WHITE,10,"var(--ink)");
+  s+=node(...P(0,R*0.36),love2,WHITE,10,"var(--ink)");
   // Subpuntos de cada radio (outer .72R, mid .48R, inner .24R) con color por chakra
   SPOKES.forEach(([k,a])=>{
     const sp=m.sp[k];
@@ -339,9 +358,9 @@ function drawMatrix(m){
   });
   // Centro / alma (Manipura, dorado)
   s+=node(0,0,m.C,"var(--k-manip)",26,"#3a2a08");
-  // Iconos de canal
-  s+=`<text x="${P(315,R*0.30)[0]}" y="${P(315,R*0.30)[1]}" font-size="15" text-anchor="middle" fill="var(--c-heart)">♥</text>`;
-  s+=`<text x="${P(45,R*0.30)[0]}" y="${P(45,R*0.30)[1]}" font-size="14" text-anchor="middle" fill="var(--c-solar)">$</text>`;
+  // Iconos de canal en su posición exacta (según la referencia)
+  s+=`<text x="${R*0.15}" y="${R*0.34}" font-size="16" text-anchor="middle" dominant-baseline="central" fill="#d0552e">♥</text>`;
+  s+=`<text x="${R*0.33}" y="${R*0.13}" font-size="15" font-weight="700" text-anchor="middle" dominant-baseline="central" fill="#8ab933">$</text>`;
   svg.innerHTML=s;
 }
 
