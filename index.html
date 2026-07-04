@@ -338,15 +338,22 @@ function drawMatrix(m){
   const love1=reduce(m.C+m.C), love2=reduce(m.C+m.social);
   s+=node(...P(0,R*0.19),love1,WHITE,10,"var(--ink)");
   s+=node(...P(0,R*0.33),love2,WHITE,10,"var(--ink)");
-  // Subpuntos de cada radio: inner .33R (dentro del anillo), mid .68R y outer .83R (fuera)
+  // Ejes (N,S,W,E): inner .33R (dentro del anillo, coloreado por chakra), mid .68R, outer .83R.
+  // Diagonales (NW,NE,SE,SW): DOS puntos blancos — sobre el anillo (.55R) = reduce(vértice+día),
+  //   y el subpunto (.74R) = reduce(anillo+vértice). Reproduce 9/10/18/19 y 14/16/5/7 de la referencia.
   SPOKES.forEach(([k,a])=>{
     const sp=m.sp[k];
-    const pOuter=P(a,R*0.83), pMid=P(a,R*0.68), pInner=P(a,R*0.33);
-    const co=dotColor(k,"outer"), cm=dotColor(k,"mid"), ci=dotColor(k,"inner");
-    s+=node(...pOuter,sp.outer,co,10,co===WHITE?"var(--ink)":"#fff8ee");
-    s+=node(...pMid,sp.mid,cm,12,cm===WHITE?"var(--ink)":"#fff8ee");
-    if(!(k==="E"||k==="S"))   // en la referencia, E y S no llevan punto interior (lo ocupan amor/dinero)
-      s+=node(...pInner,sp.inner,ci,9,ci===WHITE?"var(--ink)":"#fff8ee");
+    if(k.length===2){
+      const ring=reduce(m[k]+m.W), sub=reduce(ring+m[k]);
+      s+=node(...P(a,R*0.55),ring,WHITE,10,"var(--ink)");
+      s+=node(...P(a,R*0.74),sub,WHITE,11,"var(--ink)");
+    } else {
+      const co=dotColor(k,"outer"), cm=dotColor(k,"mid"), ci=dotColor(k,"inner");
+      s+=node(...P(a,R*0.83),sp.outer,co,10,co===WHITE?"var(--ink)":"#fff8ee");
+      s+=node(...P(a,R*0.68),sp.mid,cm,12,cm===WHITE?"var(--ink)":"#fff8ee");
+      if(!(k==="E"||k==="S"))   // en la referencia, E y S no llevan punto interior (lo ocupan amor/dinero)
+        s+=node(...P(a,R*0.33),sp.inner,ci,9,ci===WHITE?"var(--ink)":"#fff8ee");
+    }
   });
   // Vértices: N y W = corona (morado), E y S = raíz (rojo), diagonales = blancas
   [...sq1,...sq2].forEach(k=>{
@@ -359,9 +366,11 @@ function drawMatrix(m){
   s+=`<text x="${R*0.13}" y="${R*0.30}" font-size="16" text-anchor="middle" dominant-baseline="central" fill="#d0552e">♥</text>`;
   s+=`<text x="${R*0.30}" y="${R*0.13}" font-size="15" font-weight="700" text-anchor="middle" dominant-baseline="central" fill="#8ab933">$</text>`;
   // Etiquetas de las líneas (itálica serif, DIBUJADAS AL FINAL para que no las tape nada)
-  const lp=P(138,R*0.40), lm=P(42,R*0.40);
-  s+=`<text x="${lp[0]}" y="${lp[1]}" font-family="var(--serif)" font-style="italic" font-size="12" fill="#5b6bd0" text-anchor="middle" transform="rotate(45 ${lp[0]} ${lp[1]})">Línea Paterna</text>`;
-  s+=`<text x="${lm[0]}" y="${lm[1]}" font-family="var(--serif)" font-style="italic" font-size="12" fill="#d06a4a" text-anchor="middle" transform="rotate(-45 ${lm[0]} ${lm[1]})">Línea Materna</text>`;
+  // Etiquetas centradas EXACTAMENTE sobre cada diagonal (dominant-baseline central = van sobre la línea,
+  // no por encima). Tamaño reducido para caber entre el centro y el punto del anillo.
+  const lp=P(135,R*0.34), lm=P(45,R*0.34);
+  s+=`<text x="${lp[0]}" y="${lp[1]}" font-family="var(--serif)" font-style="italic" font-size="10.5" fill="#5b6bd0" text-anchor="middle" dominant-baseline="central" transform="rotate(45 ${lp[0]} ${lp[1]})">Línea Paterna</text>`;
+  s+=`<text x="${lm[0]}" y="${lm[1]}" font-family="var(--serif)" font-style="italic" font-size="10.5" fill="#d06a4a" text-anchor="middle" dominant-baseline="central" transform="rotate(-45 ${lm[0]} ${lm[1]})">Línea Materna</text>`;
   svg.innerHTML=s;
 }
 
