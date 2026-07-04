@@ -340,14 +340,14 @@ function drawMatrix(m){
   s+=node(...P(0,R*0.19),love1,WHITE,10,"var(--ink)");
   s+=node(...P(0,R*0.33),love2,WHITE,10,"var(--ink)");
   // Ejes (N,S,W,E): inner .33R (dentro del anillo, coloreado por chakra), mid .68R, outer .83R.
-  // Diagonales (NW,NE,SE,SW): DOS puntos blancos — sobre el anillo (.55R) = reduce(vértice+día),
-  //   y el subpunto (.74R) = reduce(anillo+vértice). Reproduce 9/10/18/19 y 14/16/5/7 de la referencia.
+  // Diagonales (NW,NE,SE,SW): DOS puntos blancos — anillo (.70R) = inner = reduce(C+mid),
+  //   y subpunto (.82R) = reduce(anillo+vértice). Verificado con 01/01/2001 (22/6/10/8 y 6/10/18/14).
   SPOKES.forEach(([k,a])=>{
     const sp=m.sp[k];
     if(k.length===2){
       // Diagonal: dos círculos sobre la LÍNEA RECTA (no sobre el anillo) — el punto donde la diagonal
       // cruza el rombo (~.70R, fin de la flecha) y el subpunto (~.82R, hacia el vértice).
-      const ring=reduce(m[k]+m.W), sub=reduce(ring+m[k]);
+      const ring=sp.inner, sub=reduce(ring+m[k]);
       s+=node(...P(a,R*0.70),ring,WHITE,10,"var(--ink)");
       s+=node(...P(a,R*0.82),sub,WHITE,11,"var(--ink)");
     } else {
@@ -363,10 +363,11 @@ function drawMatrix(m){
     const c=vertexColor(k), big=(k.length===1);
     s+=node(...pos[k],m[k],c,big?18:16,c===WHITE?"var(--ink)":"#fff8ee");
   });
-  // Canal del dinero ($) y del amor (♥) — solo en la esquina sureste (donde están los iconos):
-  //   base = inner_SE (sobre la diagonal SE);  dinero = reduce(inner_SE+mid_E);  amor = reduce(inner_SE+mid_S)
+  // Canal del dinero ($) y del amor (♥) — solo en la esquina sureste (donde están los iconos).
+  //   La base del canal ES el anillo SE (inner_SE, ya dibujado sobre la diagonal), así que aquí NO se
+  //   redibuja para no duplicar el número; solo se colocan las ramas:  dinero = reduce(inner_SE+mid_E),
+  //   amor = reduce(inner_SE+mid_S).
   const base=m.sp.SE.inner, money=reduce(base+m.sp.E.mid), amor=reduce(base+m.sp.S.mid);
-  s+=node(...P(315,R*0.37),base,WHITE,9,"var(--ink)");
   s+=node(R*0.45,R*0.22,money,WHITE,9,"var(--ink)");
   s+=node(R*0.25,R*0.42,amor,WHITE,9,"var(--ink)");
   // Centro / alma (Manipura, dorado)
