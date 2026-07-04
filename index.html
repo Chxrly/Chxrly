@@ -1,7 +1,10 @@
 <meta charset="utf-8">
-<title>Matriz del Destino — Calculadora de los 22 Arcanos</title>
+<title>Numen · Matriz del Destino — descubre el mapa de tu alma</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Traza tu Matriz del Destino a partir de tu fecha de nacimiento: octograma de los 22 Arcanos Mayores, chakras, linaje y propósito de vida. Cálculo exacto en tu navegador.">
+<meta name="description" content="Numen traza tu Matriz del Destino a partir de tu fecha de nacimiento: tu arcano central, tu linaje, tus siete chakras y tu propósito de vida. Gratis, privado y al instante, en tu navegador.">
+<meta property="og:title" content="Numen · Matriz del Destino">
+<meta property="og:description" content="El mapa de tu alma en 22 arcanos, a partir de tu fecha de nacimiento. Gratis y privado.">
+<meta name="theme-color" content="#efe9dd">
 <style>
   :root{
     /* — Astrolabio · tema claro (pergamino) — */
@@ -106,7 +109,8 @@
   }
   .icon-btn:hover{border-color:var(--gold);color:var(--gold-strong)}
   .icon-btn:active{transform:translateY(1px)}
-  @media (max-width:640px){.topnav a[href="#como"],.topnav a[href="#metodo"]{display:none}}
+  @media (max-width:720px){.topnav a[href="#revela"],.topnav a[href="#como"],.topnav a[href="#faq"]{display:none}}
+  @media (max-width:420px){.topnav .btn--sm{padding:8px 12px;font-size:12.5px}}
 
   .wrap{position:relative;z-index:1;max-width:1140px;margin:0 auto;padding:clamp(28px,5vw,56px) 18px 40px}
 
@@ -273,6 +277,71 @@
   footer .fbrand .star{width:16px;height:16px;color:var(--gold-strong)}
   .note{max-width:66ch;margin:6px auto 0}
 
+  /* — Botones (sistema unificado) — */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--sans);
+    font-weight:650;font-size:15px;cursor:pointer;padding:13px 24px;border-radius:var(--radius-sm);
+    border:1px solid transparent;text-decoration:none;
+    transition:transform .08s, filter .15s, box-shadow .15s, border-color .15s, color .15s, background .15s}
+  .btn:hover{text-decoration:none}
+  .btn:active{transform:translateY(1px)}
+  .btn--primary{color:#fff8ee;border-color:var(--gold-strong);
+    background:linear-gradient(180deg,color-mix(in srgb,var(--gold) 88%,#fff 4%),var(--gold-strong));
+    box-shadow:0 8px 22px color-mix(in srgb,var(--gold) 40%,transparent)}
+  .btn--primary:hover{filter:brightness(1.05);box-shadow:0 12px 30px color-mix(in srgb,var(--gold) 48%,transparent)}
+  .btn--ghost{color:var(--ink);border-color:var(--line);background:var(--panel)}
+  .btn--ghost:hover{border-color:var(--gold);color:var(--gold-strong)}
+  .btn--sm{padding:9px 16px;font-size:13.5px}
+  .btn--block{width:100%;max-width:340px}
+
+  /* — Ritmo de secciones — */
+  .sec{margin-top:clamp(52px,9vw,104px);scroll-margin-top:80px}
+  .sec--tool{scroll-margin-top:80px}
+
+  /* — Héroe de marca — */
+  .hero-motif{position:absolute;top:-56px;left:50%;transform:translateX(-50%);
+    width:min(560px,94vw);color:var(--gold);opacity:.10;pointer-events:none;z-index:-1}
+  .hero .actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+  .hero .trust{margin-top:16px;font-size:12.5px;color:var(--muted)}
+
+  /* — “Qué revela” · rejilla de facetas — */
+  .features{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media (max-width:860px){.features{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:560px){.features{grid-template-columns:1fr}}
+  .feature{padding:20px}
+  .feature .ic{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;margin-bottom:13px;
+    color:var(--gold-strong);border:1px solid var(--gold);background:color-mix(in srgb,var(--gold) 10%,transparent)}
+  .feature .ic svg{width:22px;height:22px}
+  .feature h3{font-family:var(--serif);font-size:16.5px;margin:0 0 5px;font-weight:600}
+  .feature p{margin:0;font-size:13.5px;color:var(--muted)}
+
+  /* — “Por qué Numen” — */
+  .why{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  @media (max-width:860px){.why{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:460px){.why{grid-template-columns:1fr}}
+  .why .card{padding:18px}
+  .why .wk{display:inline-flex;align-items:center;gap:8px;color:var(--gold-strong);font-weight:600;font-size:13px;margin-bottom:8px}
+  .why .wk .star{width:15px;height:15px}
+  .why h3{font-family:var(--serif);font-size:15.5px;margin:0 0 4px;font-weight:600}
+  .why p{margin:0;font-size:13px;color:var(--muted)}
+
+  /* — Preguntas frecuentes — */
+  .faq{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+  .faq details{margin:0;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:2px 18px}
+  .faq summary{font-family:var(--serif);font-size:15.5px;font-weight:600;color:var(--ink);cursor:pointer;
+    padding:15px 0;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:14px}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:"+";color:var(--gold-strong);font-size:22px;font-weight:400;line-height:1;flex:none}
+  .faq details[open] summary::after{content:"\2013"}
+  .faq details p{font-size:13.5px;color:var(--ink-soft);margin:0 0 15px}
+
+  /* — Franja de cierre — */
+  .cta-band{position:relative;overflow:hidden;text-align:center;padding:clamp(38px,6vw,68px) 24px;border-radius:var(--radius);
+    background:radial-gradient(130% 170% at 50% 0%, color-mix(in srgb,var(--gold) 16%,transparent), transparent 60%),var(--panel);
+    border:1px solid color-mix(in srgb,var(--gold) 35%,var(--line))}
+  .cta-band .star{width:26px;height:26px;color:var(--gold-strong);margin-bottom:14px}
+  .cta-band h2{font-family:var(--serif);font-weight:600;font-size:clamp(24px,4vw,36px);margin:0 0 10px;text-wrap:balance}
+  .cta-band p{color:var(--ink-soft);margin:0 auto 24px;max-width:50ch;font-size:15px}
+
   @media (prefers-reduced-motion:no-preference){
     .reveal{animation:fadeUp .5s cubic-bezier(.2,.7,.3,1) both}
   }
@@ -280,26 +349,83 @@
 </style>
 
 <header class="topbar">
-  <a class="brand" href="#top" aria-label="Matriz del Destino, inicio">
+  <a class="brand" href="#top" aria-label="Numen, inicio">
     <svg class="star" viewBox="-12 -12 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6"><rect x="-8" y="-8" width="16" height="16"/><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)"/></g></svg>
-    <b>Matriz del Destino</b>
+    <b>Numen</b>
   </a>
   <nav class="topnav">
+    <a href="#revela">Qué revela</a>
     <a href="#como">Cómo funciona</a>
-    <a href="#metodo">Método</a>
+    <a href="#faq">Preguntas</a>
+    <a href="#calc" class="btn btn--primary btn--sm">Trazar mi matriz</a>
     <button class="icon-btn" id="themeBtn" type="button" aria-label="Cambiar entre tema claro y oscuro" title="Cambiar tema">◐</button>
   </nav>
 </header>
 
 <main class="wrap" id="top">
   <section class="hero">
+    <svg class="hero-motif" viewBox="-110 -110 220 220" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.1">
+      <circle r="96"/><circle r="60"/>
+      <rect x="-68" y="-68" width="136" height="136"/>
+      <rect x="-68" y="-68" width="136" height="136" transform="rotate(45)"/>
+      <line x1="-96" y1="0" x2="96" y2="0"/><line x1="0" y1="-96" x2="0" y2="96"/>
+    </svg>
     <p class="eyebrow">
       <svg class="star" viewBox="-12 -12 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8"><rect x="-8" y="-8" width="16" height="16"/><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)"/></g></svg>
-      Método de los 22 Arcanos Mayores
+      Numen · Matriz del Destino
     </p>
-    <h1>Descubre tu <span class="em">Matriz del Destino</span></h1>
-    <p class="lede">Tu fecha de nacimiento traza un octograma de arcanos: tu alma, tu linaje, tus chakras
-      y tu propósito de vida. Ingresa tu fecha y obtén la lectura completa en segundos.</p>
+    <h1>Tu fecha de nacimiento guarda el <span class="em">mapa de tu alma</span>.</h1>
+    <p class="lede">Numen traza tu Matriz del Destino a partir de los 22 Arcanos Mayores: descubre tu
+      arcano central, tu linaje, tus siete chakras y el propósito que viniste a cumplir.
+      Solo necesitas tu fecha de nacimiento.</p>
+    <div class="actions">
+      <a href="#calc" class="btn btn--primary">Trazar mi matriz — gratis</a>
+      <a href="#revela" class="btn btn--ghost">Ver qué revela</a>
+    </div>
+    <p class="trust">Sin registro · Se calcula en tu navegador · Resultado al instante</p>
+  </section>
+
+  <section class="sec" id="revela">
+    <div class="section-head">
+      <p class="eyebrow">Tu carta interior</p>
+      <h2>Todo lo que tu matriz revela</h2>
+      <p>Un octograma vivo con cada energía de tu vida, calculado punto por punto a partir de tu fecha.</p>
+    </div>
+    <div class="features" style="margin-top:26px">
+      <div class="feature card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/></svg></div>
+        <h3>Arcano central · el alma</h3><p>El número que rige tu esencia y el propósito profundo de tu encarnación.</p></div>
+      <div class="feature card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 5l6 6M5 5v4.5M5 5h4.5"/><path d="M19 19l-6-6M19 19v-4.5M19 19h-4.5"/></svg></div>
+        <h3>Línea del linaje</h3><p>Las herencias paterna y materna que traes contigo, y lo que vienes a sanar.</p></div>
+      <div class="feature card"><div class="ic"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></div>
+        <h3>Los 7 chakras</h3><p>Tu tabla de salud energética: cuerpo, energía y emoción, chakra por chakra.</p></div>
+      <div class="feature card"><div class="ic"><svg viewBox="-12 -12 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="-8" y="-8" width="16" height="16"/><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)"/></svg></div>
+        <h3>Propósitos de vida</h3><p>Personal, social y espiritual: qué resolver y qué dar en cada etapa.</p></div>
+      <div class="feature card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 17a9 9 0 0 1 18 0"/><circle cx="3" cy="17" r="1.7" fill="currentColor" stroke="none"/><circle cx="21" cy="17" r="1.7" fill="currentColor" stroke="none"/></svg></div>
+        <h3>Línea de la vida</h3><p>Tus ciclos de los 0 a los 80 años trazados sobre el perímetro del octograma.</p></div>
+      <div class="feature card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 20s-7-4.6-7-9.3A3.7 3.7 0 0 1 12 8a3.7 3.7 0 0 1 7 2.7C19 15.4 12 20 12 20z"/></svg></div>
+        <h3>Canales de amor y dinero</h3><p>Los puntos que muestran tu relación con el vínculo y con la abundancia.</p></div>
+    </div>
+  </section>
+
+  <section class="sec" id="como" aria-label="Cómo funciona">
+    <div class="section-head">
+      <p class="eyebrow">En tres pasos</p>
+      <h2>Cómo funciona</h2>
+      <p>De tu fecha de nacimiento a tu lectura completa, sin fricción y sin registro.</p>
+    </div>
+    <div class="steps" style="margin-top:26px">
+      <div class="step card"><div class="no">1</div><div><h4>Ingresa tu fecha</h4><p>Día, mes y año de nacimiento. Nada más: sin correo ni registro.</p></div></div>
+      <div class="step card"><div class="no">2</div><div><h4>Trazamos tu octograma</h4><p>Calculamos los 22 arcanos, el linaje, los 7 chakras y la línea de la vida.</p></div></div>
+      <div class="step card"><div class="no">3</div><div><h4>Interpreta tu lectura</h4><p>Tu arcano central, tu tabla de salud y tus tres propósitos, explicados.</p></div></div>
+    </div>
+  </section>
+
+  <section class="sec sec--tool" id="calc">
+    <div class="section-head">
+      <p class="eyebrow">Gratis y privado</p>
+      <h2>Traza tu Matriz del Destino</h2>
+      <p>Ingresa tu fecha de nacimiento. La matriz se calcula en tu navegador: tus datos nunca salen de tu dispositivo.</p>
+    </div>
 
     <form class="consult card" id="form" autocomplete="off">
       <p class="consult-title">Ingresa tu fecha de nacimiento</p>
@@ -323,13 +449,6 @@
         <button type="button" class="chip-ex" data-date="26-4-2001">26/04/2001</button>
       </div>
     </form>
-  </section>
-
-  <section class="steps" id="como" aria-label="Cómo funciona">
-    <div class="step card"><div class="no">1</div><div><h4>Ingresa tu fecha</h4><p>Día, mes y año de nacimiento. Nada más: sin correo ni registro.</p></div></div>
-    <div class="step card"><div class="no">2</div><div><h4>Trazamos tu octograma</h4><p>Calculamos los 22 arcanos, el linaje, los 7 chakras y la línea de la vida.</p></div></div>
-    <div class="step card"><div class="no">3</div><div><h4>Interpreta tu lectura</h4><p>Tu arcano central, tu tabla de salud y tus tres propósitos, explicados.</p></div></div>
-  </section>
 
   <section id="featured" class="featured card" hidden aria-live="polite">
     <div class="medallion"><span class="halo"></span><span id="featNum">–</span></div>
@@ -408,16 +527,81 @@
       </div>
     </div>
   </div>
+  </section>
 
-  <footer id="metodo">
+  <section class="sec" id="porque">
+    <div class="section-head">
+      <p class="eyebrow">Por qué Numen</p>
+      <h2>Autoconocimiento que puedes confiar</h2>
+      <p>Una herramienta seria, precisa y respetuosa con tus datos y con tu tiempo.</p>
+    </div>
+    <div class="why" style="margin-top:26px">
+      <div class="card">
+        <span class="wk"><svg class="star" viewBox="-12 -12 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8"><rect x="-8" y="-8" width="16" height="16"/><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)"/></g></svg>Exactitud</span>
+        <h3>Verificado punto por punto</h3><p>Cada número está comprobado contra el método original de Natalia Ladini.</p>
+      </div>
+      <div class="card">
+        <span class="wk"><svg class="star" viewBox="-12 -12 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8"><rect x="-8" y="-8" width="16" height="16"/><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)"/></g></svg>Privacidad</span>
+        <h3>Privado de verdad</h3><p>Todo el cálculo ocurre en tu navegador. No guardamos ni enviamos tu fecha.</p>
+      </div>
+      <div class="card">
+        <span class="wk"><svg class="star" viewBox="-12 -12 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8"><rect x="-8" y="-8" width="16" height="16"/><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)"/></g></svg>Acceso</span>
+        <h3>Gratis y sin registro</h3><p>Sin correo, sin cuenta, sin costo. Tu matriz completa en segundos.</p>
+      </div>
+      <div class="card">
+        <span class="wk"><svg class="star" viewBox="-12 -12 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8"><rect x="-8" y="-8" width="16" height="16"/><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)"/></g></svg>Claridad</span>
+        <h3>Hecho en español</h3><p>Arcanos, chakras y propósitos explicados con claridad, pensados para ti.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="faq">
+    <div class="section-head">
+      <p class="eyebrow">Preguntas frecuentes</p>
+      <h2>Lo que quizá te preguntas</h2>
+    </div>
+    <div class="faq" style="margin-top:24px">
+      <details><summary>¿Qué es la Matriz del Destino?</summary>
+        <p>Es un mapa de autoconocimiento basado en los 22 Arcanos Mayores del tarot. A partir de tu fecha
+        de nacimiento traza un octograma que refleja tu esencia, tu linaje, tus chakras y tu propósito de vida.</p></details>
+      <details><summary>¿Es lo mismo que la astrología o el tarot?</summary>
+        <p>Toma los 22 Arcanos Mayores del tarot y los ordena con una geometría numérica. No usa signos ni
+        planetas ni cartas al azar: parte únicamente de los números de tu fecha de nacimiento.</p></details>
+      <details><summary>¿Necesito mi hora de nacimiento?</summary>
+        <p>No. Basta con el día, el mes y el año. Con eso se calcula tu matriz completa.</p></details>
+      <details><summary>¿Numen predice el futuro?</summary>
+        <p>No. Es una herramienta de autoconocimiento, no de adivinación. Te muestra energías y patrones
+        para que tomes tus decisiones con más claridad; el futuro siempre es tuyo.</p></details>
+      <details><summary>¿Qué pasa con mis datos?</summary>
+        <p>Nada sale de tu dispositivo. El cálculo es 100 % local en tu navegador: no hay servidores,
+        ni registro, ni seguimiento de tu fecha de nacimiento.</p></details>
+      <details><summary>¿Cómo se calcula, exactamente?</summary>
+        <p>Con la reducción numérica de los arcanos (se suman los dígitos hasta quedar entre 1 y 22) y la
+        geometría del octograma. Encontrarás el detalle completo bajo “¿Cómo se calcula?” junto a tu lectura,
+        verificado punto por punto contra los ejemplos de dinaraaxanova.com.</p></details>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="cta-band">
+      <svg class="star" viewBox="-12 -12 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6"><rect x="-8" y="-8" width="16" height="16"/><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)"/></g></svg>
+      <h2>Tu matriz ya está escrita. Solo falta leerla.</h2>
+      <p>Descubre tu arcano central, tus chakras y tu propósito de vida en segundos, gratis.</p>
+      <a href="#calc" class="btn btn--primary">Trazar mi matriz del destino</a>
+    </div>
+  </section>
+
+  <footer>
     <div class="fbrand">
       <svg class="star" viewBox="-12 -12 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6"><rect x="-8" y="-8" width="16" height="16"/><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)"/></g></svg>
-      Matriz del Destino
+      Numen
     </div>
+    <p class="note"><b>Numen</b> — del latín, la fuerza espiritual que habita y guía; raíz que comparte con
+    <i>número</i>, porque tu matriz nace de los números de tu nacimiento.</p>
     <p class="note">La Matriz del Destino es una herramienta de autoconocimiento basada en los 22 Arcanos
     Mayores; no predice el futuro. Método de Natalia Ladini, divulgado en español por
-    <a href="https://dinaraaxanova.com/">Dinara Axanova</a>. Reproducción técnica libre del algoritmo del octograma,
-    verificada punto por punto.</p>
+    <a href="https://dinaraaxanova.com/">Dinara Axanova</a>. Reproducción técnica libre del algoritmo del
+    octograma, verificada punto por punto.</p>
   </footer>
 </main>
 
