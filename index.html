@@ -295,10 +295,10 @@ function drawMatrix(m){
       const nx=x/R, ny=y/R;                      // dirección radial para desplazar etiquetas
       s+=`<circle cx="${x}" cy="${y}" r="2.4" fill="var(--star)"/>`;
       const t2=(j===4);                          // punto medio de la arista (edad múltiplo de 5)
-      s+=`<text x="${x+nx*15}" y="${y+ny*15}" text-anchor="middle" dominant-baseline="central" `
+      s+=`<text x="${x+nx*21}" y="${y+ny*21}" text-anchor="middle" dominant-baseline="central" `
         +`font-size="${t2?13:11}" font-weight="${t2?700:600}" fill="var(--ink)">${vals[j]}</text>`;
       const ageP=(age+t*10);
-      s+=`<text x="${x+nx*31}" y="${y+ny*31}" text-anchor="middle" dominant-baseline="central" `
+      s+=`<text x="${x+nx*35}" y="${y+ny*35}" text-anchor="middle" dominant-baseline="central" `
         +`font-size="7.5" fill="var(--muted)">${ageP%1?ageP.toFixed(2).replace(/0$/,''):ageP}</text>`;
     }
   });
@@ -331,8 +331,8 @@ function drawMatrix(m){
   // Flechas de las líneas paterna (NW-SE, azul) y materna (NE-SW, roja), desde el centro
   const arrow=(ang,col,mk)=>{const e=P(ang,R*0.66);return `<line x1="0" y1="0" x2="${e[0]}" y2="${e[1]}" stroke="${col}" stroke-width="1.4" opacity=".85" marker-end="url(#${mk})"/>`;};
   s+=arrow(135,"#5b6bd0","arrPat")+arrow(315,"#5b6bd0","arrPat")+arrow(45,"#d06a4a","arrMat")+arrow(225,"#d06a4a","arrMat");
-  // Línea punteada del dinero ($): del centro-derecha hacia el sureste
-  s+=`<line x1="${R*0.31}" y1="${R*0.08}" x2="${R*0.77}" y2="${R*0.51}" stroke="var(--muted)" stroke-width="1" stroke-dasharray="4 3" opacity=".7"/>`;
+  // Línea punteada del dinero ($): desde el eje horizontal derecho, paralela a la diagonal, hacia el SE
+  s+=`<line x1="${R*0.40}" y1="${R*0.13}" x2="${R*0.66}" y2="${R*0.50}" stroke="var(--muted)" stroke-width="1" stroke-dasharray="4 3" opacity=".7"/>`;
   // Canal del amor (♥): dos puntos a la derecha del centro (dentro del anillo)
   //   L1 = reduce(2·Centro), L2 = reduce(Centro+social) — verificado en varias fechas
   const love1=reduce(m.C+m.C), love2=reduce(m.C+m.social);
@@ -360,7 +360,7 @@ function drawMatrix(m){
   // Vértices: N y W = corona (morado), E y S = raíz (rojo), diagonales = blancas
   [...sq1,...sq2].forEach(k=>{
     const c=vertexColor(k), big=(k.length===1);
-    s+=node(...pos[k],m[k],c,big?22:19,c===WHITE?"var(--ink)":"#fff8ee");
+    s+=node(...pos[k],m[k],c,big?18:16,c===WHITE?"var(--ink)":"#fff8ee");
   });
   // Canal del dinero ($) y del amor (♥) — solo en la esquina sureste (donde están los iconos):
   //   base = inner_SE (sobre la diagonal SE);  dinero = reduce(inner_SE+mid_E);  amor = reduce(inner_SE+mid_S)
