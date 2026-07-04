@@ -331,9 +331,9 @@ function drawMatrix(m){
   // Flechas de las líneas paterna (NW-SE, azul) y materna (NE-SW, roja), desde el centro
   const arrow=(ang,col,mk)=>{const e=P(ang,R*0.66);return `<line x1="0" y1="0" x2="${e[0]}" y2="${e[1]}" stroke="${col}" stroke-width="1.4" opacity=".85" marker-end="url(#${mk})"/>`;};
   s+=arrow(135,"#5b6bd0","arrPat")+arrow(315,"#5b6bd0","arrPat")+arrow(45,"#d06a4a","arrMat")+arrow(225,"#d06a4a","arrMat");
-  // Línea punteada del dinero ($): PARALELA al borde E→SE del octágono (dirección "/"),
-  // desde arriba (junto al 7/mid_E) bajando hacia el 19.
-  s+=`<line x1="${R*0.78}" y1="${-R*0.07}" x2="${R*0.48}" y2="${R*0.56}" stroke="var(--muted)" stroke-width="1" stroke-dasharray="4 3" opacity=".7"/>`;
+  // Línea punteada del dinero ($): del 7 (mid_E, derecha) al 3 (mid_S, abajo), cruzando la esquina SE.
+  // Pasa exactamente por el 17 (dinero) y el 13 (amor).
+  s+=`<line x1="${P(0,R*0.68)[0]}" y1="${P(0,R*0.68)[1]}" x2="${P(270,R*0.68)[0]}" y2="${P(270,R*0.68)[1]}" stroke="var(--muted)" stroke-width="1" stroke-dasharray="4 3" opacity=".7"/>`;
   // Canal del amor (♥): dos puntos a la derecha del centro (dentro del anillo)
   //   L1 = reduce(2·Centro), L2 = reduce(Centro+social) — verificado en varias fechas
   const love1=reduce(m.C+m.C), love2=reduce(m.C+m.social);
