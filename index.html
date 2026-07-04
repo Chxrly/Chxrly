@@ -56,7 +56,14 @@
     --ring:rgba(215,167,95,.4);
   }
 
+  /* El esquema de color nativo (calendario, scrollbars) sigue al tema */
+  :root{color-scheme:light}
+  @media (prefers-color-scheme:dark){:root{color-scheme:dark}}
+  :root[data-theme="light"]{color-scheme:light}
+  :root[data-theme="dark"]{color-scheme:dark}
+
   *{box-sizing:border-box}
+  [hidden]{display:none!important}
   html{scroll-behavior:smooth}
   body{
     margin:0; color:var(--ink); font-family:var(--sans); line-height:1.6;
@@ -149,20 +156,25 @@
   input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{
     outline:none;border-color:var(--gold);box-shadow:0 0 0 3px var(--ring)}
   a:focus-visible,summary:focus-visible{outline:2px solid var(--gold);outline-offset:2px;box-shadow:none}
+  /* Control segmentado (género · modo de fecha) — mismo lenguaje que los botones */
   .seg{display:inline-flex;border:1px solid var(--line);border-radius:var(--radius-sm);overflow:hidden;background:var(--card-2)}
-  .seg button{border:none;border-radius:0;background:transparent;color:var(--muted);padding:12px 16px;font-weight:600;font-size:14px}
+  .seg button{border:none;border-radius:0;background:transparent;color:var(--muted);padding:12px 16px;
+    font-family:var(--sans);font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:7px;cursor:pointer;
+    transition:background .15s, color .15s}
+  .seg button:hover{color:var(--ink)}
   .seg button[aria-pressed="true"]{background:var(--gold);color:#fff8ee}
+  .seg button[aria-pressed="true"]:hover{color:#fff8ee}
+  .seg button svg{width:15px;height:15px}
+  .modewrap{display:flex;justify-content:center;margin-bottom:18px}
 
-  .cta{
-    display:inline-flex;align-items:center;justify-content:center;gap:9px;
-    margin:18px auto 0;width:100%;max-width:340px;font-family:var(--sans);font-weight:650;font-size:16px;
-    cursor:pointer;padding:14px 26px;border-radius:var(--radius-sm);border:1px solid var(--gold-strong);
-    color:#fff8ee;background:linear-gradient(180deg,color-mix(in srgb,var(--gold) 88%,#fff 4%),var(--gold-strong));
-    box-shadow:0 8px 22px color-mix(in srgb,var(--gold) 40%,transparent);
-    transition:transform .08s, filter .15s, box-shadow .15s}
-  .cta:hover{filter:brightness(1.05);box-shadow:0 12px 30px color-mix(in srgb,var(--gold) 48%,transparent)}
-  .cta:active{transform:translateY(1px)}
-  .cta .glyph{font-size:15px}
+  /* Campo de fecha por calendario (input nativo) */
+  input[type="date"]{width:100%;min-width:210px;text-align:left;font-weight:600;font-variant-numeric:normal}
+  .field[hidden],.manual-only[hidden]{display:none}
+  .manual-only{display:flex;gap:12px;align-items:flex-end}
+
+  /* El botón de calcular usa el sistema .btn (armonizado con el resto) */
+  .consult .btn--block{margin:18px auto 0}
+  .btn .glyph{font-size:15px}
 
   .assurances{margin:14px auto 0;text-align:center;font-size:12.5px;color:var(--muted)}
   .examples{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:14px;
@@ -429,10 +441,24 @@
 
     <form class="consult card" id="form" autocomplete="off">
       <p class="consult-title">Ingresa tu fecha de nacimiento</p>
+      <div class="modewrap">
+        <div class="seg" role="group" aria-label="Cómo ingresar la fecha">
+          <button type="button" id="modeCal" aria-pressed="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3.5v3M16 3.5v3"/></svg>Calendario</button>
+          <button type="button" id="modeType" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M14 6l4 4"/></svg>Escribir</button>
+        </div>
+      </div>
       <div class="fields">
-        <div class="field"><label for="d">Día</label><input id="d" type="number" inputmode="numeric" min="1" max="31" value="31" required></div>
-        <div class="field"><label for="m">Mes</label><input id="m" type="number" inputmode="numeric" min="1" max="12" value="1" required></div>
-        <div class="field"><label for="y">Año</label><input id="y" type="number" inputmode="numeric" min="1900" max="2100" value="2003" required style="width:96px"></div>
+        <div class="field" id="calField">
+          <label for="dateCal">Fecha de nacimiento</label>
+          <input type="date" id="dateCal" value="2003-01-31" min="1900-01-01" max="2100-12-31">
+        </div>
+        <div class="manual-only" id="manualFields" hidden>
+          <div class="field"><label for="d">Día</label><input id="d" type="number" inputmode="numeric" min="1" max="31" value="31" required></div>
+          <div class="field"><label for="m">Mes</label><input id="m" type="number" inputmode="numeric" min="1" max="12" value="1" required></div>
+          <div class="field"><label for="y">Año</label><input id="y" type="number" inputmode="numeric" min="1900" max="2100" value="2003" required style="width:96px"></div>
+        </div>
         <div class="field"><label>Género</label>
           <div class="seg" role="group" aria-label="Género">
             <button type="button" id="gH" aria-pressed="true">Hombre</button>
@@ -440,7 +466,7 @@
           </div>
         </div>
       </div>
-      <button type="submit" class="cta">Calcular mi matriz <span class="glyph" aria-hidden="true">✧</span></button>
+      <button type="submit" class="btn btn--primary btn--block">Calcular mi matriz <span class="glyph" aria-hidden="true">✧</span></button>
       <p class="assurances">Gratis · Privado · Se calcula en tu navegador, sin registro</p>
       <div class="examples">
         <span>Prueba un ejemplo:</span>
@@ -871,26 +897,52 @@ function render(m,d,mo,y){
 }
 
 /* ===== Interacción ===== */
+const $=id=>document.getElementById(id);
+const pad=n=>String(n).padStart(2,"0");
+let dateMode="cal";                                   // 'cal' (calendario) | 'type' (escribir)
+
+// Los campos día/mes/año son la fuente de verdad; el calendario se mantiene en sync.
+function syncPartsFromCal(){
+  const v=$("dateCal").value; if(!v) return;
+  const [yy,mm,dd]=v.split("-");
+  $("d").value=+dd; $("m").value=+mm; $("y").value=+yy;
+}
+function syncCalFromParts(){
+  const d=+$("d").value, mo=+$("m").value, y=+$("y").value;
+  if(d&&mo&&y&&y>=1900&&y<=2100) $("dateCal").value=`${y}-${pad(mo)}-${pad(d)}`;
+}
+function setDateMode(mode){
+  dateMode=mode; const cal=(mode==="cal");
+  $("modeCal").setAttribute("aria-pressed",cal);
+  $("modeType").setAttribute("aria-pressed",!cal);
+  $("calField").hidden=!cal;
+  $("manualFields").hidden=cal;
+  if(cal) syncCalFromParts(); else syncPartsFromCal();
+}
+$("modeCal").addEventListener("click",()=>setDateMode("cal"));
+$("modeType").addEventListener("click",()=>setDateMode("type"));
+$("dateCal").addEventListener("input",()=>{ syncPartsFromCal(); if(!$("result").hidden) calc(false); });
+
 function calc(scroll){
-  const d=+document.getElementById("d").value, mo=+document.getElementById("m").value, y=+document.getElementById("y").value;
+  if(dateMode==="cal") syncPartsFromCal();
+  const d=+$("d").value, mo=+$("m").value, y=+$("y").value;
   if(!d||!mo||!y) return;
   const m=computeMatrix(d,mo,y);
   drawMatrix(m); render(m,d,mo,y);
-  if(scroll){ document.getElementById("featured").scrollIntoView({behavior:"smooth",block:"start"}); }
+  if(scroll){ $("featured").scrollIntoView({behavior:"smooth",block:"start"}); }
 }
-document.getElementById("form").addEventListener("submit",e=>{e.preventDefault();calc(true);});
-document.getElementById("gH").addEventListener("click",()=>setG("H"));
-document.getElementById("gM").addEventListener("click",()=>setG("M"));
+$("form").addEventListener("submit",e=>{e.preventDefault();calc(true);});
+$("gH").addEventListener("click",()=>setG("H"));
+$("gM").addEventListener("click",()=>setG("M"));
 function setG(g){gender=g;
-  document.getElementById("gH").setAttribute("aria-pressed",g==="H");
-  document.getElementById("gM").setAttribute("aria-pressed",g==="M");
-  if(!document.getElementById("result").hidden) calc(false);}
-// Fechas de ejemplo
+  $("gH").setAttribute("aria-pressed",g==="H");
+  $("gM").setAttribute("aria-pressed",g==="M");
+  if(!$("result").hidden) calc(false);}
+// Fechas de ejemplo (rellenan ambos modos)
 document.querySelectorAll(".chip-ex").forEach(b=>b.addEventListener("click",()=>{
   const [dd,mm,yy]=b.dataset.date.split("-");
-  document.getElementById("d").value=dd;
-  document.getElementById("m").value=mm;
-  document.getElementById("y").value=yy;
+  $("d").value=dd; $("m").value=mm; $("y").value=yy;
+  syncCalFromParts();
   calc(true);
 }));
 
@@ -898,13 +950,13 @@ document.querySelectorAll(".chip-ex").forEach(b=>b.addEventListener("click",()=>
 const root=document.documentElement, themeBtn=document.getElementById("themeBtn");
 function prefDark(){return window.matchMedia&&window.matchMedia("(prefers-color-scheme:dark)").matches;}
 function curTheme(){return root.getAttribute("data-theme")||(prefDark()?"dark":"light");}
-function applyThemeGlyph(){themeBtn.textContent=curTheme()==="dark"?"☀":"☾";}
-(function initTheme(){ try{const t=localStorage.getItem("md-theme"); if(t) root.setAttribute("data-theme",t);}catch(e){} applyThemeGlyph(); })();
+function applyTheme(){const t=curTheme();themeBtn.textContent=t==="dark"?"☀":"☾";root.style.colorScheme=t;}
+(function initTheme(){ try{const t=localStorage.getItem("md-theme"); if(t) root.setAttribute("data-theme",t);}catch(e){} applyTheme(); })();
 themeBtn.addEventListener("click",()=>{
   const next=curTheme()==="dark"?"light":"dark";
   root.setAttribute("data-theme",next);
   try{localStorage.setItem("md-theme",next);}catch(e){}
-  applyThemeGlyph();
+  applyTheme();
 });
 
 // Estado inicial: ejemplo 31/01/2003 (coincide con dinaraaxanova.com)
