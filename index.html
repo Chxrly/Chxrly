@@ -1,144 +1,353 @@
 <meta charset="utf-8">
-<title>Matriz del Destino — Calculadora Exacta</title>
+<title>Matriz del Destino — Calculadora de los 22 Arcanos</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Traza tu Matriz del Destino a partir de tu fecha de nacimiento: octograma de los 22 Arcanos Mayores, chakras, linaje y propósito de vida. Cálculo exacto en tu navegador.">
 <style>
   :root{
-    --bg:#f4efe6; --panel:#fbf8f2; --ink:#2a2440; --muted:#6b6480; --line:#ddd1bd;
-    --gold:#b8894a; --gold-strong:#9a6d33; --violet:#4b3b7a; --crimson:#9a2f47;
-    --amber:#e0a63a; --star:#3b2f66; --sub:#8a8398; --paper:#fffdf8;
+    /* — Astrolabio · tema claro (pergamino) — */
+    --bg:#efe9dd; --bg-2:#e8e0d0; --panel:#fbf7ef; --paper:#fffdf8; --card-2:#f5efe3;
+    --ink:#241c33; --ink-soft:#443a5c; --muted:#6a6280; --sub:#8a8398; --line:#e2d7c2;
+    --gold:#a9793a; --gold-strong:#8a5f28; --gold-soft:#e7d4b0;
+    --violet:#4b3b7a; --crimson:#9a2f47; --amber:#e0a63a; --star:#3b2f66;
+    --cosmos:#3a4fb0; /* enlaces / interacción */
+    /* 7 chakras (constantes en ambos temas) — usados por la carta y la tabla */
     --c-root:#c0392b; --c-sacral:#e67e22; --c-solar:#f1c40f; --c-heart:#27ae60;
     --c-throat:#2980b9; --c-brow:#3f3f9e; --c-crown:#7d3c98;
-    /* Colores de los 7 chakras (constantes en ambos temas) */
     --k-crown:#6d3f9c; --k-ajna:#2f66c7; --k-vish:#1596a3; --k-ana:#2fa457;
     --k-manip:#e0a63a; --k-svad:#e2761c; --k-root:#c0392b;
-    --shadow:0 1px 2px rgba(42,36,64,.08),0 10px 34px rgba(42,36,64,.12);
-    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
-    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --shadow:0 1px 2px rgba(36,28,51,.06), 0 14px 40px rgba(36,28,51,.10);
+    --shadow-lg:0 2px 6px rgba(36,28,51,.08), 0 30px 70px rgba(36,28,51,.16);
+    --ring:rgba(169,121,58,.35);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,"Times New Roman",serif;
+    --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --radius:18px; --radius-sm:12px;
   }
   @media (prefers-color-scheme:dark){
-    :root{--bg:#141019;--panel:#1d1826;--ink:#ece7f5;--muted:#a99fc4;--line:#332a44;
-      --gold:#d7a75f;--gold-strong:#e8bd77;--violet:#a394dd;--crimson:#e0768e;
-      --amber:#f0b94a;--star:#c9bdf0;--sub:#7c7594;--paper:#221c2e;
-      --shadow:0 1px 2px rgba(0,0,0,.4),0 14px 44px rgba(0,0,0,.5);}
+    :root{
+      --bg:#120e1a; --bg-2:#0d0a14; --panel:#1e1826; --paper:#251e31; --card-2:#241d30;
+      --ink:#ece7f5; --ink-soft:#cabce6; --muted:#a99fc4; --sub:#7c7594; --line:#352b48;
+      --gold:#d7a75f; --gold-strong:#e8bd77; --gold-soft:#5a4526;
+      --violet:#a394dd; --crimson:#e0768e; --amber:#f0b94a; --star:#c9bdf0;
+      --cosmos:#8ea2ff;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 16px 46px rgba(0,0,0,.55);
+      --shadow-lg:0 2px 8px rgba(0,0,0,.5), 0 34px 80px rgba(0,0,0,.6);
+      --ring:rgba(215,167,95,.4);
+    }
   }
-  :root[data-theme="light"]{--bg:#f4efe6;--panel:#fbf8f2;--ink:#2a2440;--muted:#6b6480;
-    --line:#ddd1bd;--gold:#b8894a;--gold-strong:#9a6d33;--violet:#4b3b7a;--crimson:#9a2f47;
-    --amber:#e0a63a;--star:#3b2f66;--sub:#8a8398;--paper:#fffdf8;
-    --shadow:0 1px 2px rgba(42,36,64,.08),0 10px 34px rgba(42,36,64,.12);}
-  :root[data-theme="dark"]{--bg:#141019;--panel:#1d1826;--ink:#ece7f5;--muted:#a99fc4;
-    --line:#332a44;--gold:#d7a75f;--gold-strong:#e8bd77;--violet:#a394dd;--crimson:#e0768e;
-    --amber:#f0b94a;--star:#c9bdf0;--sub:#7c7594;--paper:#221c2e;
-    --shadow:0 1px 2px rgba(0,0,0,.4),0 14px 44px rgba(0,0,0,.5);}
+  :root[data-theme="light"]{
+    --bg:#efe9dd; --bg-2:#e8e0d0; --panel:#fbf7ef; --paper:#fffdf8; --card-2:#f5efe3;
+    --ink:#241c33; --ink-soft:#443a5c; --muted:#6a6280; --sub:#8a8398; --line:#e2d7c2;
+    --gold:#a9793a; --gold-strong:#8a5f28; --gold-soft:#e7d4b0; --violet:#4b3b7a;
+    --star:#3b2f66; --cosmos:#3a4fb0;
+    --shadow:0 1px 2px rgba(36,28,51,.06), 0 14px 40px rgba(36,28,51,.10);
+    --shadow-lg:0 2px 6px rgba(36,28,51,.08), 0 30px 70px rgba(36,28,51,.16);
+    --ring:rgba(169,121,58,.35);
+  }
+  :root[data-theme="dark"]{
+    --bg:#120e1a; --bg-2:#0d0a14; --panel:#1e1826; --paper:#251e31; --card-2:#241d30;
+    --ink:#ece7f5; --ink-soft:#cabce6; --muted:#a99fc4; --sub:#7c7594; --line:#352b48;
+    --gold:#d7a75f; --gold-strong:#e8bd77; --gold-soft:#5a4526; --violet:#a394dd;
+    --star:#c9bdf0; --cosmos:#8ea2ff;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 16px 46px rgba(0,0,0,.55);
+    --shadow-lg:0 2px 8px rgba(0,0,0,.5), 0 34px 80px rgba(0,0,0,.6);
+    --ring:rgba(215,167,95,.4);
+  }
 
   *{box-sizing:border-box}
-  body{margin:0;color:var(--ink);font-family:var(--sans);line-height:1.55;
-    -webkit-font-smoothing:antialiased;
-    background:radial-gradient(1100px 560px at 50% -8%,color-mix(in srgb,var(--gold) 14%,transparent),transparent 62%),var(--bg);}
-  .wrap{max-width:1120px;margin:0 auto;padding:clamp(18px,4vw,44px) 18px 72px;}
-  header{text-align:center;margin-bottom:22px;}
-  .eyebrow{text-transform:uppercase;letter-spacing:.32em;font-size:11px;
-    color:var(--gold-strong);font-weight:600;margin:0 0 8px;}
-  h1{font-family:var(--serif);font-weight:600;font-size:clamp(28px,5vw,44px);
-    margin:0 0 8px;text-wrap:balance;}
-  header p{max-width:56ch;margin:6px auto 0;color:var(--muted);font-size:15px;}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; color:var(--ink); font-family:var(--sans); line-height:1.6;
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    background:
+      radial-gradient(1200px 620px at 50% -12%, color-mix(in srgb,var(--gold) 16%,transparent), transparent 60%),
+      radial-gradient(900px 500px at 88% 8%, color-mix(in srgb,var(--violet) 14%,transparent), transparent 55%),
+      var(--bg);
+    background-attachment:fixed;
+  }
+  /* Cielo estrellado sutil */
+  body::before{
+    content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+      radial-gradient(1.4px 1.4px at 12% 22%, color-mix(in srgb,var(--star) 55%,transparent), transparent),
+      radial-gradient(1.2px 1.2px at 78% 16%, color-mix(in srgb,var(--star) 45%,transparent), transparent),
+      radial-gradient(1.6px 1.6px at 62% 62%, color-mix(in srgb,var(--star) 40%,transparent), transparent),
+      radial-gradient(1.2px 1.2px at 32% 74%, color-mix(in srgb,var(--star) 40%,transparent), transparent),
+      radial-gradient(1.3px 1.3px at 90% 82%, color-mix(in srgb,var(--star) 35%,transparent), transparent);
+    opacity:.5;
+  }
+  @media (prefers-reduced-motion:no-preference){
+    body::before{animation:twinkle 7s ease-in-out infinite alternate}
+  }
+  @keyframes twinkle{from{opacity:.32}to{opacity:.6}}
 
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);}
-  form.controls{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;justify-content:center;
-    padding:16px 18px;margin:0 auto 22px;max-width:660px;}
-  .field{display:flex;flex-direction:column;gap:6px;}
-  .field label{font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:600;}
-  input,select{font-family:var(--sans);font-size:16px;padding:10px 12px;border:1px solid var(--line);
-    border-radius:10px;background:var(--bg);color:var(--ink);}
-  input{width:82px;text-align:center;font-variant-numeric:tabular-nums;}
-  input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
-  .seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;}
-  .seg button{border:none;border-radius:0;background:transparent;color:var(--muted);padding:10px 16px;font-weight:600;}
-  .seg button[aria-pressed="true"]{background:var(--gold);color:#fff8ee;}
-  button{font-family:var(--sans);font-weight:600;font-size:15px;cursor:pointer;padding:11px 22px;
-    border-radius:10px;border:1px solid var(--gold-strong);background:var(--gold);color:#fff8ee;
-    transition:transform .08s,filter .15s;}
-  button:hover{filter:brightness(1.06)} button:active{transform:translateY(1px)}
+  a{color:var(--cosmos);text-decoration:none}
+  a:hover{text-decoration:underline;text-underline-offset:3px}
 
-  .layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:24px;align-items:start;}
-  @media (max-width:880px){.layout{grid-template-columns:1fr}}
-  .chart-card{padding:10px;overflow-x:auto;}
-  svg{display:block;width:100%;height:auto;max-width:600px;margin:0 auto;}
-  .legend{display:flex;gap:12px 16px;flex-wrap:wrap;justify-content:center;font-size:12px;color:var(--muted);padding:6px 10px 12px;}
-  .legend span{display:inline-flex;align-items:center;gap:6px;}
-  .dot{width:11px;height:11px;border-radius:50%;}
+  /* — Barra superior — */
+  .topbar{
+    position:sticky; top:0; z-index:20;
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    padding:12px clamp(16px,4vw,44px);
+    background:color-mix(in srgb,var(--bg) 82%,transparent);
+    backdrop-filter:saturate(1.2) blur(10px);
+    border-bottom:1px solid color-mix(in srgb,var(--line) 70%,transparent);
+  }
+  .brand{display:inline-flex;align-items:center;gap:10px;color:var(--ink);font-weight:600}
+  .brand:hover{text-decoration:none}
+  .brand .star{width:22px;height:22px;color:var(--gold-strong)}
+  .brand b{font-family:var(--serif);font-weight:600;font-size:17px;letter-spacing:.01em}
+  .topnav{display:flex;align-items:center;gap:6px}
+  .topnav a{color:var(--muted);font-size:13.5px;padding:8px 12px;border-radius:9px}
+  .topnav a:hover{color:var(--ink);background:color-mix(in srgb,var(--line) 40%,transparent);text-decoration:none}
+  .icon-btn{
+    display:inline-grid;place-items:center;width:38px;height:38px;border-radius:10px;
+    border:1px solid var(--line);background:var(--panel);color:var(--ink-soft);cursor:pointer;
+    font-size:16px;transition:border-color .15s, color .15s, transform .08s;
+  }
+  .icon-btn:hover{border-color:var(--gold);color:var(--gold-strong)}
+  .icon-btn:active{transform:translateY(1px)}
+  @media (max-width:640px){.topnav a[href="#como"],.topnav a[href="#metodo"]{display:none}}
 
-  .read{padding:18px 20px;}
-  .read h2{font-family:var(--serif);font-size:20px;margin:0 0 2px;font-weight:600;}
-  .read .sub{color:var(--muted);font-size:13px;margin:0 0 14px;}
-  .block{margin-top:6px;}
-  .block h3{font-family:var(--serif);font-size:15px;margin:16px 0 8px;font-weight:600;
-    display:flex;align-items:center;gap:8px;}
-  .block h3::before{content:"";width:16px;height:1px;background:var(--gold);}
-  .rows{display:flex;flex-direction:column;gap:1px;}
-  .row{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:baseline;padding:8px;border-radius:8px;}
-  .row:nth-child(odd){background:color-mix(in srgb,var(--line) 26%,transparent);}
-  .num{font-weight:800;font-variant-numeric:tabular-nums;font-size:15px;text-align:center;color:var(--gold-strong);}
-  .rn-name{font-weight:600;font-size:14px;}
-  .rn-name small{display:block;font-weight:400;color:var(--muted);font-size:12px;margin-top:1px;}
-  .rn-tag{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);white-space:nowrap;align-self:center;}
+  .wrap{position:relative;z-index:1;max-width:1140px;margin:0 auto;padding:clamp(28px,5vw,56px) 18px 40px}
 
-  table{border-collapse:collapse;width:100%;font-size:13px;margin-top:4px;}
-  th,td{padding:7px 8px;text-align:center;border-bottom:1px solid var(--line);}
-  th{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600;}
-  td:first-child,th:first-child{text-align:left;}
-  .chk{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;vertical-align:middle;}
-  td b{font-variant-numeric:tabular-nums;color:var(--gold-strong);}
-  .cross{font-variant-numeric:tabular-nums;}
+  /* — Héroe — */
+  .hero{text-align:center;max-width:720px;margin:0 auto clamp(28px,4vw,44px)}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:9px;
+    text-transform:uppercase;letter-spacing:.28em;font-size:11px;font-weight:600;
+    color:var(--gold-strong);margin:0 0 14px;
+  }
+  .eyebrow .star{width:14px;height:14px;color:currentColor}
+  h1{
+    font-family:var(--serif);font-weight:600;font-size:clamp(32px,6vw,54px);line-height:1.05;
+    margin:0 0 14px;text-wrap:balance;letter-spacing:-.01em;
+  }
+  h1 .em{color:var(--gold-strong);font-style:italic}
+  .lede{max-width:60ch;margin:0 auto;color:var(--ink-soft);font-size:clamp(15px,2.2vw,17px)}
 
-  tfoot td{font-weight:700;border-top:2px solid var(--line);border-bottom:none;color:var(--muted);}
-  tfoot td b{color:var(--gold-strong);}
-  .purposes{display:flex;flex-direction:column;gap:10px;margin-top:4px;}
-  .purpose{border:1px solid var(--line);border-radius:11px;padding:12px 14px;background:var(--paper);}
-  .purpose .ph{display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
-  .purpose .ph b{font-size:14px;} .purpose .ph .age{font-size:11px;color:var(--muted);}
-  .purpose .pb{display:flex;align-items:center;gap:12px;margin-top:8px;flex-wrap:wrap;}
-  .brace{display:flex;align-items:center;gap:8px;}
-  .brace .pair{display:flex;flex-direction:column;gap:4px;}
-  .chip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);}
-  .chip .v{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:26px;
-    border-radius:50%;border:1.5px solid var(--gold);color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums;font-size:13px;}
-  .eq{font-size:18px;color:var(--muted);}
+  /* — Tarjetas base — */
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+
+  /* — Tarjeta de consulta (el héroe ES la herramienta) — */
+  .consult{max-width:640px;margin:26px auto 0;padding:22px clamp(16px,3vw,26px) 20px;position:relative;overflow:hidden}
+  .consult::after{ /* filo dorado superior */
+    content:"";position:absolute;top:0;left:0;right:0;height:3px;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.85}
+  .consult-title{
+    font-family:var(--serif);font-size:18px;font-weight:600;margin:0 0 16px;text-align:center}
+  .fields{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;justify-content:center}
+  .field{display:flex;flex-direction:column;gap:7px}
+  .field label{font-size:10.5px;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);font-weight:600;text-align:center}
+  input,select{
+    font-family:var(--sans);font-size:17px;padding:12px 12px;border:1px solid var(--line);
+    border-radius:var(--radius-sm);background:var(--card-2);color:var(--ink);transition:border-color .15s, box-shadow .15s}
+  input{width:78px;text-align:center;font-variant-numeric:tabular-nums;font-weight:600}
+  input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{
+    outline:none;border-color:var(--gold);box-shadow:0 0 0 3px var(--ring)}
+  a:focus-visible,summary:focus-visible{outline:2px solid var(--gold);outline-offset:2px;box-shadow:none}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:var(--radius-sm);overflow:hidden;background:var(--card-2)}
+  .seg button{border:none;border-radius:0;background:transparent;color:var(--muted);padding:12px 16px;font-weight:600;font-size:14px}
+  .seg button[aria-pressed="true"]{background:var(--gold);color:#fff8ee}
+
+  .cta{
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    margin:18px auto 0;width:100%;max-width:340px;font-family:var(--sans);font-weight:650;font-size:16px;
+    cursor:pointer;padding:14px 26px;border-radius:var(--radius-sm);border:1px solid var(--gold-strong);
+    color:#fff8ee;background:linear-gradient(180deg,color-mix(in srgb,var(--gold) 88%,#fff 4%),var(--gold-strong));
+    box-shadow:0 8px 22px color-mix(in srgb,var(--gold) 40%,transparent);
+    transition:transform .08s, filter .15s, box-shadow .15s}
+  .cta:hover{filter:brightness(1.05);box-shadow:0 12px 30px color-mix(in srgb,var(--gold) 48%,transparent)}
+  .cta:active{transform:translateY(1px)}
+  .cta .glyph{font-size:15px}
+
+  .assurances{margin:14px auto 0;text-align:center;font-size:12.5px;color:var(--muted)}
+  .examples{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:14px;
+    padding-top:14px;border-top:1px dashed var(--line)}
+  .examples > span{font-size:12px;color:var(--muted)}
+  .chip-ex{
+    font-family:var(--sans);font-size:12.5px;font-variant-numeric:tabular-nums;cursor:pointer;
+    padding:6px 11px;border-radius:999px;border:1px solid var(--line);background:var(--paper);color:var(--ink-soft);
+    transition:border-color .15s, color .15s, background .15s}
+  .chip-ex:hover{border-color:var(--gold);color:var(--gold-strong);background:var(--card-2)}
+
+  /* — Cómo funciona (secuencia real) — */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:900px;margin:clamp(30px,5vw,52px) auto 0}
+  @media (max-width:680px){.steps{grid-template-columns:1fr;gap:12px}}
+  .step{display:flex;gap:14px;align-items:flex-start;padding:16px 18px}
+  .step .no{
+    flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;
+    font-family:var(--serif);font-weight:700;color:var(--gold-strong);
+    border:1px solid var(--gold);background:color-mix(in srgb,var(--gold) 10%,transparent);
+    font-variant-numeric:tabular-nums}
+  .step h4{margin:2px 0 3px;font-size:14.5px;font-family:var(--serif);font-weight:600}
+  .step p{margin:0;font-size:13px;color:var(--muted)}
+
+  .section-head{text-align:center;max-width:60ch;margin:clamp(34px,5vw,56px) auto 0}
+  .section-head .eyebrow{margin-bottom:10px}
+  .section-head h2{font-family:var(--serif);font-weight:600;font-size:clamp(22px,3.4vw,30px);margin:0;text-wrap:balance}
+  .section-head p{color:var(--muted);font-size:14.5px;margin:8px auto 0}
+
+  /* — Resultado destacado — */
+  .featured{
+    margin:22px auto 0;max-width:1140px;padding:22px clamp(18px,3vw,30px);
+    display:grid;grid-template-columns:auto 1fr;gap:22px 26px;align-items:center;
+    background:
+      radial-gradient(120% 140% at 0% 0%, color-mix(in srgb,var(--gold) 12%,transparent), transparent 60%),
+      var(--panel);
+    border-color:color-mix(in srgb,var(--gold) 40%,var(--line))}
+  .medallion{
+    position:relative;display:grid;place-items:center;width:96px;height:96px;border-radius:50%;
+    color:#fff8ee;font-family:var(--serif);font-weight:700;font-size:40px;font-variant-numeric:tabular-nums;
+    background:radial-gradient(circle at 32% 28%, color-mix(in srgb,var(--k-manip) 88%,#fff 12%), var(--gold-strong));
+    box-shadow:0 10px 26px color-mix(in srgb,var(--gold) 45%,transparent), inset 0 0 0 3px rgba(255,255,255,.25)}
+  .medallion .halo{position:absolute;inset:-9px;border-radius:50%;border:1px solid var(--gold);opacity:.5}
+  .feat-body .flabel{text-transform:uppercase;letter-spacing:.2em;font-size:11px;color:var(--gold-strong);font-weight:600;margin:0 0 3px}
+  .feat-body h3{font-family:var(--serif);font-weight:600;font-size:clamp(20px,3vw,26px);margin:0 0 4px}
+  .feat-body .fmean{margin:0 0 14px;color:var(--ink-soft);font-size:14.5px;max-width:52ch}
+  .fstats{display:flex;gap:10px;flex-wrap:wrap}
+  .fstat{display:flex;align-items:center;gap:9px;padding:8px 13px;border:1px solid var(--line);border-radius:999px;background:var(--card-2)}
+  .fstat .fv{font-family:var(--serif);font-weight:700;font-size:16px;color:var(--gold-strong);font-variant-numeric:tabular-nums}
+  .fstat .fk{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+  @media (max-width:560px){.featured{grid-template-columns:1fr;justify-items:center;text-align:center}
+    .feat-body .fmean{margin-inline:auto}.fstats{justify-content:center}}
+
+  /* — Layout carta + lectura — */
+  .layout{display:grid;grid-template-columns:minmax(0,1.22fr) minmax(0,1fr);gap:22px;align-items:start;margin-top:22px}
+  @media (max-width:900px){.layout{grid-template-columns:1fr}}
+  .chart-card{padding:14px 12px 8px;overflow-x:auto;position:sticky;top:72px}
+  @media (max-width:900px){.chart-card{position:static}}
+  .chart-cap{text-align:center;font-size:11px;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);margin:2px 0 6px}
+  svg#matrix{display:block;width:100%;height:auto;max-width:600px;margin:0 auto}
+  .legend{display:flex;gap:10px 14px;flex-wrap:wrap;justify-content:center;font-size:11.5px;color:var(--muted);padding:10px 10px 12px}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:10px;height:10px;border-radius:50%}
+
+  .read{padding:20px 22px}
+  .read h2{font-family:var(--serif);font-size:21px;margin:0 0 3px;font-weight:600}
+  .read .sub{color:var(--muted);font-size:13px;margin:0 0 6px}
+  .block{margin-top:8px}
+  .block h3{font-family:var(--serif);font-size:15.5px;margin:20px 0 4px;font-weight:600;display:flex;align-items:center;gap:9px}
+  .block h3::before{content:"";width:15px;height:1px;background:var(--gold);flex:none}
+  .hint{font-size:12.5px;color:var(--muted);margin:0 0 10px 24px}
+  .rows{display:flex;flex-direction:column;gap:1px}
+  .row{display:grid;grid-template-columns:32px 1fr auto;gap:10px;align-items:baseline;padding:9px 8px;border-radius:9px}
+  .row:nth-child(odd){background:color-mix(in srgb,var(--line) 28%,transparent)}
+  .num{font-family:var(--serif);font-weight:700;font-variant-numeric:tabular-nums;font-size:16px;text-align:center;color:var(--gold-strong)}
+  .rn-name{font-weight:600;font-size:14px}
+  .rn-name small{display:block;font-weight:400;color:var(--muted);font-size:12px;margin-top:1px}
+  .rn-tag{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);white-space:nowrap;align-self:center}
+
+  table{border-collapse:collapse;width:100%;font-size:13px;margin-top:4px}
+  th,td{padding:8px;text-align:center;border-bottom:1px solid var(--line)}
+  th{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600}
+  td:first-child,th:first-child{text-align:left}
+  .chk{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;vertical-align:middle}
+  td b{font-variant-numeric:tabular-nums;color:var(--gold-strong)}
+  .cross{font-variant-numeric:tabular-nums}
+  tfoot td{font-weight:700;border-top:2px solid var(--line);border-bottom:none;color:var(--muted)}
+  tfoot td b{color:var(--gold-strong)}
+
+  .purposes{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+  .purpose{border:1px solid var(--line);border-radius:13px;padding:13px 15px;background:var(--card-2)}
+  .purpose .ph{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+  .purpose .ph b{font-size:14px;font-family:var(--serif)} .purpose .ph .age{font-size:11px;color:var(--muted)}
+  .purpose .pb{display:flex;align-items:center;gap:12px;margin-top:9px;flex-wrap:wrap}
+  .brace{display:flex;align-items:center;gap:8px}
+  .brace .pair{display:flex;flex-direction:column;gap:4px}
+  .chip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}
+  .chip .v{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:26px;border-radius:50%;
+    border:1.5px solid var(--gold);color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums;font-size:13px}
+  .eq{font-size:18px;color:var(--muted)}
   .res{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:34px;border-radius:50%;
-    background:var(--gold);color:#fff8ee;font-weight:800;font-variant-numeric:tabular-nums;}
-  .res-arc{font-size:12.5px;color:var(--muted);}
+    background:var(--gold);color:#fff8ee;font-weight:800;font-variant-numeric:tabular-nums}
+  .res-arc{font-size:12.5px;color:var(--muted)}
 
-  .empty{color:var(--muted);text-align:center;padding:50px 20px;font-size:15px;}
-  details{margin-top:14px;border:1px solid var(--line);border-radius:10px;padding:2px 12px;background:var(--paper);}
-  summary{cursor:pointer;font-weight:600;font-size:13px;padding:8px 0;color:var(--ink);}
-  details p{font-size:12.5px;color:var(--muted);margin:0 0 10px;}
-  footer{margin-top:36px;text-align:center;color:var(--muted);font-size:12px;line-height:1.7;}
-  footer a{color:var(--gold-strong);}
-  .note{max-width:64ch;margin:6px auto 0;}
+  .empty{color:var(--muted);text-align:center;padding:54px 20px;font-size:15px}
+  .empty .star{width:30px;height:30px;color:var(--gold);opacity:.7;margin:0 auto 12px;display:block}
+  details{margin-top:16px;border:1px solid var(--line);border-radius:12px;padding:2px 14px;background:var(--card-2)}
+  summary{cursor:pointer;font-weight:600;font-size:13px;padding:10px 0;color:var(--ink)}
+  details p{font-size:12.5px;color:var(--muted);margin:0 0 12px}
+
+  footer{margin-top:clamp(40px,6vw,72px);padding-top:24px;border-top:1px solid var(--line);text-align:center;color:var(--muted);font-size:12.5px;line-height:1.75}
+  footer .fbrand{display:inline-flex;align-items:center;gap:8px;color:var(--ink);font-family:var(--serif);font-size:15px;margin-bottom:8px}
+  footer .fbrand .star{width:16px;height:16px;color:var(--gold-strong)}
+  .note{max-width:66ch;margin:6px auto 0}
+
+  @media (prefers-reduced-motion:no-preference){
+    .reveal{animation:fadeUp .5s cubic-bezier(.2,.7,.3,1) both}
+  }
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 </style>
 
-<div class="wrap">
-  <header>
-    <p class="eyebrow">Método de los 22 Arcanos · Cálculo exacto</p>
-    <h1>Matriz del Destino</h1>
-    <p>Introduce tu fecha de nacimiento y obtén el octograma completo: cuadrado personal,
-       línea del linaje, chakras, propósito y tabla de salud. Todo se calcula en tu navegador.</p>
-  </header>
+<header class="topbar">
+  <a class="brand" href="#top" aria-label="Matriz del Destino, inicio">
+    <svg class="star" viewBox="-12 -12 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6"><rect x="-8" y="-8" width="16" height="16"/><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)"/></g></svg>
+    <b>Matriz del Destino</b>
+  </a>
+  <nav class="topnav">
+    <a href="#como">Cómo funciona</a>
+    <a href="#metodo">Método</a>
+    <button class="icon-btn" id="themeBtn" type="button" aria-label="Cambiar entre tema claro y oscuro" title="Cambiar tema">◐</button>
+  </nav>
+</header>
 
-  <form class="controls card" id="form" autocomplete="off">
-    <div class="field"><label for="d">Día</label><input id="d" type="number" min="1" max="31" value="31" required></div>
-    <div class="field"><label for="m">Mes</label><input id="m" type="number" min="1" max="12" value="1" required></div>
-    <div class="field"><label for="y">Año</label><input id="y" type="number" min="1900" max="2100" value="2003" required style="width:100px"></div>
-    <div class="field"><label>Género</label>
-      <div class="seg" role="group" aria-label="Género">
-        <button type="button" id="gH" aria-pressed="true">Hombre</button>
-        <button type="button" id="gM" aria-pressed="false">Mujer</button>
+<main class="wrap" id="top">
+  <section class="hero">
+    <p class="eyebrow">
+      <svg class="star" viewBox="-12 -12 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8"><rect x="-8" y="-8" width="16" height="16"/><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)"/></g></svg>
+      Método de los 22 Arcanos Mayores
+    </p>
+    <h1>Descubre tu <span class="em">Matriz del Destino</span></h1>
+    <p class="lede">Tu fecha de nacimiento traza un octograma de arcanos: tu alma, tu linaje, tus chakras
+      y tu propósito de vida. Ingresa tu fecha y obtén la lectura completa en segundos.</p>
+
+    <form class="consult card" id="form" autocomplete="off">
+      <p class="consult-title">Ingresa tu fecha de nacimiento</p>
+      <div class="fields">
+        <div class="field"><label for="d">Día</label><input id="d" type="number" inputmode="numeric" min="1" max="31" value="31" required></div>
+        <div class="field"><label for="m">Mes</label><input id="m" type="number" inputmode="numeric" min="1" max="12" value="1" required></div>
+        <div class="field"><label for="y">Año</label><input id="y" type="number" inputmode="numeric" min="1900" max="2100" value="2003" required style="width:96px"></div>
+        <div class="field"><label>Género</label>
+          <div class="seg" role="group" aria-label="Género">
+            <button type="button" id="gH" aria-pressed="true">Hombre</button>
+            <button type="button" id="gM" aria-pressed="false">Mujer</button>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="cta">Calcular mi matriz <span class="glyph" aria-hidden="true">✧</span></button>
+      <p class="assurances">Gratis · Privado · Se calcula en tu navegador, sin registro</p>
+      <div class="examples">
+        <span>Prueba un ejemplo:</span>
+        <button type="button" class="chip-ex" data-date="31-1-2003">31/01/2003</button>
+        <button type="button" class="chip-ex" data-date="1-1-2001">01/01/2001</button>
+        <button type="button" class="chip-ex" data-date="26-4-2001">26/04/2001</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="steps" id="como" aria-label="Cómo funciona">
+    <div class="step card"><div class="no">1</div><div><h4>Ingresa tu fecha</h4><p>Día, mes y año de nacimiento. Nada más: sin correo ni registro.</p></div></div>
+    <div class="step card"><div class="no">2</div><div><h4>Trazamos tu octograma</h4><p>Calculamos los 22 arcanos, el linaje, los 7 chakras y la línea de la vida.</p></div></div>
+    <div class="step card"><div class="no">3</div><div><h4>Interpreta tu lectura</h4><p>Tu arcano central, tu tabla de salud y tus tres propósitos, explicados.</p></div></div>
+  </section>
+
+  <section id="featured" class="featured card" hidden aria-live="polite">
+    <div class="medallion"><span class="halo"></span><span id="featNum">–</span></div>
+    <div class="feat-body">
+      <p class="flabel">Tu arcano central · el alma</p>
+      <h3 id="featName">—</h3>
+      <p class="fmean" id="featMean">—</p>
+      <div class="fstats">
+        <div class="fstat"><span class="fv" id="fMision">–</span><span class="fk">Misión</span></div>
+        <div class="fstat"><span class="fv" id="fPersonal">–</span><span class="fk">Prop. personal</span></div>
+        <div class="fstat"><span class="fv" id="fEspiritual">–</span><span class="fk">Prop. espiritual</span></div>
       </div>
     </div>
-    <button type="submit">Calcular ↗</button>
-  </form>
+  </section>
 
   <div class="layout">
     <div class="card chart-card">
+      <p class="chart-cap">Tu octograma del destino</p>
       <svg id="matrix" viewBox="-350 -368 700 736" role="img" aria-label="Octograma de la Matriz del Destino"></svg>
       <div class="legend">
         <span><i class="dot" style="background:var(--k-crown)"></i>Corona (día · mes)</span>
@@ -152,18 +361,23 @@
     </div>
 
     <div class="card read" id="read">
-      <div class="empty" id="empty">Tu lectura aparecerá aquí tras calcular la matriz.</div>
+      <div class="empty" id="empty">
+        <svg class="star" viewBox="-12 -12 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.4"><rect x="-8" y="-8" width="16" height="16"/><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)"/></g></svg>
+        Tu lectura aparecerá aquí en cuanto calcules tu matriz.
+      </div>
       <div id="result" hidden>
         <h2 id="rTitle">Tu Matriz del Destino</h2>
         <p class="sub" id="rSub"></p>
 
         <div class="block">
           <h3>Energías principales</h3>
+          <p class="hint">Los arcanos que rigen tu identidad, tu día, tu linaje y tu misión.</p>
           <div class="rows" id="mainRows"></div>
         </div>
 
         <div class="block">
           <h3>Tabla de salud · 7 chakras</h3>
+          <p class="hint">Cómo fluye tu energía por cada chakra: cuerpo, energía y emoción.</p>
           <table id="health">
             <thead><tr><th>Chakra</th><th>Físico</th><th>Energía</th><th>Emoción</th></tr></thead>
             <tbody></tbody>
@@ -173,6 +387,7 @@
 
         <div class="block">
           <h3>Propósitos de vida</h3>
+          <p class="hint">Aquello que viniste a resolver y a dar, por etapas de vida.</p>
           <div class="purposes" id="purposes"></div>
         </div>
 
@@ -187,19 +402,24 @@
              (mes→centro→misión); Emoción = Físico+Energía; el Total reduce la suma de cada columna.<br>
              <b>Propósitos:</b> personal = (Cielo=mes+misión)+(Tierra=día+año); social = suma de las dos
              diagonales del linaje; espiritual = personal+social.<br>
-             Verificado punto por punto contra el ejemplo 31/01/2003 de dinaraaxanova.com: octograma,
+             Verificado punto por punto contra los ejemplos de dinaraaxanova.com: octograma,
              tabla de salud (7 chakras + total) y los tres propósitos coinciden exactamente.</p>
         </details>
       </div>
     </div>
   </div>
 
-  <footer>
+  <footer id="metodo">
+    <div class="fbrand">
+      <svg class="star" viewBox="-12 -12 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6"><rect x="-8" y="-8" width="16" height="16"/><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)"/></g></svg>
+      Matriz del Destino
+    </div>
     <p class="note">La Matriz del Destino es una herramienta de autoconocimiento basada en los 22 Arcanos
     Mayores; no predice el futuro. Método de Natalia Ladini, divulgado en español por
-    <a href="https://dinaraaxanova.com/">Dinara Axanova</a>. Reproducción técnica libre del algoritmo del octograma.</p>
+    <a href="https://dinaraaxanova.com/">Dinara Axanova</a>. Reproducción técnica libre del algoritmo del octograma,
+    verificada punto por punto.</p>
   </footer>
-</div>
+</main>
 
 <script>
 /* ===== 22 Arcanos Mayores ===== */
@@ -376,8 +596,6 @@ function drawMatrix(m){
   s+=`<text x="${R*0.14}" y="${R*0.31}" font-size="16" text-anchor="middle" dominant-baseline="central" fill="#d0552e">♥</text>`;
   s+=`<text x="${R*0.32}" y="${R*0.12}" font-size="15" font-weight="700" text-anchor="middle" dominant-baseline="central" fill="#8ab933">$</text>`;
   // Etiquetas de las líneas (itálica serif, DIBUJADAS AL FINAL para que no las tape nada)
-  // Etiquetas centradas EXACTAMENTE sobre cada diagonal (dominant-baseline central = van sobre la línea,
-  // no por encima). Tamaño reducido para caber entre el centro y el punto del anillo.
   const lp=P(135,R*0.34), lm=P(45,R*0.34);
   s+=`<text x="${lp[0]}" y="${lp[1]}" font-family="var(--serif)" font-style="italic" font-size="10.5" fill="#5b6bd0" text-anchor="middle" dominant-baseline="central" transform="rotate(45 ${lp[0]} ${lp[1]})">Línea Paterna</text>`;
   s+=`<text x="${lm[0]}" y="${lm[1]}" font-family="var(--serif)" font-style="italic" font-size="10.5" fill="#d06a4a" text-anchor="middle" dominant-baseline="central" transform="rotate(-45 ${lm[0]} ${lm[1]})">Línea Materna</text>`;
@@ -417,6 +635,15 @@ function render(m,d,mo,y){
   document.getElementById("result").hidden=false;
   document.getElementById("rSub").textContent=
     `Nacimiento ${d}/${mo}/${y} · ${gender==="H"?"Hombre":"Mujer"} · Arcano central ${arc(m.C)}`;
+  // Resumen destacado (arcano central + propósitos clave)
+  const feat=document.getElementById("featured");
+  feat.hidden=false;
+  document.getElementById("featNum").textContent=m.C;
+  document.getElementById("featName").textContent=arc(m.C);
+  document.getElementById("featMean").textContent=ARCANA[m.C][1]+".";
+  document.getElementById("fMision").textContent=reduce(m.social+m.espiritual);
+  document.getElementById("fPersonal").textContent=m.personal;
+  document.getElementById("fEspiritual").textContent=m.espiritual;
   document.getElementById("mainRows").innerHTML=
       mainRow(m.C,"Centro · Alma")+mainRow(m.W,"Día · Cuerpo")+mainRow(m.N,"Mes · Social")
     + mainRow(m.E,"Año · Linaje")+mainRow(m.S,"Misión")
@@ -453,22 +680,49 @@ function render(m,d,mo,y){
       pair("Cielo",m.cielo,"Tierra",m.tierra,{title:"♥ Propósito personal",v:m.personal},"20 – 40 años")
     + pair("Hombre",m.hombre,"Mujer",m.mujer,{title:"✦ Propósito social",v:m.social},"40 – 60 años")
     + single("✦ Propósito espiritual",m.espiritual,"Siempre activo");
+  // Revelado suave (se reproduce en cada cálculo)
+  [feat, document.getElementById("result")].forEach(el=>{
+    el.classList.remove("reveal"); void el.offsetWidth; el.classList.add("reveal");
+  });
 }
 
 /* ===== Interacción ===== */
-function calc(){
+function calc(scroll){
   const d=+document.getElementById("d").value, mo=+document.getElementById("m").value, y=+document.getElementById("y").value;
   if(!d||!mo||!y) return;
   const m=computeMatrix(d,mo,y);
   drawMatrix(m); render(m,d,mo,y);
+  if(scroll){ document.getElementById("featured").scrollIntoView({behavior:"smooth",block:"start"}); }
 }
-document.getElementById("form").addEventListener("submit",e=>{e.preventDefault();calc();});
+document.getElementById("form").addEventListener("submit",e=>{e.preventDefault();calc(true);});
 document.getElementById("gH").addEventListener("click",()=>setG("H"));
 document.getElementById("gM").addEventListener("click",()=>setG("M"));
 function setG(g){gender=g;
   document.getElementById("gH").setAttribute("aria-pressed",g==="H");
   document.getElementById("gM").setAttribute("aria-pressed",g==="M");
-  if(!document.getElementById("result").hidden) calc();}
+  if(!document.getElementById("result").hidden) calc(false);}
+// Fechas de ejemplo
+document.querySelectorAll(".chip-ex").forEach(b=>b.addEventListener("click",()=>{
+  const [dd,mm,yy]=b.dataset.date.split("-");
+  document.getElementById("d").value=dd;
+  document.getElementById("m").value=mm;
+  document.getElementById("y").value=yy;
+  calc(true);
+}));
+
+/* ===== Tema claro / oscuro ===== */
+const root=document.documentElement, themeBtn=document.getElementById("themeBtn");
+function prefDark(){return window.matchMedia&&window.matchMedia("(prefers-color-scheme:dark)").matches;}
+function curTheme(){return root.getAttribute("data-theme")||(prefDark()?"dark":"light");}
+function applyThemeGlyph(){themeBtn.textContent=curTheme()==="dark"?"☀":"☾";}
+(function initTheme(){ try{const t=localStorage.getItem("md-theme"); if(t) root.setAttribute("data-theme",t);}catch(e){} applyThemeGlyph(); })();
+themeBtn.addEventListener("click",()=>{
+  const next=curTheme()==="dark"?"light":"dark";
+  root.setAttribute("data-theme",next);
+  try{localStorage.setItem("md-theme",next);}catch(e){}
+  applyThemeGlyph();
+});
+
 // Estado inicial: ejemplo 31/01/2003 (coincide con dinaraaxanova.com)
-calc();
+calc(false);
 </script>
