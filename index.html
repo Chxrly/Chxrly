@@ -344,9 +344,8 @@ function drawMatrix(m){
   SPOKES.forEach(([k,a])=>{
     const sp=m.sp[k];
     if(k.length===2){
-      // Diagonal: punto interior (.37R) si difiere del anillo, anillo (.55R), y subpunto (.74R)
+      // Diagonal: SOLO dos círculos — anillo (.55R, fin de la flecha) y subpunto (.74R).
       const ring=reduce(m[k]+m.W), sub=reduce(ring+m[k]);
-      if(sp.inner!==ring) s+=node(...P(a,R*0.37),sp.inner,WHITE,9,"var(--ink)");
       s+=node(...P(a,R*0.55),ring,WHITE,10,"var(--ink)");
       s+=node(...P(a,R*0.74),sub,WHITE,11,"var(--ink)");
     } else {
@@ -362,9 +361,10 @@ function drawMatrix(m){
     const c=vertexColor(k), big=(k.length===1);
     s+=node(...pos[k],m[k],c,big?22:19,c===WHITE?"var(--ink)":"#fff8ee");
   });
-  // Puntos del canal del dinero ($) y del amor (♥) en la esquina sureste
-  //   dinero = reduce(inner_SE + mid_E);  amor = reduce(inner_SE + mid_S)  — coincide con la referencia
-  const money=reduce(m.sp.SE.inner+m.sp.E.mid), amor=reduce(m.sp.SE.inner+m.sp.S.mid);
+  // Canal del dinero ($) y del amor (♥) — solo en la esquina sureste (donde están los iconos):
+  //   base = inner_SE (sobre la diagonal SE);  dinero = reduce(inner_SE+mid_E);  amor = reduce(inner_SE+mid_S)
+  const base=m.sp.SE.inner, money=reduce(base+m.sp.E.mid), amor=reduce(base+m.sp.S.mid);
+  s+=node(...P(315,R*0.37),base,WHITE,9,"var(--ink)");
   s+=node(R*0.45,R*0.22,money,WHITE,9,"var(--ink)");
   s+=node(R*0.25,R*0.42,amor,WHITE,9,"var(--ink)");
   // Centro / alma (Manipura, dorado)
