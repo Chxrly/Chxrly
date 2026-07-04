@@ -329,7 +329,7 @@ function drawMatrix(m){
   // Ejes central (vertical + horizontal)
   s+=seg(pos.N,pos.S,"var(--star)",1,.35)+seg(pos.W,pos.E,"var(--star)",1,.35);
   // Flechas de las líneas paterna (NW-SE, azul) y materna (NE-SW, roja), desde el centro
-  const arrow=(ang,col,mk)=>{const e=P(ang,R*0.60);return `<line x1="0" y1="0" x2="${e[0]}" y2="${e[1]}" stroke="${col}" stroke-width="1.4" opacity=".85" marker-end="url(#${mk})"/>`;};
+  const arrow=(ang,col,mk)=>{const e=P(ang,R*0.66);return `<line x1="0" y1="0" x2="${e[0]}" y2="${e[1]}" stroke="${col}" stroke-width="1.4" opacity=".85" marker-end="url(#${mk})"/>`;};
   s+=arrow(135,"#5b6bd0","arrPat")+arrow(315,"#5b6bd0","arrPat")+arrow(45,"#d06a4a","arrMat")+arrow(225,"#d06a4a","arrMat");
   // Línea punteada del dinero ($): del centro-derecha hacia el sureste
   s+=`<line x1="${R*0.31}" y1="${R*0.08}" x2="${R*0.77}" y2="${R*0.51}" stroke="var(--muted)" stroke-width="1" stroke-dasharray="4 3" opacity=".7"/>`;
@@ -344,10 +344,11 @@ function drawMatrix(m){
   SPOKES.forEach(([k,a])=>{
     const sp=m.sp[k];
     if(k.length===2){
-      // Diagonal: SOLO dos círculos — anillo (.55R, fin de la flecha) y subpunto (.74R).
+      // Diagonal: dos círculos sobre la LÍNEA RECTA (no sobre el anillo) — el punto donde la diagonal
+      // cruza el rombo (~.70R, fin de la flecha) y el subpunto (~.82R, hacia el vértice).
       const ring=reduce(m[k]+m.W), sub=reduce(ring+m[k]);
-      s+=node(...P(a,R*0.55),ring,WHITE,10,"var(--ink)");
-      s+=node(...P(a,R*0.74),sub,WHITE,11,"var(--ink)");
+      s+=node(...P(a,R*0.70),ring,WHITE,10,"var(--ink)");
+      s+=node(...P(a,R*0.82),sub,WHITE,11,"var(--ink)");
     } else {
       const co=dotColor(k,"outer"), cm=dotColor(k,"mid"), ci=dotColor(k,"inner");
       s+=node(...P(a,R*0.83),sp.outer,co,10,co===WHITE?"var(--ink)":"#fff8ee");
