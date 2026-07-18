@@ -4,7 +4,15 @@
 <meta name="description" content="Numen traza tu Matriz del Destino a partir de tu fecha de nacimiento: tu arcano central, tu linaje, tus siete chakras y tu propósito de vida. Gratis, privado y al instante, en tu navegador.">
 <meta property="og:title" content="Numen · Matriz del Destino">
 <meta property="og:description" content="El mapa de tu alma en 22 arcanos, a partir de tu fecha de nacimiento. Gratis y privado.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#efe9dd">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='-12%20-12%2024%2024'%3E%3Cg%20fill='none'%20stroke='%23a9793a'%20stroke-width='2'%3E%3Crect%20x='-8'%20y='-8'%20width='16'%20height='16'/%3E%3Crect%20x='-8'%20y='-8'%20width='16'%20height='16'%20transform='rotate(45)'/%3E%3C/g%3E%3C/svg%3E">
+<!-- Al conectar tu dominio, añade aquí:
+     <link rel="canonical" href="https://TU-DOMINIO/">
+     <meta property="og:url" content="https://TU-DOMINIO/">
+     <meta property="og:image" content="https://TU-DOMINIO/og-image.png"> -->
 <style>
   :root{
     /* — Astrolabio · tema claro (pergamino) — */
@@ -950,6 +958,7 @@ document.querySelectorAll(".chip-ex").forEach(b=>b.addEventListener("click",()=>
 
 /* ===== Tema claro / oscuro ===== */
 const root=document.documentElement, themeBtn=document.getElementById("themeBtn");
+root.lang="es";   // idioma del documento (accesibilidad y SEO)
 function prefDark(){return window.matchMedia&&window.matchMedia("(prefers-color-scheme:dark)").matches;}
 function curTheme(){return root.getAttribute("data-theme")||(prefDark()?"dark":"light");}
 function applyTheme(){const t=curTheme();themeBtn.textContent=t==="dark"?"☀":"☾";root.style.colorScheme=t;}
