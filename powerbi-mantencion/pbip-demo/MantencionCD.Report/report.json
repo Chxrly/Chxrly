@@ -39,7 +39,7 @@
           "z": 1,
           "width": 250,
           "height": 46,
-          "config": "{\"name\": \"02966aa383f9414a83eb\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 278, \"y\": 8, \"z\": 1, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Bitacora.Turno\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Bitacora\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Turno\"}, \"Name\": \"Bitacora.Turno\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "config": "{\"name\": \"02966aa383f9414a83eb\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 278, \"y\": 8, \"z\": 1, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Bitacora.Turno\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Bitacora\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Turno\"}, \"Name\": \"Bitacora.Turno\"}]}, \"drillFilterOtherVisuals\": true, \"objects\": {\"data\": [{\"properties\": {\"mode\": {\"expr\": {\"Literal\": {\"Value\": \"'Dropdown'\"}}}}}]}}}",
           "filters": "[]"
         },
         {
@@ -48,7 +48,7 @@
           "z": 2,
           "width": 250,
           "height": 46,
-          "config": "{\"name\": \"5fd3084462504f0a963f\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 540, \"y\": 8, \"z\": 2, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Maquinas.ID_Maquina\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Maquinas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"ID_Maquina\"}, \"Name\": \"Maquinas.ID_Maquina\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "config": "{\"name\": \"5fd3084462504f0a963f\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 540, \"y\": 8, \"z\": 2, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Maquinas.ID_Maquina\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Maquinas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"ID_Maquina\"}, \"Name\": \"Maquinas.ID_Maquina\"}]}, \"drillFilterOtherVisuals\": true, \"objects\": {\"data\": [{\"properties\": {\"mode\": {\"expr\": {\"Literal\": {\"Value\": \"'Dropdown'\"}}}}}]}}}",
           "filters": "[]"
         },
         {
@@ -57,7 +57,7 @@
           "z": 3,
           "width": 250,
           "height": 46,
-          "config": "{\"name\": \"8725c0b3bb4e4a43a9e7\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 802, \"y\": 8, \"z\": 3, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Bitacora.Tecnico\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Bitacora\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Tecnico\"}, \"Name\": \"Bitacora.Tecnico\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "config": "{\"name\": \"8725c0b3bb4e4a43a9e7\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 802, \"y\": 8, \"z\": 3, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Bitacora.Tecnico\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Bitacora\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Tecnico\"}, \"Name\": \"Bitacora.Tecnico\"}]}, \"drillFilterOtherVisuals\": true, \"objects\": {\"data\": [{\"properties\": {\"mode\": {\"expr\": {\"Literal\": {\"Value\": \"'Dropdown'\"}}}}}]}}}",
           "filters": "[]"
         },
         {
@@ -149,7 +149,7 @@
           "z": 1,
           "width": 250,
           "height": 46,
-          "config": "{\"name\": \"173282df38674ed88603\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 278, \"y\": 8, \"z\": 1, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Maquinas.ID_Maquina\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Maquinas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"ID_Maquina\"}, \"Name\": \"Maquinas.ID_Maquina\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "config": "{\"name\": \"173282df38674ed88603\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 278, \"y\": 8, \"z\": 1, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Maquinas.ID_Maquina\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Maquinas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"ID_Maquina\"}, \"Name\": \"Maquinas.ID_Maquina\"}]}, \"drillFilterOtherVisuals\": true, \"objects\": {\"data\": [{\"properties\": {\"mode\": {\"expr\": {\"Literal\": {\"Value\": \"'Dropdown'\"}}}}}]}}}",
           "filters": "[]"
         },
         {
@@ -158,7 +158,7 @@
           "z": 2,
           "width": 250,
           "height": 46,
-          "config": "{\"name\": \"e47138d154a248aa992d\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 540, \"y\": 8, \"z\": 2, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Fallas.Tipo_Falla\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Fallas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Tipo_Falla\"}, \"Name\": \"Fallas.Tipo_Falla\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "config": "{\"name\": \"e47138d154a248aa992d\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 540, \"y\": 8, \"z\": 2, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Fallas.Tipo_Falla\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Fallas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Tipo_Falla\"}, \"Name\": \"Fallas.Tipo_Falla\"}]}, \"drillFilterOtherVisuals\": true, \"objects\": {\"data\": [{\"properties\": {\"mode\": {\"expr\": {\"Literal\": {\"Value\": \"'Dropdown'\"}}}}}]}}}",
           "filters": "[]"
         },
         {
@@ -167,7 +167,7 @@
           "z": 3,
           "width": 250,
           "height": 46,
-          "config": "{\"name\": \"3fc58d671c6e4a67b288\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 802, \"y\": 8, \"z\": 3, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Fallas.Severidad\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Fallas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Severidad\"}, \"Name\": \"Fallas.Severidad\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "config": "{\"name\": \"3fc58d671c6e4a67b288\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 802, \"y\": 8, \"z\": 3, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Fallas.Severidad\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Fallas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Severidad\"}, \"Name\": \"Fallas.Severidad\"}]}, \"drillFilterOtherVisuals\": true, \"objects\": {\"data\": [{\"properties\": {\"mode\": {\"expr\": {\"Literal\": {\"Value\": \"'Dropdown'\"}}}}}]}}}",
           "filters": "[]"
         },
         {
@@ -259,7 +259,7 @@
           "z": 0,
           "width": 250,
           "height": 46,
-          "config": "{\"name\": \"7eca406ff03e4fd5be5d\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 16, \"y\": 8, \"z\": 0, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Calendario.Mes\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Calendario\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Mes\"}, \"Name\": \"Calendario.Mes\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "config": "{\"name\": \"7eca406ff03e4fd5be5d\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 16, \"y\": 8, \"z\": 0, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Calendario.Mes\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Calendario\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Mes\"}, \"Name\": \"Calendario.Mes\"}]}, \"drillFilterOtherVisuals\": true, \"objects\": {\"data\": [{\"properties\": {\"mode\": {\"expr\": {\"Literal\": {\"Value\": \"'Dropdown'\"}}}}}]}}}",
           "filters": "[]"
         },
         {
@@ -268,7 +268,7 @@
           "z": 1,
           "width": 250,
           "height": 46,
-          "config": "{\"name\": \"ea0448f030a641c29176\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 278, \"y\": 8, \"z\": 1, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Maquinas.Zona\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Maquinas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Zona\"}, \"Name\": \"Maquinas.Zona\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "config": "{\"name\": \"ea0448f030a641c29176\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 278, \"y\": 8, \"z\": 1, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Maquinas.Zona\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Maquinas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Zona\"}, \"Name\": \"Maquinas.Zona\"}]}, \"drillFilterOtherVisuals\": true, \"objects\": {\"data\": [{\"properties\": {\"mode\": {\"expr\": {\"Literal\": {\"Value\": \"'Dropdown'\"}}}}}]}}}",
           "filters": "[]"
         },
         {
@@ -277,7 +277,7 @@
           "z": 2,
           "width": 250,
           "height": 46,
-          "config": "{\"name\": \"973ac08c80e444f887de\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 540, \"y\": 8, \"z\": 2, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Maquinas.ID_Maquina\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Maquinas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"ID_Maquina\"}, \"Name\": \"Maquinas.ID_Maquina\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "config": "{\"name\": \"973ac08c80e444f887de\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 540, \"y\": 8, \"z\": 2, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Maquinas.ID_Maquina\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Maquinas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"ID_Maquina\"}, \"Name\": \"Maquinas.ID_Maquina\"}]}, \"drillFilterOtherVisuals\": true, \"objects\": {\"data\": [{\"properties\": {\"mode\": {\"expr\": {\"Literal\": {\"Value\": \"'Dropdown'\"}}}}}]}}}",
           "filters": "[]"
         },
         {
@@ -331,7 +331,7 @@
           "z": 8,
           "width": 806,
           "height": 268,
-          "config": "{\"name\": \"3f96f163e62f4cc4b615\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 458, \"y\": 166, \"z\": 8, \"width\": 806, \"height\": 268}}], \"singleVisual\": {\"visualType\": \"matrix\", \"projections\": {\"Rows\": [{\"queryRef\": \"Maquinas.ID_Maquina\"}], \"Columns\": [{\"queryRef\": \"Calendario.Mes\"}], \"Values\": [{\"queryRef\": \"Min(MantencionMensual.Estado Ejecucion)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Maquinas\", \"Type\": 0}, {\"Name\": \"t1\", \"Entity\": \"Calendario\", \"Type\": 0}, {\"Name\": \"t2\", \"Entity\": \"MantencionMensual\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"ID_Maquina\"}, \"Name\": \"Maquinas.ID_Maquina\"}, {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t1\"}}, \"Property\": \"Mes\"}, \"Name\": \"Calendario.Mes\"}, {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t2\"}}, \"Property\": \"Estado Ejecucion\"}}, \"Function\": 3}, \"Name\": \"Min(MantencionMensual.Estado Ejecucion)\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Ejecución del plan por equipo y mes'\"}}}, \"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}}}]}}}",
+          "config": "{\"name\": \"3f96f163e62f4cc4b615\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 458, \"y\": 166, \"z\": 8, \"width\": 806, \"height\": 268}}], \"singleVisual\": {\"visualType\": \"matrix\", \"projections\": {\"Rows\": [{\"queryRef\": \"Maquinas.ID_Maquina\"}], \"Columns\": [{\"queryRef\": \"Calendario.Mes\"}], \"Values\": [{\"queryRef\": \"Min(MantencionMensual.Estado Ejecucion)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Maquinas\", \"Type\": 0}, {\"Name\": \"t1\", \"Entity\": \"Calendario\", \"Type\": 0}, {\"Name\": \"t2\", \"Entity\": \"MantencionMensual\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"ID_Maquina\"}, \"Name\": \"Maquinas.ID_Maquina\"}, {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t1\"}}, \"Property\": \"Mes\"}, \"Name\": \"Calendario.Mes\"}, {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t2\"}}, \"Property\": \"Estado Ejecucion\"}}, \"Function\": 3}, \"Name\": \"Min(MantencionMensual.Estado Ejecucion)\"}]}, \"drillFilterOtherVisuals\": true, \"vcObjects\": {\"title\": [{\"properties\": {\"text\": {\"expr\": {\"Literal\": {\"Value\": \"'Ejecución del plan por equipo y mes'\"}}}, \"show\": {\"expr\": {\"Literal\": {\"Value\": \"true\"}}}}}]}, \"objects\": {\"values\": [{\"selector\": {\"metadata\": \"Min(MantencionMensual.Estado Ejecucion)\"}, \"properties\": {\"backColor\": {\"expr\": {\"Conditional\": {\"Cases\": [{\"Condition\": {\"Comparison\": {\"ComparisonKind\": 0, \"Left\": {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t2\"}}, \"Property\": \"Estado Ejecucion\"}}, \"Function\": 3}}, \"Right\": {\"Literal\": {\"Value\": \"'Realizada en fecha'\"}}}}, \"Value\": {\"Literal\": {\"Value\": \"'#0CA30C'\"}}}, {\"Condition\": {\"Comparison\": {\"ComparisonKind\": 0, \"Left\": {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t2\"}}, \"Property\": \"Estado Ejecucion\"}}, \"Function\": 3}}, \"Right\": {\"Literal\": {\"Value\": \"'Realizada con atraso'\"}}}}, \"Value\": {\"Literal\": {\"Value\": \"'#FAB219'\"}}}, {\"Condition\": {\"Comparison\": {\"ComparisonKind\": 0, \"Left\": {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t2\"}}, \"Property\": \"Estado Ejecucion\"}}, \"Function\": 3}}, \"Right\": {\"Literal\": {\"Value\": \"'Atrasada'\"}}}}, \"Value\": {\"Literal\": {\"Value\": \"'#D03B3B'\"}}}, {\"Condition\": {\"Comparison\": {\"ComparisonKind\": 0, \"Left\": {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t2\"}}, \"Property\": \"Estado Ejecucion\"}}, \"Function\": 3}}, \"Right\": {\"Literal\": {\"Value\": \"'Reprogramada'\"}}}}, \"Value\": {\"Literal\": {\"Value\": \"'#B9B7AE'\"}}}, {\"Condition\": {\"Comparison\": {\"ComparisonKind\": 0, \"Left\": {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t2\"}}, \"Property\": \"Estado Ejecucion\"}}, \"Function\": 3}}, \"Right\": {\"Literal\": {\"Value\": \"'Programada'\"}}}}, \"Value\": {\"Literal\": {\"Value\": \"'#E1E0D9'\"}}}, {\"Condition\": {\"Comparison\": {\"ComparisonKind\": 0, \"Left\": {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t2\"}}, \"Property\": \"Estado Ejecucion\"}}, \"Function\": 3}}, \"Right\": {\"Literal\": {\"Value\": \"'Cancelada'\"}}}}, \"Value\": {\"Literal\": {\"Value\": \"'#F0EFEC'\"}}}]}}}}}]}}}",
           "filters": "[]"
         },
         {
@@ -369,7 +369,7 @@
           "z": 1,
           "width": 250,
           "height": 46,
-          "config": "{\"name\": \"e2c31f38eacd47c5b551\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 278, \"y\": 8, \"z\": 1, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Bitacora.Turno\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Bitacora\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Turno\"}, \"Name\": \"Bitacora.Turno\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "config": "{\"name\": \"e2c31f38eacd47c5b551\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 278, \"y\": 8, \"z\": 1, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Bitacora.Turno\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Bitacora\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Turno\"}, \"Name\": \"Bitacora.Turno\"}]}, \"drillFilterOtherVisuals\": true, \"objects\": {\"data\": [{\"properties\": {\"mode\": {\"expr\": {\"Literal\": {\"Value\": \"'Dropdown'\"}}}}}]}}}",
           "filters": "[]"
         },
         {
@@ -378,7 +378,7 @@
           "z": 2,
           "width": 250,
           "height": 46,
-          "config": "{\"name\": \"35c37c271656402d8e8c\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 540, \"y\": 8, \"z\": 2, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Maquinas.ID_Maquina\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Maquinas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"ID_Maquina\"}, \"Name\": \"Maquinas.ID_Maquina\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "config": "{\"name\": \"35c37c271656402d8e8c\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 540, \"y\": 8, \"z\": 2, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Maquinas.ID_Maquina\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Maquinas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"ID_Maquina\"}, \"Name\": \"Maquinas.ID_Maquina\"}]}, \"drillFilterOtherVisuals\": true, \"objects\": {\"data\": [{\"properties\": {\"mode\": {\"expr\": {\"Literal\": {\"Value\": \"'Dropdown'\"}}}}}]}}}",
           "filters": "[]"
         },
         {
@@ -387,7 +387,7 @@
           "z": 3,
           "width": 250,
           "height": 46,
-          "config": "{\"name\": \"32d92f339ae2463ab866\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 802, \"y\": 8, \"z\": 3, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Bitacora.Clase_Mantencion\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Bitacora\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Clase_Mantencion\"}, \"Name\": \"Bitacora.Clase_Mantencion\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "config": "{\"name\": \"32d92f339ae2463ab866\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 802, \"y\": 8, \"z\": 3, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Bitacora.Clase_Mantencion\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Bitacora\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Clase_Mantencion\"}, \"Name\": \"Bitacora.Clase_Mantencion\"}]}, \"drillFilterOtherVisuals\": true, \"objects\": {\"data\": [{\"properties\": {\"mode\": {\"expr\": {\"Literal\": {\"Value\": \"'Dropdown'\"}}}}}]}}}",
           "filters": "[]"
         },
         {
@@ -479,7 +479,7 @@
           "z": 0,
           "width": 250,
           "height": 46,
-          "config": "{\"name\": \"e069d8345bd64ebe849e\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 16, \"y\": 8, \"z\": 0, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Calendario.Mes\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Calendario\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Mes\"}, \"Name\": \"Calendario.Mes\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "config": "{\"name\": \"e069d8345bd64ebe849e\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 16, \"y\": 8, \"z\": 0, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Calendario.Mes\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Calendario\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Mes\"}, \"Name\": \"Calendario.Mes\"}]}, \"drillFilterOtherVisuals\": true, \"objects\": {\"data\": [{\"properties\": {\"mode\": {\"expr\": {\"Literal\": {\"Value\": \"'Dropdown'\"}}}}}]}}}",
           "filters": "[]"
         },
         {
@@ -488,7 +488,7 @@
           "z": 1,
           "width": 250,
           "height": 46,
-          "config": "{\"name\": \"7fddeea43c9e49309f6f\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 278, \"y\": 8, \"z\": 1, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Maquinas.Tipo\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Maquinas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Tipo\"}, \"Name\": \"Maquinas.Tipo\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "config": "{\"name\": \"7fddeea43c9e49309f6f\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 278, \"y\": 8, \"z\": 1, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Maquinas.Tipo\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Maquinas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Tipo\"}, \"Name\": \"Maquinas.Tipo\"}]}, \"drillFilterOtherVisuals\": true, \"objects\": {\"data\": [{\"properties\": {\"mode\": {\"expr\": {\"Literal\": {\"Value\": \"'Dropdown'\"}}}}}]}}}",
           "filters": "[]"
         },
         {
@@ -497,7 +497,7 @@
           "z": 2,
           "width": 250,
           "height": 46,
-          "config": "{\"name\": \"05f1a151fcd3424d8f40\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 540, \"y\": 8, \"z\": 2, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Maquinas.Criticidad\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Maquinas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Criticidad\"}, \"Name\": \"Maquinas.Criticidad\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "config": "{\"name\": \"05f1a151fcd3424d8f40\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 540, \"y\": 8, \"z\": 2, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Maquinas.Criticidad\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Maquinas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Criticidad\"}, \"Name\": \"Maquinas.Criticidad\"}]}, \"drillFilterOtherVisuals\": true, \"objects\": {\"data\": [{\"properties\": {\"mode\": {\"expr\": {\"Literal\": {\"Value\": \"'Dropdown'\"}}}}}]}}}",
           "filters": "[]"
         },
         {
@@ -607,7 +607,7 @@
           "z": 0,
           "width": 250,
           "height": 46,
-          "config": "{\"name\": \"5d9246fda643426cb82e\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 16, \"y\": 8, \"z\": 0, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Maquinas.Fabricante\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Maquinas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Fabricante\"}, \"Name\": \"Maquinas.Fabricante\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "config": "{\"name\": \"5d9246fda643426cb82e\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 16, \"y\": 8, \"z\": 0, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Maquinas.Fabricante\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Maquinas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Fabricante\"}, \"Name\": \"Maquinas.Fabricante\"}]}, \"drillFilterOtherVisuals\": true, \"objects\": {\"data\": [{\"properties\": {\"mode\": {\"expr\": {\"Literal\": {\"Value\": \"'Dropdown'\"}}}}}]}}}",
           "filters": "[]"
         },
         {
@@ -616,7 +616,7 @@
           "z": 1,
           "width": 250,
           "height": 46,
-          "config": "{\"name\": \"163b30387cc948ddaa49\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 278, \"y\": 8, \"z\": 1, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Maquinas.Tipo\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Maquinas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Tipo\"}, \"Name\": \"Maquinas.Tipo\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "config": "{\"name\": \"163b30387cc948ddaa49\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 278, \"y\": 8, \"z\": 1, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Maquinas.Tipo\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Maquinas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Tipo\"}, \"Name\": \"Maquinas.Tipo\"}]}, \"drillFilterOtherVisuals\": true, \"objects\": {\"data\": [{\"properties\": {\"mode\": {\"expr\": {\"Literal\": {\"Value\": \"'Dropdown'\"}}}}}]}}}",
           "filters": "[]"
         },
         {
@@ -625,7 +625,7 @@
           "z": 2,
           "width": 250,
           "height": 46,
-          "config": "{\"name\": \"f45b3ee4a40440ba9da8\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 540, \"y\": 8, \"z\": 2, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Pautas.Frecuencia\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Pautas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Frecuencia\"}, \"Name\": \"Pautas.Frecuencia\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "config": "{\"name\": \"f45b3ee4a40440ba9da8\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 540, \"y\": 8, \"z\": 2, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Pautas.Frecuencia\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Pautas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"Frecuencia\"}, \"Name\": \"Pautas.Frecuencia\"}]}, \"drillFilterOtherVisuals\": true, \"objects\": {\"data\": [{\"properties\": {\"mode\": {\"expr\": {\"Literal\": {\"Value\": \"'Dropdown'\"}}}}}]}}}",
           "filters": "[]"
         },
         {
@@ -634,7 +634,7 @@
           "z": 3,
           "width": 250,
           "height": 46,
-          "config": "{\"name\": \"5a4a36add56f4e69bd69\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 802, \"y\": 8, \"z\": 3, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Maquinas.ID_Maquina\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Maquinas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"ID_Maquina\"}, \"Name\": \"Maquinas.ID_Maquina\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "config": "{\"name\": \"5a4a36add56f4e69bd69\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 802, \"y\": 8, \"z\": 3, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Maquinas.ID_Maquina\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Maquinas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"ID_Maquina\"}, \"Name\": \"Maquinas.ID_Maquina\"}]}, \"drillFilterOtherVisuals\": true, \"objects\": {\"data\": [{\"properties\": {\"mode\": {\"expr\": {\"Literal\": {\"Value\": \"'Dropdown'\"}}}}}]}}}",
           "filters": "[]"
         },
         {
@@ -663,7 +663,7 @@
           "z": 0,
           "width": 250,
           "height": 46,
-          "config": "{\"name\": \"bafc56f21ee64c80b846\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 16, \"y\": 8, \"z\": 0, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Maquinas.ID_Maquina\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Maquinas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"ID_Maquina\"}, \"Name\": \"Maquinas.ID_Maquina\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "config": "{\"name\": \"bafc56f21ee64c80b846\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 16, \"y\": 8, \"z\": 0, \"width\": 250, \"height\": 46}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"Maquinas.ID_Maquina\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t0\", \"Entity\": \"Maquinas\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t0\"}}, \"Property\": \"ID_Maquina\"}, \"Name\": \"Maquinas.ID_Maquina\"}]}, \"drillFilterOtherVisuals\": true, \"objects\": {\"data\": [{\"properties\": {\"mode\": {\"expr\": {\"Literal\": {\"Value\": \"'Dropdown'\"}}}}}]}}}",
           "filters": "[]"
         },
         {
