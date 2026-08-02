@@ -284,6 +284,8 @@ Segmentaciones: `Calendario[Mes]`, `Maquinas[Tipo]` (sección),
 
 ### Página extra · Pautas de mantención por equipo
 
+![Página de pautas](img/pagina-6-pautas.png)
+
 Con la tabla `Pautas` cargada puedes armar la biblioteca de pautas
 segmentada según fabricante:
 
@@ -311,6 +313,8 @@ segmentada según fabricante:
 > la rutina diaria/semanal se controla por la bitácora contra la pauta.
 
 ### Página extra · Ficha de equipo (obtención de detalles)
+
+![Ficha de equipo](img/pagina-7-ficha-equipo.png)
 
 La vista que enlaza todo por equipo — su bitácora, sus fallas y soluciones,
 sus pautas y su historial de plan:
