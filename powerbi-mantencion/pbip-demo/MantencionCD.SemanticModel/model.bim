@@ -88,7 +88,8 @@
             "name": "Fecha",
             "dataType": "dateTime",
             "sourceColumn": "Fecha",
-            "lineageTag": "e68fba18-c8db-4b37-8e7f-6d18858d28a8"
+            "lineageTag": "e68fba18-c8db-4b37-8e7f-6d18858d28a8",
+            "formatString": "dd-MM-yyyy"
           },
           {
             "name": "Turno",
@@ -176,49 +177,56 @@
             "expression": [
               "COUNTROWS ( Bitacora )"
             ],
-            "lineageTag": "6fdb9a1b-4c47-437d-a9b6-cd31375e1d26"
+            "lineageTag": "6fdb9a1b-4c47-437d-a9b6-cd31375e1d26",
+            "formatString": "#,0"
           },
           {
             "name": "Actividades Pendientes",
             "expression": [
               "CALCULATE ( COUNTROWS ( Bitacora ), Bitacora[Pendiente] = \"Sí\" )"
             ],
-            "lineageTag": "d90f8f24-2a5f-4023-a51c-1bba1aae3803"
+            "lineageTag": "d90f8f24-2a5f-4023-a51c-1bba1aae3803",
+            "formatString": "#,0"
           },
           {
             "name": "Horas Detencion Bitacora",
             "expression": [
               "DIVIDE ( SUM ( Bitacora[Detencion_Min] ), 60 )"
             ],
-            "lineageTag": "7183d514-8116-400d-8184-e5737197ba8e"
+            "lineageTag": "7183d514-8116-400d-8184-e5737197ba8e",
+            "formatString": "#,0.0"
           },
           {
             "name": "Turnos Con Registro",
             "expression": [
               "COUNTROWS ( SUMMARIZE ( Bitacora, Bitacora[Fecha], Bitacora[Turno] ) )"
             ],
-            "lineageTag": "3eb58b76-678d-4f42-8152-b9842959629b"
+            "lineageTag": "3eb58b76-678d-4f42-8152-b9842959629b",
+            "formatString": "#,0"
           },
           {
             "name": "Mantenciones Preventivas",
             "expression": [
               "CALCULATE ( COUNTROWS ( Bitacora ), Bitacora[Clase_Mantencion] = \"Preventiva\" )"
             ],
-            "lineageTag": "e3fda7bb-8521-4116-b1f3-936072664577"
+            "lineageTag": "e3fda7bb-8521-4116-b1f3-936072664577",
+            "formatString": "#,0"
           },
           {
             "name": "Mantenciones Correctivas",
             "expression": [
               "CALCULATE ( COUNTROWS ( Bitacora ), Bitacora[Clase_Mantencion] = \"Correctiva\" )"
             ],
-            "lineageTag": "1cf4ddd7-6720-4143-a4da-34a8bf1fd1a5"
+            "lineageTag": "1cf4ddd7-6720-4143-a4da-34a8bf1fd1a5",
+            "formatString": "#,0"
           },
           {
             "name": "Mantenciones de Rutina",
             "expression": [
               "CALCULATE ( COUNTROWS ( Bitacora ), Bitacora[Clase_Mantencion] = \"Rutina\" )"
             ],
-            "lineageTag": "01b3237f-2874-4f2c-9b73-8aace1934f21"
+            "lineageTag": "01b3237f-2874-4f2c-9b73-8aace1934f21",
+            "formatString": "#,0"
           },
           {
             "name": "% Trabajo Planificado",
@@ -228,7 +236,8 @@
               "    [Mantenciones Preventivas] + [Mantenciones de Rutina] + [Mantenciones Correctivas]",
               ")"
             ],
-            "lineageTag": "9ac50e9f-5baa-456b-aed4-6e030f38dda5"
+            "lineageTag": "9ac50e9f-5baa-456b-aed4-6e030f38dda5",
+            "formatString": "0%"
           }
         ]
       },
@@ -246,7 +255,8 @@
             "name": "Fecha_Hora_Falla",
             "dataType": "dateTime",
             "sourceColumn": "Fecha_Hora_Falla",
-            "lineageTag": "0100ccf2-498c-4c6a-a348-270af604561f"
+            "lineageTag": "0100ccf2-498c-4c6a-a348-270af604561f",
+            "formatString": "dd-MM-yyyy HH:mm"
           },
           {
             "name": "ID_Maquina",
@@ -288,7 +298,8 @@
             "name": "Fecha_Hora_Cierre",
             "dataType": "dateTime",
             "sourceColumn": "Fecha_Hora_Cierre",
-            "lineageTag": "f9889e0f-7a7a-47d3-87eb-760857cb1b43"
+            "lineageTag": "f9889e0f-7a7a-47d3-87eb-760857cb1b43",
+            "formatString": "dd-MM-yyyy HH:mm"
           },
           {
             "name": "Detencion_Min",
@@ -319,7 +330,8 @@
             "name": "Fecha",
             "dataType": "dateTime",
             "sourceColumn": "Fecha",
-            "lineageTag": "94732cd0-f3e0-41a9-9e31-146f8466c06f"
+            "lineageTag": "94732cd0-f3e0-41a9-9e31-146f8466c06f",
+            "formatString": "dd-MM-yyyy"
           }
         ],
         "partitions": [
@@ -346,21 +358,24 @@
             "expression": [
               "DISTINCTCOUNT ( Bitacora[ID_Maquina] )"
             ],
-            "lineageTag": "dd00bbfb-7c13-48f1-b738-8cab34c4c63d"
+            "lineageTag": "dd00bbfb-7c13-48f1-b738-8cab34c4c63d",
+            "formatString": "#,0"
           },
           {
             "name": "Numero Fallas",
             "expression": [
               "COUNTROWS ( Fallas )"
             ],
-            "lineageTag": "a3b08840-fbe3-4458-92e2-db112bf58a63"
+            "lineageTag": "a3b08840-fbe3-4458-92e2-db112bf58a63",
+            "formatString": "#,0"
           },
           {
             "name": "Fallas Abiertas",
             "expression": [
               "CALCULATE ( COUNTROWS ( Fallas ), Fallas[Estado] <> \"Cerrada\" )"
             ],
-            "lineageTag": "8e85ad7d-154e-4c82-9da8-d67e5235b594"
+            "lineageTag": "8e85ad7d-154e-4c82-9da8-d67e5235b594",
+            "formatString": "#,0"
           },
           {
             "name": "Fallas Abiertas (actual)",
@@ -371,14 +386,16 @@
               "    REMOVEFILTERS ( Calendario )",
               ")"
             ],
-            "lineageTag": "f63b3eff-8ad8-4c4d-aae2-478bf5126bfe"
+            "lineageTag": "f63b3eff-8ad8-4c4d-aae2-478bf5126bfe",
+            "formatString": "#,0"
           },
           {
             "name": "Fallas Criticas",
             "expression": [
               "CALCULATE ( COUNTROWS ( Fallas ), Fallas[Severidad] = \"Crítica\" )"
             ],
-            "lineageTag": "71dc6458-8076-46c2-a3b2-91d02ab174c5"
+            "lineageTag": "71dc6458-8076-46c2-a3b2-91d02ab174c5",
+            "formatString": "#,0"
           },
           {
             "name": "Maquinas Con Falla Abierta",
@@ -389,28 +406,32 @@
               "    REMOVEFILTERS ( Calendario )",
               ")"
             ],
-            "lineageTag": "a981212b-88e8-45d6-a857-a1815f005149"
+            "lineageTag": "a981212b-88e8-45d6-a857-a1815f005149",
+            "formatString": "#,0"
           },
           {
             "name": "Equipos Con Falla",
             "expression": [
               "DISTINCTCOUNT ( Fallas[ID_Maquina] )"
             ],
-            "lineageTag": "34443f3f-2ca5-4328-a475-bbefef0d013e"
+            "lineageTag": "34443f3f-2ca5-4328-a475-bbefef0d013e",
+            "formatString": "#,0"
           },
           {
             "name": "Minutos Detencion Fallas",
             "expression": [
               "SUM ( Fallas[Detencion_Min] )"
             ],
-            "lineageTag": "133a179f-6ab1-41ab-a18a-4d6b0dc6137e"
+            "lineageTag": "133a179f-6ab1-41ab-a18a-4d6b0dc6137e",
+            "formatString": "#,0"
           },
           {
             "name": "Horas Detencion Fallas",
             "expression": [
               "DIVIDE ( [Minutos Detencion Fallas], 60 )"
             ],
-            "lineageTag": "2108e2e5-44b5-4804-9859-07e5cf2dc661"
+            "lineageTag": "2108e2e5-44b5-4804-9859-07e5cf2dc661",
+            "formatString": "#,0.0"
           },
           {
             "name": "MTTR Horas",
@@ -420,14 +441,16 @@
               "    60",
               ")"
             ],
-            "lineageTag": "fe2fb8f1-92ed-40b1-911c-9bf08e17d40c"
+            "lineageTag": "fe2fb8f1-92ed-40b1-911c-9bf08e17d40c",
+            "formatString": "#,0.0"
           },
           {
             "name": "Horas Operacion por Dia",
             "expression": [
               "24"
             ],
-            "lineageTag": "65548485-60d9-4d1f-9ef3-6ae808eaee12"
+            "lineageTag": "65548485-60d9-4d1f-9ef3-6ae808eaee12",
+            "formatString": "#,0"
           },
           {
             "name": "Horas Operacion Estimadas",
@@ -436,7 +459,8 @@
               "    * COUNTROWS ( Calendario )",
               "    * DISTINCTCOUNT ( Maquinas[ID_Maquina] )"
             ],
-            "lineageTag": "608fc21f-7864-45c7-ae73-c98640dc7e87"
+            "lineageTag": "608fc21f-7864-45c7-ae73-c98640dc7e87",
+            "formatString": "#,0"
           },
           {
             "name": "MTBF Horas",
@@ -446,7 +470,8 @@
               "    [Numero Fallas]",
               ")"
             ],
-            "lineageTag": "4c616cd6-c1a2-4542-9252-b69877dfaf8a"
+            "lineageTag": "4c616cd6-c1a2-4542-9252-b69877dfaf8a",
+            "formatString": "#,0.0"
           },
           {
             "name": "Disponibilidad %",
@@ -456,7 +481,8 @@
               "    [Horas Operacion Estimadas]",
               ")"
             ],
-            "lineageTag": "46a0b41b-0a90-41b7-87f5-e820f04b20fd"
+            "lineageTag": "46a0b41b-0a90-41b7-87f5-e820f04b20fd",
+            "formatString": "0%"
           },
           {
             "name": "Antiguedad Backlog Dias",
@@ -469,7 +495,8 @@
               "    INT ( TODAY () - Fallas[Fecha] )",
               ")"
             ],
-            "lineageTag": "a4636689-fc86-4fce-8bba-ee2ce59c3a59"
+            "lineageTag": "a4636689-fc86-4fce-8bba-ee2ce59c3a59",
+            "formatString": "#,0.0"
           },
           {
             "name": "Antiguedad Backlog Max Dias",
@@ -482,7 +509,8 @@
               "    INT ( TODAY () - Fallas[Fecha] )",
               ")"
             ],
-            "lineageTag": "a4405eda-1d4e-49ff-ae39-0a3eeae4d3fe"
+            "lineageTag": "a4405eda-1d4e-49ff-ae39-0a3eeae4d3fe",
+            "formatString": "#,0"
           },
           {
             "name": "% Fallas Resueltas Mismo Dia",
@@ -500,7 +528,8 @@
               "        COUNTROWS ( Cerradas )",
               "    )"
             ],
-            "lineageTag": "99cb970e-ed47-4e77-9cf6-8eae3ab805aa"
+            "lineageTag": "99cb970e-ed47-4e77-9cf6-8eae3ab805aa",
+            "formatString": "0%"
           },
           {
             "name": "Fallas Reincidentes 30d",
@@ -524,7 +553,8 @@
               "    )",
               ")"
             ],
-            "lineageTag": "b139fd80-b433-49e6-abde-93ef5bbf4721"
+            "lineageTag": "b139fd80-b433-49e6-abde-93ef5bbf4721",
+            "formatString": "#,0"
           }
         ]
       },
@@ -560,13 +590,15 @@
             "name": "Fecha_Programada",
             "dataType": "dateTime",
             "sourceColumn": "Fecha_Programada",
-            "lineageTag": "b6a275a4-f30c-428a-8fd0-47b3108a2e91"
+            "lineageTag": "b6a275a4-f30c-428a-8fd0-47b3108a2e91",
+            "formatString": "dd-MM-yyyy"
           },
           {
             "name": "Fecha_Realizada",
             "dataType": "dateTime",
             "sourceColumn": "Fecha_Realizada",
-            "lineageTag": "54aaf83d-2a5f-4530-a602-46feb835dfa9"
+            "lineageTag": "54aaf83d-2a5f-4530-a602-46feb835dfa9",
+            "formatString": "dd-MM-yyyy"
           },
           {
             "name": "Estado",
@@ -639,21 +671,24 @@
             "expression": [
               "CALCULATE ( COUNTROWS ( MantencionMensual ), MantencionMensual[Estado] <> \"Cancelada\" )"
             ],
-            "lineageTag": "588290f8-39d5-48f5-93c0-83bab20f6716"
+            "lineageTag": "588290f8-39d5-48f5-93c0-83bab20f6716",
+            "formatString": "#,0"
           },
           {
             "name": "OT Realizadas",
             "expression": [
               "CALCULATE ( COUNTROWS ( MantencionMensual ), MantencionMensual[Estado] = \"Realizada\" )"
             ],
-            "lineageTag": "2b8e646f-b6ec-49aa-8c1b-27cbf10e5055"
+            "lineageTag": "2b8e646f-b6ec-49aa-8c1b-27cbf10e5055",
+            "formatString": "#,0"
           },
           {
             "name": "Cumplimiento PM %",
             "expression": [
               "DIVIDE ( [OT Realizadas], [OT Programadas] )"
             ],
-            "lineageTag": "490cf7ce-a859-432c-a907-787a8b1d8474"
+            "lineageTag": "490cf7ce-a859-432c-a907-787a8b1d8474",
+            "formatString": "0%"
           },
           {
             "name": "OT Realizadas En Fecha",
@@ -667,14 +702,16 @@
               "    )",
               ")"
             ],
-            "lineageTag": "0c49540e-72f6-45c3-80ea-c679fde21ee5"
+            "lineageTag": "0c49540e-72f6-45c3-80ea-c679fde21ee5",
+            "formatString": "#,0"
           },
           {
             "name": "Puntualidad PM %",
             "expression": [
               "DIVIDE ( [OT Realizadas En Fecha], [OT Realizadas] )"
             ],
-            "lineageTag": "a2c70759-86a3-4417-ab7e-530f9a1e04fd"
+            "lineageTag": "a2c70759-86a3-4417-ab7e-530f9a1e04fd",
+            "formatString": "0%"
           },
           {
             "name": "OT Atrasadas",
@@ -690,7 +727,8 @@
               "    REMOVEFILTERS ( Calendario )",
               ")"
             ],
-            "lineageTag": "b04ab37a-0996-48e6-bf47-0a140b4c9b09"
+            "lineageTag": "b04ab37a-0996-48e6-bf47-0a140b4c9b09",
+            "formatString": "#,0"
           },
           {
             "name": "OT Proximas 7 Dias",
@@ -707,7 +745,8 @@
               "    REMOVEFILTERS ( Calendario )",
               ")"
             ],
-            "lineageTag": "18196486-a44b-4a6a-abb1-a546f55be3f5"
+            "lineageTag": "18196486-a44b-4a6a-abb1-a546f55be3f5",
+            "formatString": "#,0"
           },
           {
             "name": "Dias Atraso Promedio",
@@ -722,7 +761,8 @@
               "    INT ( MantencionMensual[Fecha_Realizada] - MantencionMensual[Fecha_Programada] )",
               ")"
             ],
-            "lineageTag": "3aaee0a2-e5e3-4ee2-885c-042a46a726aa"
+            "lineageTag": "3aaee0a2-e5e3-4ee2-885c-042a46a726aa",
+            "formatString": "#,0.0"
           },
           {
             "name": "Horas PM Ejecutadas",
@@ -732,7 +772,8 @@
               "    60",
               ")"
             ],
-            "lineageTag": "5b7408ab-3ea4-4dc5-95cb-725e3ddffa52"
+            "lineageTag": "5b7408ab-3ea4-4dc5-95cb-725e3ddffa52",
+            "formatString": "#,0.0"
           }
         ]
       },
@@ -817,7 +858,8 @@
             "isNameInferred": true,
             "isDataTypeInferred": true,
             "lineageTag": "d1dce275-1e63-485d-92db-e80bdfdd43d7",
-            "isKey": true
+            "isKey": true,
+            "formatString": "dd-MM-yyyy"
           },
           {
             "name": "Anio",
