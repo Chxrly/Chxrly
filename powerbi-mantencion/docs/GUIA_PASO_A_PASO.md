@@ -5,7 +5,7 @@ conectado a un Google Sheet donde el equipo registra la bitácora de cada
 turno, las fallas/reparaciones y el plan de mantención mensual de las
 máquinas del centro de distribución.
 
-**El resultado final son estas 3 páginas** (maquetas de referencia; las
+**El resultado final son estas 4 páginas** (maquetas de referencia; las
 construirás visual por visual en el paso 6):
 
 | Página | Responde a |
@@ -13,10 +13,12 @@ construirás visual por visual en el paso 6):
 | **1 · Bitácora del turno** | ¿Qué se hizo en cada turno? ¿En qué estado quedaron las máquinas? ¿Qué quedó pendiente? |
 | **2 · Fallas y reparaciones** | ¿Qué máquinas fallan más? ¿Cuánto tiempo de detención generan? ¿Qué sigue abierto? |
 | **3 · Mantención mensual** | ¿Se está cumpliendo el plan de mantención preventiva de cada máquina, mes a mes? |
+| **4 · Reporte diario del turno** | ¿Qué problemas hubo hoy en el turno? Fallas por equipo, minutos y razón de inactividad, solución aplicada y mantenciones por clase (preventiva · correctiva · rutina) |
 
 ![Página 1 — Bitácora del turno](img/pagina-1-bitacora.png)
 ![Página 2 — Fallas y reparaciones](img/pagina-2-fallas.png)
 ![Página 3 — Mantención mensual](img/pagina-3-mantencion.png)
+![Página 4 — Reporte diario del turno](img/pagina-4-reporte-diario.png)
 
 ---
 
@@ -138,7 +140,7 @@ segmentaciones de fecha, y **`Maquinas[ID_Maquina]`/`[Zona]`** para máquinas.
 3. En la tabla `MantencionMensual`: `Nueva columna` → pega
    [`dax/03_columna_estado_ejecucion.dax`](../dax/03_columna_estado_ejecucion.dax).
 
-## Paso 6 — Construir las 3 páginas
+## Paso 6 — Construir las 4 páginas
 
 Aplica primero el tema: `Ver → Temas → Buscar temas →`
 [`tema/tema_mantencion.json`](../tema/tema_mantencion.json). Renombra las
@@ -207,6 +209,46 @@ Segmentaciones extra: `Calendario[Mes]`, `Maquinas[Zona]`,
 > `Realizada en fecha` → `#0CA30C` · `Realizada con atraso` → `#FAB219` ·
 > `Atrasada` → `#D03B3B` · `Reprogramada` → `#898781` · `Programada` →
 > `#E1E0D9`. Con eso cada celda queda como un semáforo por máquina y mes.
+
+### Página 4 · Reporte diario del turno
+
+La página de cierre operativo: **un día (y opcionalmente un turno) a la
+vista**, con los problemas del turno, la inactividad y su razón, la solución
+aplicada y las mantenciones clasificadas. La clasificación
+Preventiva / Correctiva / Rutina la calcula automáticamente la consulta
+`Bitacora` (columna `Clase_Mantencion`) a partir del tipo de actividad, así
+que **no hay que registrar nada nuevo en la hoja**:
+
+| `Tipo_Actividad` registrado | `Clase_Mantencion` |
+|---|---|
+| Mantención Preventiva | Preventiva |
+| Reparación | Correctiva |
+| Inspección · Limpieza · Lubricación · Ajuste · Cambio de Batería | Rutina |
+| Apoyo a Operación · Capacitación · Otro | Otra |
+
+Segmentaciones: `Calendario[Fecha]` (estilo **lista desplegable, selección
+única** — la página se mira un día a la vez), `Bitacora[Turno]`,
+`Maquinas[ID_Maquina]`, `Bitacora[Clase_Mantencion]`.
+
+| Visual | Tipo | Campos / medida |
+|---|---|---|
+| Fallas del turno | Tarjeta | `[Numero Fallas]` |
+| Minutos de inactividad | Tarjeta | `[Minutos Detencion Fallas]` |
+| Equipos con detención | Tarjeta | `[Equipos Con Falla]` |
+| Mantenciones del turno | Tarjeta | `[Actividades]` + `[Mantenciones Correctivas]`, `[Mantenciones Preventivas]`, `[Mantenciones de Rutina]` |
+| Fallas del turno y su solución | Tabla | `Fecha_Hora_Falla, ID_Maquina, Tipo_Falla` (razón), `Descripcion_Falla, Detencion_Min, Estado, Reparacion_Realizada` (solución) |
+| Mantenciones del turno por clase | Barras horizontales | Eje Y: `Bitacora[Clase_Mantencion]` · Eje X: `[Actividades]` |
+| Inactividad por razón | Barras horizontales | Eje Y: `Fallas[Tipo_Falla]` · Eje X: `[Minutos Detencion Fallas]` |
+| Traspaso al próximo turno | Tabla | `Bitacora`: `ID_Maquina, Descripcion, Observaciones` — filtro del visual: `Pendiente` = "Sí" |
+
+> Notas de esta página:
+> - Para ver también las fallas **de arrastre** (abiertas de días anteriores)
+>   en la tabla, usa como filtro de página `Fallas[Estado]` ≠ Cerrada **o**
+>   fecha = día seleccionado (o duplica la tabla: "nuevas del día" y
+>   "arrastradas").
+> - En Power BI Service puedes crear una **suscripción por correo** a esta
+>   página (Suscribirse → diaria a las 07:00 / 15:00 / 23:00) para que el
+>   reporte del turno llegue solo a jefatura al cierre de cada turno.
 
 ## Paso 7 — Publicar y automatizar
 

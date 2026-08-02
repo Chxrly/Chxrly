@@ -16,6 +16,9 @@ mantención mensual (preventiva) de las máquinas.
   fallas abiertas que se arrastran entre turnos.
 - **Mantención mensual**: si el plan preventivo se está cumpliendo, máquina
   por máquina y mes a mes, con OT atrasadas y reprogramadas a la vista.
+- **Reporte diario del turno**: un día a la vista — fallas por equipo,
+  minutos y razón de inactividad, solución aplicada en el turno, mantenciones
+  por clase (preventiva · correctiva · rutina) y traspaso al turno entrante.
 
 ## Contenido del kit
 
@@ -29,14 +32,14 @@ powerbi-mantencion/
 │   └── csv-enlace-publico/                  ← consultas M, método alternativo sin credenciales
 ├── dax/
 │   ├── 01_tabla_calendario.dax              ← dimensión de fechas
-│   ├── 02_medidas.dax                       ← 26 medidas: MTTR, MTBF, disponibilidad,
+│   ├── 02_medidas.dax                       ← 30 medidas: MTTR, MTBF, disponibilidad,
 │   │                                          cumplimiento PM, atrasadas, etc.
 │   └── 03_columna_estado_ejecucion.dax      ← semáforo para la matriz de cumplimiento
 ├── tema/
 │   └── tema_mantencion.json                 ← tema visual de Power BI (paleta accesible)
 └── docs/
     ├── GUIA_PASO_A_PASO.md                  ← ★ empezar aquí
-    └── img/                                 ← maquetas de las 3 páginas
+    └── img/                                 ← maquetas de las 4 páginas
 ```
 
 ## Cómo empezar (resumen)
@@ -48,7 +51,7 @@ powerbi-mantencion/
    de `power-query/conector-google-sheets/` y aplica.
 3. **Modelo** — crea la tabla `Calendario`, las relaciones y las medidas
    (`dax/`).
-4. **Páginas** — aplica `tema/tema_mantencion.json` y construye las 3 páginas
+4. **Páginas** — aplica `tema/tema_mantencion.json` y construye las 4 páginas
    siguiendo las maquetas y las tablas visual-por-visual de la guía.
 5. **Publica** — sube al Power BI Service y programa la actualización
    automática (origen en la nube, sin puerta de enlace).
@@ -56,16 +59,20 @@ powerbi-mantencion/
 La guía completa, con capturas y solución de problemas:
 **[docs/GUIA_PASO_A_PASO.md](docs/GUIA_PASO_A_PASO.md)**
 
-## Las 3 páginas del dashboard
+## Las 4 páginas del dashboard
 
 | | |
 |---|---|
 | ![Página 2](docs/img/pagina-2-fallas.png) | ![Página 3](docs/img/pagina-3-mantencion.png) |
 
+![Página 4 — Reporte diario del turno](docs/img/pagina-4-reporte-diario.png)
+
 **KPIs incluidos:** actividades por turno · pendientes entre turnos ·
 máquinas detenidas · horas de detención · N° de fallas y fallas abiertas ·
 MTTR · MTBF · disponibilidad estimada · cumplimiento del plan mensual ·
-puntualidad de OT · OT atrasadas y próximas · horas de mantención preventiva.
+puntualidad de OT · OT atrasadas y próximas · horas de mantención preventiva ·
+mantenciones por clase (preventiva / correctiva / rutina) · inactividad por
+razón.
 
 > Los datos de la plantilla son de ejemplo (junio–agosto 2026) para que el
 > dashboard se vea poblado al primer intento; bórralos al pasar a producción.

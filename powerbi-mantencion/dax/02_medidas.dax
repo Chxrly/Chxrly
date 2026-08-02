@@ -42,6 +42,26 @@ Turnos Con Registro =
 COUNTROWS ( SUMMARIZE ( Bitacora, Bitacora[Fecha], Bitacora[Turno] ) )
 // Sirve para vigilar que los 3 turnos estén reportando. Formato: entero
 
+// ----------------------------------------------------------------------------
+
+Mantenciones Preventivas =
+CALCULATE ( COUNTROWS ( Bitacora ), Bitacora[Clase_Mantencion] = "Preventiva" )
+// La columna Clase_Mantencion la crea la consulta Bitacora en Power Query.
+// Formato: entero
+
+// ----------------------------------------------------------------------------
+
+Mantenciones Correctivas =
+CALCULATE ( COUNTROWS ( Bitacora ), Bitacora[Clase_Mantencion] = "Correctiva" )
+// Formato: entero
+
+// ----------------------------------------------------------------------------
+
+Mantenciones de Rutina =
+CALCULATE ( COUNTROWS ( Bitacora ), Bitacora[Clase_Mantencion] = "Rutina" )
+// Inspecciones, limpiezas, lubricaciones, ajustes y cambios de batería.
+// Formato: entero
+
 
 // ──────────────────────────────── FALLAS ────────────────────────────────────
 
@@ -80,6 +100,13 @@ CALCULATE (
     REMOVEFILTERS ( Calendario )
 )
 // Para la tarjeta "Máquinas detenidas / en falla ahora". Formato: entero
+
+// ----------------------------------------------------------------------------
+
+Equipos Con Falla =
+DISTINCTCOUNT ( Fallas[ID_Maquina] )
+// Equipos afectados por fallas en el período filtrado (p. ej. el turno del
+// reporte diario). Formato: entero
 
 // ----------------------------------------------------------------------------
 

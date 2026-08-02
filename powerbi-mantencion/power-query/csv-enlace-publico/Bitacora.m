@@ -18,6 +18,20 @@ let
          {"Estado_Maquina", type text}, {"Detencion_Min", Int64.Type},
          {"Pendiente", type text}, {"Observaciones", type text}},
         "es-CL"
+    ),
+    // Clase de mantención para el reporte diario (Preventiva / Correctiva / Rutina)
+    ConClase = Table.AddColumn(
+        Tipos,
+        "Clase_Mantencion",
+        each
+            if [Tipo_Actividad] = "Mantención Preventiva" then "Preventiva"
+            else if [Tipo_Actividad] = "Reparación" then "Correctiva"
+            else if List.Contains(
+                {"Inspección", "Limpieza", "Lubricación", "Ajuste", "Cambio de Batería"},
+                [Tipo_Actividad]
+            ) then "Rutina"
+            else "Otra",
+        type text
     )
 in
-    Tipos
+    ConClase
