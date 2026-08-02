@@ -5,7 +5,7 @@ conectado a un Google Sheet donde el equipo registra la bitácora de cada
 turno, las fallas/reparaciones y el plan de mantención mensual de las
 máquinas del centro de distribución.
 
-**El resultado final son estas 4 páginas** (maquetas de referencia; las
+**El resultado final son estas 5 páginas** (maquetas de referencia; las
 construirás visual por visual en el paso 6):
 
 | Página | Responde a |
@@ -14,11 +14,13 @@ construirás visual por visual en el paso 6):
 | **2 · Fallas y reparaciones** | ¿Qué máquinas fallan más? ¿Cuánto tiempo de detención generan? ¿Qué sigue abierto? |
 | **3 · Mantención mensual** | ¿Se está cumpliendo el plan de mantención preventiva de cada máquina, mes a mes? |
 | **4 · Reporte diario del turno** | ¿Qué problemas hubo hoy en el turno? Fallas por equipo, minutos y razón de inactividad, solución aplicada y mantenciones por clase (preventiva · correctiva · rutina) |
+| **5 · Resumen KPI · Gerencia** | ¿Cómo estamos contra metas y benchmarks del rubro? Semáforo de indicadores, % trabajo planificado vs cumplimiento, top ofensores y reincidencias |
 
 ![Página 1 — Bitácora del turno](img/pagina-1-bitacora.png)
 ![Página 2 — Fallas y reparaciones](img/pagina-2-fallas.png)
 ![Página 3 — Mantención mensual](img/pagina-3-mantencion.png)
 ![Página 4 — Reporte diario del turno](img/pagina-4-reporte-diario.png)
+![Página 5 — Resumen KPI Gerencia](img/pagina-5-resumen-kpi.png)
 
 ---
 
@@ -140,7 +142,7 @@ segmentaciones de fecha, y **`Maquinas[ID_Maquina]`/`[Zona]`** para máquinas.
 3. En la tabla `MantencionMensual`: `Nueva columna` → pega
    [`dax/03_columna_estado_ejecucion.dax`](../dax/03_columna_estado_ejecucion.dax).
 
-## Paso 6 — Construir las 4 páginas
+## Paso 6 — Construir las 5 páginas
 
 Aplica primero el tema: `Ver → Temas → Buscar temas →`
 [`tema/tema_mantencion.json`](../tema/tema_mantencion.json). Renombra las
@@ -249,6 +251,33 @@ Segmentaciones: `Calendario[Fecha]` (estilo **lista desplegable, selección
 > - En Power BI Service puedes crear una **suscripción por correo** a esta
 >   página (Suscribirse → diaria a las 07:00 / 15:00 / 23:00) para que el
 >   reporte del turno llegue solo a jefatura al cierre de cada turno.
+
+### Página 5 · Resumen KPI · Gerencia
+
+La vista ejecutiva, construida según las prácticas del rubro (máximo 6
+indicadores, cada uno **contra su meta y el benchmark de clase mundial**,
+con semáforo y tendencia). Las metas y sus fuentes están documentadas en
+[`INVESTIGACION_KPI.md`](INVESTIGACION_KPI.md) — ajusta las metas internas a
+tu realidad y súbelas año a año.
+
+Segmentaciones: `Calendario[Mes]`, `Maquinas[Tipo]` (sección),
+`Maquinas[Criticidad]`.
+
+| Visual | Tipo | Campos / medida |
+|---|---|---|
+| Disponibilidad flota | Tarjeta | `[Disponibilidad %]` · meta ≥ 98 % |
+| % trabajo planificado | Tarjeta | `[% Trabajo Planificado]` · meta ≥ 85 % (SMRP) |
+| Cumplimiento PM | Tarjeta | `[Cumplimiento PM %]` · meta ≥ 90 % |
+| MTTR | Tarjeta | `[MTTR Horas]` · meta ≤ 2 h |
+| Reincidencias | Tarjeta | `[Fallas Reincidentes 30d]` · meta 0 |
+| Backlog | Tarjeta | `[Fallas Abiertas (actual)]` + `[Antiguedad Backlog Dias]` |
+| Estrategia: planificado vs cumplimiento | Líneas | Eje X: `Calendario[Mes]` · Valores: `[% Trabajo Planificado]`, `[Cumplimiento PM %]` · línea de constante Y = 0,85 |
+| Detención por sección | Barras horizontales | Eje Y: `Maquinas[Tipo]` · Eje X: `[Horas Detencion Fallas]` |
+| Top ofensores | Tabla | `Maquinas[ID_Maquina]`, `[Minutos Detencion Fallas]`, `[Numero Fallas]` — Top 5 por detención |
+| Semáforo vs benchmark | Tabla | Una fila por KPI con valor, meta y benchmark; usa iconos de formato condicional para el estado |
+
+> Para los semáforos de las tarjetas: `Formato → fx` sobre el color del
+> texto/fondo con reglas (verde si cumple meta, ámbar cerca, rojo bajo).
 
 ## Paso 7 — Publicar y automatizar
 

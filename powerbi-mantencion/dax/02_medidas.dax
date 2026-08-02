@@ -62,6 +62,17 @@ CALCULATE ( COUNTROWS ( Bitacora ), Bitacora[Clase_Mantencion] = "Rutina" )
 // Inspecciones, limpiezas, lubricaciones, ajustes y cambios de batería.
 // Formato: entero
 
+// ----------------------------------------------------------------------------
+
+% Trabajo Planificado =
+DIVIDE (
+    [Mantenciones Preventivas] + [Mantenciones de Rutina],
+    [Mantenciones Preventivas] + [Mantenciones de Rutina] + [Mantenciones Correctivas]
+)
+// El indicador de salud de la estrategia: trabajo planificado vs correctivo.
+// Benchmark SMRP / clase mundial: >= 85 % planificado; promedio industria
+// 50-60 %; bajo 70 % el programa es reactivo. Formato: porcentaje, 0 dec.
+
 
 // ──────────────────────────────── FALLAS ────────────────────────────────────
 
@@ -251,3 +262,73 @@ DIVIDE (
     60
 )
 // Horas invertidas en mantención preventiva. Formato: decimal, 1 decimal
+
+
+// ─────────────────── CONFIABILIDAD Y BACKLOG (benchmarks) ───────────────────
+
+Antiguedad Backlog Dias =
+AVERAGEX (
+    CALCULATETABLE (
+        FILTER ( Fallas, Fallas[Estado] <> "Cerrada" ),
+        REMOVEFILTERS ( Calendario )
+    ),
+    INT ( TODAY () - Fallas[Fecha] )
+)
+// Edad promedio (días) de las fallas abiertas. Un backlog sano se resuelve
+// en 3-5 semanas; fallas que envejecen indican falta de repuestos o de
+// capacidad. Formato: decimal, 1 decimal
+
+// ----------------------------------------------------------------------------
+
+Antiguedad Backlog Max Dias =
+MAXX (
+    CALCULATETABLE (
+        FILTER ( Fallas, Fallas[Estado] <> "Cerrada" ),
+        REMOVEFILTERS ( Calendario )
+    ),
+    INT ( TODAY () - Fallas[Fecha] )
+)
+// La falla abierta más antigua. Formato: entero
+
+// ----------------------------------------------------------------------------
+
+% Fallas Resueltas Mismo Dia =
+VAR Cerradas =
+    FILTER (
+        Fallas,
+        Fallas[Estado] = "Cerrada" && NOT ISBLANK ( Fallas[Fecha_Hora_Cierre] )
+    )
+RETURN
+    DIVIDE (
+        COUNTROWS (
+            FILTER ( Cerradas, INT ( Fallas[Fecha_Hora_Cierre] ) = INT ( Fallas[Fecha_Hora_Falla] ) )
+        ),
+        COUNTROWS ( Cerradas )
+    )
+// Capacidad de resolución del turno: fallas cerradas el mismo día en que
+// se detectaron. Formato: porcentaje, 0 decimales
+
+// ----------------------------------------------------------------------------
+
+Fallas Reincidentes 30d =
+COUNTROWS (
+    FILTER (
+        Fallas,
+        VAR EquipoActual = Fallas[ID_Maquina]
+        VAR TipoActual = Fallas[Tipo_Falla]
+        VAR FechaActual = Fallas[Fecha_Hora_Falla]
+        RETURN
+            NOT ISEMPTY (
+                FILTER (
+                    ALL ( Fallas ),
+                    Fallas[ID_Maquina] = EquipoActual
+                        && Fallas[Tipo_Falla] = TipoActual
+                        && Fallas[Fecha_Hora_Falla] < FechaActual
+                        && Fallas[Fecha_Hora_Falla] >= FechaActual - 30
+                )
+            )
+    )
+)
+// Fallas que repiten el mismo equipo y tipo dentro de 30 días: mide la
+// calidad de la reparación (arreglo de raíz vs parche). Meta: 0.
+// Formato: entero
