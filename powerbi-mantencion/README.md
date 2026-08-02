@@ -22,6 +22,10 @@ mantención mensual (preventiva) de las máquinas.
 - **Resumen KPI para gerencia**: cada indicador contra su meta y el benchmark
   de clase mundial (SMRP), con semáforo y tendencia: disponibilidad,
   % trabajo planificado, cumplimiento PM, MTTR, reincidencias y backlog.
+- **Pautas de mantención por equipo**: biblioteca de pautas por frecuencia
+  (diaria → anual) con link al documento del fabricante, segmentable por
+  fabricante y sección; y **ficha por equipo** (drillthrough) que enlaza la
+  bitácora, fallas, pautas e historial de cada máquina.
 
 ## Contenido del kit
 
@@ -44,6 +48,7 @@ powerbi-mantencion/
     ├── GUIA_PASO_A_PASO.md                  ← ★ empezar aquí
     ├── INVESTIGACION_KPI.md                 ← benchmarks del rubro (SMRP) y diseño de
     │                                          dashboards profesionales, con fuentes
+    ├── ARQUITECTURA_INTEGRACION.md          ← fases con Power Automate, Azure y Snowflake
     └── img/                                 ← maquetas de las 5 páginas
 ```
 

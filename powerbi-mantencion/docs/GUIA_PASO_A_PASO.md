@@ -36,8 +36,9 @@ construirás visual por visual en el paso 6):
    |---|---|---|
    | `Bitacora` | actividades de cada turno | una actividad |
    | `Fallas` | fallas y su reparación | una falla (se completa el cierre al repararla) |
-   | `MantencionMensual` | plan preventivo y su ejecución | una OT por máquina y mes |
-   | `Maquinas` | catálogo de equipos | una máquina |
+   | `MantencionMensual` | plan preventivo y su ejecución (todas las frecuencias: use la columna `Frecuencia`) | una OT por equipo y período |
+   | `Maquinas` | catálogo de equipos, con sección (`Tipo`), zona, criticidad y fabricante | una máquina |
+   | `Pautas` | pauta de mantención por equipo y frecuencia (diaria → anual) con link al documento del fabricante | una pauta |
    | `Listas` | valores de los desplegables | — |
 
 4. Adapta `Maquinas` a tus equipos reales y la columna `Tecnicos` de `Listas`
@@ -75,8 +76,9 @@ La hoja permanece privada; Power BI se conecta con tu cuenta Google.
    Renombra la consulta a `Bitacora` (panel derecho).
 3. La primera vez pedirá credenciales: elige iniciar sesión con Google y
    autoriza el acceso de solo lectura.
-4. Repite el punto 2 con `Fallas.m`, `MantencionMensual.m` y `Maquinas.m`
-   (nombres de consulta: `Fallas`, `MantencionMensual`, `Maquinas`).
+4. Repite el punto 2 con `Fallas.m`, `MantencionMensual.m`, `Maquinas.m` y
+   `Pautas.m` (nombres de consulta: `Fallas`, `MantencionMensual`,
+   `Maquinas`, `Pautas`).
 5. `Cerrar y aplicar`.
 
 > Si el paso `Hoja` diera error en tu versión de Power BI, borra los pasos
@@ -125,6 +127,7 @@ flowchart LR
 | `Maquinas[ID_Maquina]` | `Bitacora[ID_Maquina]` | |
 | `Maquinas[ID_Maquina]` | `Fallas[ID_Maquina]` | |
 | `Maquinas[ID_Maquina]` | `MantencionMensual[ID_Maquina]` | |
+| `Maquinas[ID_Maquina]` | `Pautas[ID_Maquina]` | permite segmentar pautas por fabricante y sección |
 | `Calendario[Fecha]` | `Bitacora[Fecha]` | |
 | `Calendario[Fecha]` | `Fallas[Fecha]` | la columna `Fecha` la crea la consulta (día de `Fecha_Hora_Falla`) |
 | `Calendario[Fecha]` | `MantencionMensual[Fecha_Programada]` | |
@@ -279,6 +282,49 @@ Segmentaciones: `Calendario[Mes]`, `Maquinas[Tipo]` (sección),
 > Para los semáforos de las tarjetas: `Formato → fx` sobre el color del
 > texto/fondo con reglas (verde si cumple meta, ámbar cerca, rojo bajo).
 
+### Página extra · Pautas de mantención por equipo
+
+Con la tabla `Pautas` cargada puedes armar la biblioteca de pautas
+segmentada según fabricante:
+
+1. **Preparar el link**: sube los PDF de las pautas del fabricante a una
+   carpeta de Drive/SharePoint y pega cada enlace en la columna
+   `Link_Pauta` de la pestaña `Pautas` (la plantilla trae marcadores
+   `REEMPLAZAR`).
+2. En Power BI, selecciona la columna `Link_Pauta` → `Herramientas de
+   columna → Categoría de datos → Dirección URL web`.
+3. Crea la página con: segmentaciones `Maquinas[Fabricante]`,
+   `Maquinas[Tipo]`, `Pautas[Frecuencia]`, `Maquinas[ID_Maquina]` + una
+   **tabla** con `ID_Maquina, Frecuencia, Tarea, Duracion_Min_Est,
+   Link_Pauta`. En el formato de la tabla activa `Valores → Icono de URL`
+   para que el link se muestre como ícono clicable 🔗.
+
+**Dónde vive cada frecuencia del plan:**
+
+| Frecuencia | Se planifica en | Se registra en | Se controla con |
+|---|---|---|---|
+| Diaria / Semanal | `Pautas` (checklist de rutina) | `Bitacora` (Tipo\_Actividad Inspección/Limpieza/etc.) | `[Mantenciones de Rutina]`, actividades por día (página 1) |
+| Mensual / Bimestral / Trimestral | `MantencionMensual` (columna `Frecuencia`) | misma fila (Fecha\_Realizada) | matriz página 3, `[Cumplimiento PM %]` |
+| Semestral / Anual | `MantencionMensual` (columna `Frecuencia`) | misma fila | tabla de OT filtrada por `Frecuencia` |
+
+> Las OT diarias no se cargan una a una al plan (serían 600 filas/mes):
+> la rutina diaria/semanal se controla por la bitácora contra la pauta.
+
+### Página extra · Ficha de equipo (obtención de detalles)
+
+La vista que enlaza todo por equipo — su bitácora, sus fallas y soluciones,
+sus pautas y su historial de plan:
+
+1. Crea una página `Ficha equipo` y en el panel **Visualizaciones →
+   Obtención de detalles** arrastra `Maquinas[ID_Maquina]`.
+2. Agrega: tarjetas con `Maquinas[Nombre]`, `[Numero Fallas]`,
+   `[Horas Detencion Fallas]`, `[MTBF Horas]`, `[Cumplimiento PM %]`; tabla
+   de su bitácora; tabla de sus fallas con `Reparacion_Realizada`; tabla de
+   sus `Pautas` con el link; y la matriz de ejecución PM filtrada.
+3. Desde **cualquier** visual de las otras páginas: clic derecho sobre un
+   equipo → `Obtener detalles → Ficha equipo`. Así el reporte diario y el
+   mensual quedan enlazados a la bitácora de cada equipo.
+
 ## Paso 7 — Publicar y automatizar
 
 1. `Inicio → Publicar` → elige tu área de trabajo de Power BI Service.
@@ -290,6 +336,10 @@ Segmentaciones: `Calendario[Mes]`, `Maquinas[Tipo]` (sección),
    Google Sheets es un origen en la nube.
 4. Comparte el informe con jefatura y supervisores, e instala la app móvil
    de Power BI para revisarlo en terreno.
+5. Automatizaciones siguientes (refresh cada 10 min con PPU + Power
+   Automate, alertas de falla crítica a Teams, integración futura con
+   Snowflake/Azure): ver
+   [`ARQUITECTURA_INTEGRACION.md`](ARQUITECTURA_INTEGRACION.md).
 
 ## Rutina de uso sugerida
 
