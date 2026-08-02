@@ -1,0 +1,25 @@
+// ============================================================================
+// Columna calculada: Estado Ejecucion  (tabla MantencionMensual)
+// ----------------------------------------------------------------------------
+// En Power BI Desktop: seleccionar la tabla MantencionMensual > pestaña
+// "Herramientas de tabla" > "Nueva columna" > pegar todo.
+//
+// Clasifica cada OT para la matriz "Ejecución del plan por máquina y mes":
+//   Realizada en fecha · Realizada con atraso · Atrasada · Reprogramada ·
+//   Programada · Cancelada
+// Úsala con formato condicional (ver guía, página 3 del dashboard).
+// ============================================================================
+Estado Ejecucion =
+SWITCH (
+    TRUE (),
+    MantencionMensual[Estado] = "Cancelada", "Cancelada",
+    MantencionMensual[Estado] = "Realizada"
+        && NOT ISBLANK ( MantencionMensual[Fecha_Realizada] )
+        && MantencionMensual[Fecha_Realizada] <= MantencionMensual[Fecha_Programada], "Realizada en fecha",
+    MantencionMensual[Estado] = "Realizada", "Realizada con atraso",
+    MantencionMensual[Estado] = "Reprogramada"
+        && MantencionMensual[Fecha_Programada] < TODAY (), "Atrasada",
+    MantencionMensual[Estado] = "Reprogramada", "Reprogramada",
+    MantencionMensual[Fecha_Programada] < TODAY (), "Atrasada",
+    "Programada"
+)

@@ -1,0 +1,25 @@
+// ============================================================================
+// Tabla Calendario (dimensión de fechas)
+// ----------------------------------------------------------------------------
+// En Power BI Desktop: pestaña "Modelado" > "Nueva tabla" > pegar todo.
+// Después:
+//   1. Marcarla como tabla de fechas: Herramientas de tabla > Marcar como
+//      tabla de fechas > columna [Fecha].
+//   2. Seleccionar la columna [Mes] > Ordenar por columna > [AnioMes].
+//   3. Seleccionar la columna [DiaSemana] > Ordenar por columna > [DiaSemanaNum].
+// CALENDARAUTO() cubre automáticamente todo el rango de fechas del modelo.
+// ============================================================================
+Calendario =
+ADDCOLUMNS (
+    SELECTCOLUMNS ( CALENDARAUTO (), "Fecha", [Date] ),
+    "Anio", YEAR ( [Fecha] ),
+    "MesNum", MONTH ( [Fecha] ),
+    "AnioMes", FORMAT ( [Fecha], "yyyy-MM" ),
+    "Mes", FORMAT ( [Fecha], "mmm yyyy" ),
+    "MesCorto", FORMAT ( [Fecha], "mmm" ),
+    "Semana", WEEKNUM ( [Fecha], 2 ),
+    "Dia", DAY ( [Fecha] ),
+    "DiaSemanaNum", WEEKDAY ( [Fecha], 2 ),
+    "DiaSemana", FORMAT ( [Fecha], "ddd" ),
+    "EsFinDeSemana", WEEKDAY ( [Fecha], 2 ) > 5
+)

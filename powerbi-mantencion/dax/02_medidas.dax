@@ -1,0 +1,226 @@
+// ============================================================================
+// MEDIDAS DAX — Dashboard de Mantención · Centro de Distribución
+// ----------------------------------------------------------------------------
+// Cómo usarlas: en Power BI Desktop, clic derecho sobre la tabla "Medidas"
+// (crear antes una tabla vacía: Inicio > Especificar datos > nombre "Medidas")
+// > "Nueva medida" > pegar UNA medida (desde su nombre hasta antes del
+// separador -----) > Enter. Repetir para cada una.
+// El formato sugerido se indica en cada bloque (se define en
+// Herramientas de medición > Formato).
+//
+// Supuesto configurable: el CD opera 24/7. Si un equipo opera menos horas,
+// edita la medida [Horas Operacion por Dia].
+// ============================================================================
+
+
+// ─────────────────────────────── BITÁCORA ───────────────────────────────────
+
+Actividades = COUNTROWS ( Bitacora )
+// Formato: número entero
+
+// ----------------------------------------------------------------------------
+
+Actividades Pendientes =
+CALCULATE ( COUNTROWS ( Bitacora ), Bitacora[Pendiente] = "Sí" )
+// Pendientes que se dejan anotados para el turno siguiente. Formato: entero
+
+// ----------------------------------------------------------------------------
+
+Horas Detencion Bitacora =
+DIVIDE ( SUM ( Bitacora[Detencion_Min] ), 60 )
+// Formato: número decimal, 1 decimal
+
+// ----------------------------------------------------------------------------
+
+Maquinas Intervenidas =
+DISTINCTCOUNT ( Bitacora[ID_Maquina] )
+// Formato: entero
+
+// ----------------------------------------------------------------------------
+
+Turnos Con Registro =
+COUNTROWS ( SUMMARIZE ( Bitacora, Bitacora[Fecha], Bitacora[Turno] ) )
+// Sirve para vigilar que los 3 turnos estén reportando. Formato: entero
+
+
+// ──────────────────────────────── FALLAS ────────────────────────────────────
+
+Numero Fallas = COUNTROWS ( Fallas )
+// Formato: entero
+
+// ----------------------------------------------------------------------------
+
+Fallas Abiertas =
+CALCULATE ( COUNTROWS ( Fallas ), Fallas[Estado] <> "Cerrada" )
+// Respeta el filtro de fecha del informe. Formato: entero
+
+// ----------------------------------------------------------------------------
+
+Fallas Abiertas (actual) =
+CALCULATE (
+    COUNTROWS ( Fallas ),
+    Fallas[Estado] <> "Cerrada",
+    REMOVEFILTERS ( Calendario )
+)
+// Backlog real ahora, ignora el rango de fechas del informe.
+// Úsala en la tarjeta "Fallas abiertas". Formato: entero
+
+// ----------------------------------------------------------------------------
+
+Fallas Criticas =
+CALCULATE ( COUNTROWS ( Fallas ), Fallas[Severidad] = "Crítica" )
+// Formato: entero
+
+// ----------------------------------------------------------------------------
+
+Maquinas Con Falla Abierta =
+CALCULATE (
+    DISTINCTCOUNT ( Fallas[ID_Maquina] ),
+    Fallas[Estado] <> "Cerrada",
+    REMOVEFILTERS ( Calendario )
+)
+// Para la tarjeta "Máquinas detenidas / en falla ahora". Formato: entero
+
+// ----------------------------------------------------------------------------
+
+Minutos Detencion Fallas = SUM ( Fallas[Detencion_Min] )
+// Formato: entero
+
+// ----------------------------------------------------------------------------
+
+Horas Detencion Fallas =
+DIVIDE ( [Minutos Detencion Fallas], 60 )
+// Formato: decimal, 1 decimal
+
+// ----------------------------------------------------------------------------
+
+MTTR Horas =
+DIVIDE (
+    CALCULATE ( AVERAGE ( Fallas[Detencion_Min] ), Fallas[Estado] = "Cerrada" ),
+    60
+)
+// Tiempo medio de reparación (solo fallas cerradas). Formato: decimal, 1 decimal
+
+// ----------------------------------------------------------------------------
+
+Horas Operacion por Dia = 24
+// Supuesto editable: horas de operación por máquina y día (CD automatizado 24/7)
+
+// ----------------------------------------------------------------------------
+
+Horas Operacion Estimadas =
+[Horas Operacion por Dia]
+    * COUNTROWS ( Calendario )
+    * DISTINCTCOUNT ( Maquinas[ID_Maquina] )
+// Horas máquina disponibles en el período filtrado. Formato: entero
+
+// ----------------------------------------------------------------------------
+
+MTBF Horas =
+DIVIDE (
+    [Horas Operacion Estimadas] - [Horas Detencion Fallas],
+    [Numero Fallas]
+)
+// Tiempo medio entre fallas. Filtrado por una máquina da su MTBF individual.
+// Formato: decimal, 0-1 decimales
+
+// ----------------------------------------------------------------------------
+
+Disponibilidad % =
+DIVIDE (
+    [Horas Operacion Estimadas] - [Horas Detencion Fallas],
+    [Horas Operacion Estimadas]
+)
+// Formato: porcentaje, 1 decimal
+
+
+// ─────────────────────────── MANTENCIÓN MENSUAL ─────────────────────────────
+
+OT Programadas =
+CALCULATE ( COUNTROWS ( MantencionMensual ), MantencionMensual[Estado] <> "Cancelada" )
+// Formato: entero
+
+// ----------------------------------------------------------------------------
+
+OT Realizadas =
+CALCULATE ( COUNTROWS ( MantencionMensual ), MantencionMensual[Estado] = "Realizada" )
+// Formato: entero
+
+// ----------------------------------------------------------------------------
+
+Cumplimiento PM % =
+DIVIDE ( [OT Realizadas], [OT Programadas] )
+// KPI principal del plan mensual. Formato: porcentaje, 0 decimales
+
+// ----------------------------------------------------------------------------
+
+OT Realizadas En Fecha =
+COUNTROWS (
+    FILTER (
+        MantencionMensual,
+        MantencionMensual[Estado] = "Realizada"
+            && NOT ISBLANK ( MantencionMensual[Fecha_Realizada] )
+            && MantencionMensual[Fecha_Realizada] <= MantencionMensual[Fecha_Programada]
+    )
+)
+// Formato: entero
+
+// ----------------------------------------------------------------------------
+
+Puntualidad PM % =
+DIVIDE ( [OT Realizadas En Fecha], [OT Realizadas] )
+// De lo realizado, cuánto se hizo en la fecha comprometida. Formato: %, 0 dec.
+
+// ----------------------------------------------------------------------------
+
+OT Atrasadas =
+CALCULATE (
+    COUNTROWS (
+        FILTER (
+            MantencionMensual,
+            MantencionMensual[Estado] IN { "Programada", "Reprogramada" }
+                && MantencionMensual[Fecha_Programada] < TODAY ()
+        )
+    ),
+    REMOVEFILTERS ( Calendario )
+)
+// OT vencidas y aún no ejecutadas, ignora el filtro de fecha. Formato: entero
+
+// ----------------------------------------------------------------------------
+
+OT Proximas 7 Dias =
+CALCULATE (
+    COUNTROWS (
+        FILTER (
+            MantencionMensual,
+            MantencionMensual[Estado] IN { "Programada", "Reprogramada" }
+                && MantencionMensual[Fecha_Programada] >= TODAY ()
+                && MantencionMensual[Fecha_Programada] <= TODAY () + 7
+        )
+    ),
+    REMOVEFILTERS ( Calendario )
+)
+// Carga de trabajo de la semana que viene. Formato: entero
+
+// ----------------------------------------------------------------------------
+
+Dias Atraso Promedio =
+AVERAGEX (
+    FILTER (
+        MantencionMensual,
+        MantencionMensual[Estado] = "Realizada"
+            && NOT ISBLANK ( MantencionMensual[Fecha_Realizada] )
+            && MantencionMensual[Fecha_Realizada] > MantencionMensual[Fecha_Programada]
+    ),
+    INT ( MantencionMensual[Fecha_Realizada] - MantencionMensual[Fecha_Programada] )
+)
+// Días de atraso promedio de las OT que se hicieron tarde. Formato: decimal, 1
+
+// ----------------------------------------------------------------------------
+
+Horas PM Ejecutadas =
+DIVIDE (
+    CALCULATE ( SUM ( MantencionMensual[Duracion_Min] ), MantencionMensual[Estado] = "Realizada" ),
+    60
+)
+// Horas invertidas en mantención preventiva. Formato: decimal, 1 decimal
