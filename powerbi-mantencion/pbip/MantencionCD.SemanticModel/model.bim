@@ -1,0 +1,1149 @@
+{
+  "name": "MantencionCD",
+  "compatibilityLevel": 1567,
+  "model": {
+    "culture": "es-CL",
+    "sourceQueryCulture": "es-CL",
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "discourageImplicitMeasures": false,
+    "tables": [
+      {
+        "name": "Maquinas",
+        "lineageTag": "666dcfe4-7c49-4393-aaf8-a4fa3857eeeb",
+        "columns": [
+          {
+            "name": "ID_Maquina",
+            "dataType": "string",
+            "lineageTag": "ea809616-7745-4c18-9585-6125067c7ee6",
+            "sourceColumn": "ID_Maquina"
+          },
+          {
+            "name": "Nombre",
+            "dataType": "string",
+            "lineageTag": "a1471a6b-b3a2-4a09-b51c-3bffeec61e0c",
+            "sourceColumn": "Nombre"
+          },
+          {
+            "name": "Tipo",
+            "dataType": "string",
+            "lineageTag": "739098c4-fe85-4cf6-b26d-1097a58ad171",
+            "sourceColumn": "Tipo"
+          },
+          {
+            "name": "Zona",
+            "dataType": "string",
+            "lineageTag": "67f84c38-5fc5-44ca-bcb7-75698e674103",
+            "sourceColumn": "Zona"
+          },
+          {
+            "name": "Criticidad",
+            "dataType": "string",
+            "lineageTag": "c7b9168f-622f-4ae0-bcf0-6f7b32043190",
+            "sourceColumn": "Criticidad"
+          },
+          {
+            "name": "Fabricante",
+            "dataType": "string",
+            "lineageTag": "00d671e7-310d-4ae9-847c-bdcdd4e003fb",
+            "sourceColumn": "Fabricante"
+          },
+          {
+            "name": "Anio_Instalacion",
+            "dataType": "int64",
+            "lineageTag": "d9df3c3b-7450-465e-9773-3a0bffeb08f7",
+            "sourceColumn": "Anio_Instalacion",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Maquina",
+            "dataType": "string",
+            "lineageTag": "29d3d8b6-107d-4e15-badb-22a81c7743bb",
+            "sourceColumn": "Maquina"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Maquinas",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "// ============================================================================",
+                "// Consulta: Maquinas   (conector nativo de Google Sheets)",
+                "// Requiere el parámetro URL_GoogleSheets (ver Bitacora.m).",
+                "// Tabla de dimensión: catálogo de equipos del CD.",
+                "// ============================================================================",
+                "let",
+                "    Origen = GoogleSheets.Contents(URL_GoogleSheets),",
+                "    Hoja = Origen{[name = \"Maquinas\", ItemKind = \"Sheet\"]}[Data],",
+                "    Encabezados = Table.PromoteHeaders(Hoja, [PromoteAllScalars = true]),",
+                "    Columnas = Table.SelectColumns(",
+                "        Encabezados,",
+                "        {\"ID_Maquina\", \"Nombre\", \"Tipo\", \"Zona\", \"Criticidad\", \"Fabricante\", \"Anio_Instalacion\"},",
+                "        MissingField.UseNull",
+                "    ),",
+                "    SinVacias = Table.SelectRows(Columnas, each [ID_Maquina] <> null and [ID_Maquina] <> \"\"),",
+                "    Limpieza = Table.ReplaceValue(SinVacias, \"\", null, Replacer.ReplaceValue, {\"Anio_Instalacion\"}),",
+                "    Tipos = Table.TransformColumnTypes(",
+                "        Limpieza,",
+                "        {{\"ID_Maquina\", type text}, {\"Nombre\", type text}, {\"Tipo\", type text},",
+                "         {\"Zona\", type text}, {\"Criticidad\", type text}, {\"Fabricante\", type text},",
+                "         {\"Anio_Instalacion\", Int64.Type}},",
+                "        \"es-CL\"",
+                "    ),",
+                "    // Etiqueta amigable para tooltips y tablas",
+                "    ConEtiqueta = Table.AddColumn(Tipos, \"Maquina\", each [ID_Maquina] & \" · \" & [Nombre], type text)",
+                "in",
+                "    ConEtiqueta"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Bitacora",
+        "lineageTag": "d4e90d27-6b9a-4af3-b06b-d74b7cd6840c",
+        "columns": [
+          {
+            "name": "Fecha",
+            "dataType": "dateTime",
+            "lineageTag": "130331b0-9a2e-4f25-8018-695f2b80a50c",
+            "sourceColumn": "Fecha"
+          },
+          {
+            "name": "Turno",
+            "dataType": "string",
+            "lineageTag": "dfbcae32-e846-4234-ac7f-292d2baf866c",
+            "sourceColumn": "Turno"
+          },
+          {
+            "name": "Tecnico",
+            "dataType": "string",
+            "lineageTag": "cf9600a7-8736-401b-90b3-f9805f16b24b",
+            "sourceColumn": "Tecnico"
+          },
+          {
+            "name": "ID_Maquina",
+            "dataType": "string",
+            "lineageTag": "6f41a7d1-15ca-4931-b339-af0948323002",
+            "sourceColumn": "ID_Maquina"
+          },
+          {
+            "name": "Tipo_Actividad",
+            "dataType": "string",
+            "lineageTag": "3daa247a-16fa-415e-beff-2a021f35de6e",
+            "sourceColumn": "Tipo_Actividad"
+          },
+          {
+            "name": "Descripcion",
+            "dataType": "string",
+            "lineageTag": "25a65212-e139-4f21-bfdc-969bc146363e",
+            "sourceColumn": "Descripcion"
+          },
+          {
+            "name": "Estado_Maquina",
+            "dataType": "string",
+            "lineageTag": "b73cc43c-f720-4ada-8573-4fce7cc7d4db",
+            "sourceColumn": "Estado_Maquina"
+          },
+          {
+            "name": "Detencion_Min",
+            "dataType": "int64",
+            "lineageTag": "5da1cbdf-fe1e-4368-915a-6fe5599724fa",
+            "sourceColumn": "Detencion_Min",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Pendiente",
+            "dataType": "string",
+            "lineageTag": "6fa2f918-e6b6-4f96-98eb-7b8a05ad1a6b",
+            "sourceColumn": "Pendiente"
+          },
+          {
+            "name": "Observaciones",
+            "dataType": "string",
+            "lineageTag": "6c74dca7-dfb0-4ade-9cf9-1731d830000d",
+            "sourceColumn": "Observaciones"
+          },
+          {
+            "name": "Clase_Mantencion",
+            "dataType": "string",
+            "lineageTag": "c656cb80-e76c-4390-a7af-325b31f30e47",
+            "sourceColumn": "Clase_Mantencion"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Bitacora",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "// ============================================================================",
+                "// Consulta: Bitacora   (método recomendado: conector nativo de Google Sheets)",
+                "// ----------------------------------------------------------------------------",
+                "// Requisito previo: crear un parámetro de texto llamado  URL_GoogleSheets",
+                "//   Inicio > Administrar parámetros > Nuevo parámetro",
+                "//   Nombre: URL_GoogleSheets   Tipo: Texto",
+                "//   Valor:  la URL completa de tu hoja, ej:",
+                "//           https://docs.google.com/spreadsheets/d/XXXXXXXXXXXX/edit",
+                "//",
+                "// Cómo usar: Inicio > Obtener datos > Consulta en blanco > Editor avanzado >",
+                "// pegar todo este código. La primera vez pedirá iniciar sesión con Google",
+                "// (credencial de tipo \"Cuenta de organización / Google\").",
+                "//",
+                "// Si el paso \"Hoja\" diera error en tu versión de Power BI, borra los pasos",
+                "// Origen y Hoja, usa Obtener datos > Google Sheets, marca la hoja \"Bitacora\"",
+                "// y conserva desde \"Encabezados\" hacia abajo.",
+                "// ============================================================================",
+                "let",
+                "    Origen = GoogleSheets.Contents(URL_GoogleSheets),",
+                "    Hoja = Origen{[name = \"Bitacora\", ItemKind = \"Sheet\"]}[Data],",
+                "    Encabezados = Table.PromoteHeaders(Hoja, [PromoteAllScalars = true]),",
+                "    // Solo las columnas que usa el modelo (ignora columnas extra que agreguen)",
+                "    Columnas = Table.SelectColumns(",
+                "        Encabezados,",
+                "        {\"Fecha\", \"Turno\", \"Tecnico\", \"ID_Maquina\", \"Tipo_Actividad\", \"Descripcion\",",
+                "         \"Estado_Maquina\", \"Detencion_Min\", \"Pendiente\", \"Observaciones\"},",
+                "        MissingField.UseNull",
+                "    ),",
+                "    // Quita filas vacías (Google Sheets devuelve el rango usado completo)",
+                "    SinVacias = Table.SelectRows(Columnas, each [Fecha] <> null and [Fecha] <> \"\"),",
+                "    // Vacíos numéricos -> null antes de tipar",
+                "    Limpieza = Table.ReplaceValue(SinVacias, \"\", null, Replacer.ReplaceValue, {\"Detencion_Min\"}),",
+                "    Tipos = Table.TransformColumnTypes(",
+                "        Limpieza,",
+                "        {{\"Fecha\", type date}, {\"Turno\", type text}, {\"Tecnico\", type text},",
+                "         {\"ID_Maquina\", type text}, {\"Tipo_Actividad\", type text}, {\"Descripcion\", type text},",
+                "         {\"Estado_Maquina\", type text}, {\"Detencion_Min\", Int64.Type},",
+                "         {\"Pendiente\", type text}, {\"Observaciones\", type text}},",
+                "        \"es-CL\"",
+                "    ),",
+                "    // Clase de mantención para el reporte diario (Preventiva / Correctiva / Rutina)",
+                "    ConClase = Table.AddColumn(",
+                "        Tipos,",
+                "        \"Clase_Mantencion\",",
+                "        each",
+                "            if [Tipo_Actividad] = \"Mantención Preventiva\" then \"Preventiva\"",
+                "            else if [Tipo_Actividad] = \"Reparación\" then \"Correctiva\"",
+                "            else if List.Contains(",
+                "                {\"Inspección\", \"Limpieza\", \"Lubricación\", \"Ajuste\", \"Cambio de Batería\"},",
+                "                [Tipo_Actividad]",
+                "            ) then \"Rutina\"",
+                "            else \"Otra\",",
+                "        type text",
+                "    )",
+                "in",
+                "    ConClase"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Actividades",
+            "expression": [
+              "COUNTROWS ( Bitacora )"
+            ],
+            "lineageTag": "2896df6b-77a4-402e-b922-ec99e4db5003"
+          },
+          {
+            "name": "Actividades Pendientes",
+            "expression": [
+              "CALCULATE ( COUNTROWS ( Bitacora ), Bitacora[Pendiente] = \"Sí\" )"
+            ],
+            "lineageTag": "19f3ac9e-70b7-48c0-ac03-c1da3bda88f4"
+          },
+          {
+            "name": "Horas Detencion Bitacora",
+            "expression": [
+              "DIVIDE ( SUM ( Bitacora[Detencion_Min] ), 60 )"
+            ],
+            "lineageTag": "8c2cae93-5fe4-456b-9888-8b861a686199"
+          },
+          {
+            "name": "Turnos Con Registro",
+            "expression": [
+              "COUNTROWS ( SUMMARIZE ( Bitacora, Bitacora[Fecha], Bitacora[Turno] ) )"
+            ],
+            "lineageTag": "64fbc5dc-017c-412d-a569-53cda3814170"
+          },
+          {
+            "name": "Mantenciones Preventivas",
+            "expression": [
+              "CALCULATE ( COUNTROWS ( Bitacora ), Bitacora[Clase_Mantencion] = \"Preventiva\" )"
+            ],
+            "lineageTag": "054dea3f-a6bb-4c31-85e0-4f24df29fc95"
+          },
+          {
+            "name": "Mantenciones Correctivas",
+            "expression": [
+              "CALCULATE ( COUNTROWS ( Bitacora ), Bitacora[Clase_Mantencion] = \"Correctiva\" )"
+            ],
+            "lineageTag": "51aa3539-0e1f-4146-bf32-0a9f61a60f3c"
+          },
+          {
+            "name": "Mantenciones de Rutina",
+            "expression": [
+              "CALCULATE ( COUNTROWS ( Bitacora ), Bitacora[Clase_Mantencion] = \"Rutina\" )"
+            ],
+            "lineageTag": "3fa2f953-f3b0-4364-a297-7af3b70bdfb9"
+          },
+          {
+            "name": "% Trabajo Planificado",
+            "expression": [
+              "DIVIDE (",
+              "    [Mantenciones Preventivas] + [Mantenciones de Rutina],",
+              "    [Mantenciones Preventivas] + [Mantenciones de Rutina] + [Mantenciones Correctivas]",
+              ")"
+            ],
+            "lineageTag": "db2f49a0-2cbc-4435-9ced-0405376cc830"
+          }
+        ]
+      },
+      {
+        "name": "Fallas",
+        "lineageTag": "31c2edaa-8124-42c8-9aa1-ae6287cea9a5",
+        "columns": [
+          {
+            "name": "ID_Falla",
+            "dataType": "string",
+            "lineageTag": "51a57506-f49e-4318-8032-3913cecfade0",
+            "sourceColumn": "ID_Falla"
+          },
+          {
+            "name": "Fecha_Hora_Falla",
+            "dataType": "dateTime",
+            "lineageTag": "e1a400f8-2612-4878-96e8-14710948c4fd",
+            "sourceColumn": "Fecha_Hora_Falla"
+          },
+          {
+            "name": "ID_Maquina",
+            "dataType": "string",
+            "lineageTag": "5dce1d18-351c-4b87-9710-f32e2f391304",
+            "sourceColumn": "ID_Maquina"
+          },
+          {
+            "name": "Turno_Detecta",
+            "dataType": "string",
+            "lineageTag": "083d4058-5948-4b09-a5e0-5ff59342c8d4",
+            "sourceColumn": "Turno_Detecta"
+          },
+          {
+            "name": "Tipo_Falla",
+            "dataType": "string",
+            "lineageTag": "b42a7dbd-a537-418f-887b-9f11e8e73bcf",
+            "sourceColumn": "Tipo_Falla"
+          },
+          {
+            "name": "Severidad",
+            "dataType": "string",
+            "lineageTag": "16097943-0d5a-4772-9bd6-75b645f15623",
+            "sourceColumn": "Severidad"
+          },
+          {
+            "name": "Descripcion_Falla",
+            "dataType": "string",
+            "lineageTag": "e99fc4e9-d48a-48a0-963d-20646ea6c2a5",
+            "sourceColumn": "Descripcion_Falla"
+          },
+          {
+            "name": "Estado",
+            "dataType": "string",
+            "lineageTag": "43690c98-b341-4a73-b588-83844086b2ae",
+            "sourceColumn": "Estado"
+          },
+          {
+            "name": "Fecha_Hora_Cierre",
+            "dataType": "dateTime",
+            "lineageTag": "bee98116-5b78-44cf-915e-38267f444e8b",
+            "sourceColumn": "Fecha_Hora_Cierre"
+          },
+          {
+            "name": "Detencion_Min",
+            "dataType": "int64",
+            "lineageTag": "5f5c56fb-4851-4b97-a649-869b282b62db",
+            "sourceColumn": "Detencion_Min",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Reparacion_Realizada",
+            "dataType": "string",
+            "lineageTag": "0711a3f7-7553-4068-a31c-b8569b5a8507",
+            "sourceColumn": "Reparacion_Realizada"
+          },
+          {
+            "name": "Repuestos_Usados",
+            "dataType": "string",
+            "lineageTag": "7c1b06e9-2e30-4635-adea-fc8b7209ce4a",
+            "sourceColumn": "Repuestos_Usados"
+          },
+          {
+            "name": "Tecnico_Responsable",
+            "dataType": "string",
+            "lineageTag": "9f5940d1-4d9d-4228-adb9-159961dbff55",
+            "sourceColumn": "Tecnico_Responsable"
+          },
+          {
+            "name": "Fecha",
+            "dataType": "dateTime",
+            "lineageTag": "35cf7790-14da-48d3-a6c5-7f95f11528c6",
+            "sourceColumn": "Fecha"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Fallas",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "// ============================================================================",
+                "// Consulta: Fallas   (método recomendado: conector nativo de Google Sheets)",
+                "// Requiere el parámetro URL_GoogleSheets (ver Bitacora.m).",
+                "// Incluye la columna derivada \"Fecha\" (día de la falla) para relacionar con",
+                "// la tabla Calendario.",
+                "// ============================================================================",
+                "let",
+                "    Origen = GoogleSheets.Contents(URL_GoogleSheets),",
+                "    Hoja = Origen{[name = \"Fallas\", ItemKind = \"Sheet\"]}[Data],",
+                "    Encabezados = Table.PromoteHeaders(Hoja, [PromoteAllScalars = true]),",
+                "    Columnas = Table.SelectColumns(",
+                "        Encabezados,",
+                "        {\"ID_Falla\", \"Fecha_Hora_Falla\", \"ID_Maquina\", \"Turno_Detecta\", \"Tipo_Falla\",",
+                "         \"Severidad\", \"Descripcion_Falla\", \"Estado\", \"Fecha_Hora_Cierre\", \"Detencion_Min\",",
+                "         \"Reparacion_Realizada\", \"Repuestos_Usados\", \"Tecnico_Responsable\"},",
+                "        MissingField.UseNull",
+                "    ),",
+                "    SinVacias = Table.SelectRows(Columnas, each [ID_Falla] <> null and [ID_Falla] <> \"\"),",
+                "    Limpieza = Table.ReplaceValue(SinVacias, \"\", null, Replacer.ReplaceValue,",
+                "        {\"Fecha_Hora_Cierre\", \"Detencion_Min\"}),",
+                "    Tipos = Table.TransformColumnTypes(",
+                "        Limpieza,",
+                "        {{\"ID_Falla\", type text}, {\"Fecha_Hora_Falla\", type datetime}, {\"ID_Maquina\", type text},",
+                "         {\"Turno_Detecta\", type text}, {\"Tipo_Falla\", type text}, {\"Severidad\", type text},",
+                "         {\"Descripcion_Falla\", type text}, {\"Estado\", type text},",
+                "         {\"Fecha_Hora_Cierre\", type datetime}, {\"Detencion_Min\", Int64.Type},",
+                "         {\"Reparacion_Realizada\", type text}, {\"Repuestos_Usados\", type text},",
+                "         {\"Tecnico_Responsable\", type text}},",
+                "        \"es-CL\"",
+                "    ),",
+                "    // Día de la falla, para la relación con Calendario[Fecha]",
+                "    ConFecha = Table.AddColumn(Tipos, \"Fecha\", each Date.From([Fecha_Hora_Falla]), type date)",
+                "in",
+                "    ConFecha"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Maquinas Intervenidas",
+            "expression": [
+              "DISTINCTCOUNT ( Bitacora[ID_Maquina] )"
+            ],
+            "lineageTag": "ce6d2a03-b2b6-4d54-bbdc-5cd15cdef7f7"
+          },
+          {
+            "name": "Numero Fallas",
+            "expression": [
+              "COUNTROWS ( Fallas )"
+            ],
+            "lineageTag": "fb64d2ba-7fb3-4ec9-9681-ff29c30b9532"
+          },
+          {
+            "name": "Fallas Abiertas",
+            "expression": [
+              "CALCULATE ( COUNTROWS ( Fallas ), Fallas[Estado] <> \"Cerrada\" )"
+            ],
+            "lineageTag": "52e78d83-4c41-4989-8e10-de57ca289f5f"
+          },
+          {
+            "name": "Fallas Abiertas (actual)",
+            "expression": [
+              "CALCULATE (",
+              "    COUNTROWS ( Fallas ),",
+              "    Fallas[Estado] <> \"Cerrada\",",
+              "    REMOVEFILTERS ( Calendario )",
+              ")"
+            ],
+            "lineageTag": "95f30850-1e05-4d8a-a785-2bf925957e6d"
+          },
+          {
+            "name": "Fallas Criticas",
+            "expression": [
+              "CALCULATE ( COUNTROWS ( Fallas ), Fallas[Severidad] = \"Crítica\" )"
+            ],
+            "lineageTag": "f67327c3-a372-486f-ba8a-2dc3dec737c9"
+          },
+          {
+            "name": "Maquinas Con Falla Abierta",
+            "expression": [
+              "CALCULATE (",
+              "    DISTINCTCOUNT ( Fallas[ID_Maquina] ),",
+              "    Fallas[Estado] <> \"Cerrada\",",
+              "    REMOVEFILTERS ( Calendario )",
+              ")"
+            ],
+            "lineageTag": "2fea12e4-e593-4fc7-ae47-f1f3e2d8a44d"
+          },
+          {
+            "name": "Equipos Con Falla",
+            "expression": [
+              "DISTINCTCOUNT ( Fallas[ID_Maquina] )"
+            ],
+            "lineageTag": "b7652094-2dc9-4e26-b9cb-5b825edc9388"
+          },
+          {
+            "name": "Minutos Detencion Fallas",
+            "expression": [
+              "SUM ( Fallas[Detencion_Min] )"
+            ],
+            "lineageTag": "aef9c7b7-5530-4d63-b7c0-393bcccfd79a"
+          },
+          {
+            "name": "Horas Detencion Fallas",
+            "expression": [
+              "DIVIDE ( [Minutos Detencion Fallas], 60 )"
+            ],
+            "lineageTag": "8ea69469-52a6-4636-afb9-5309578864e0"
+          },
+          {
+            "name": "MTTR Horas",
+            "expression": [
+              "DIVIDE (",
+              "    CALCULATE ( AVERAGE ( Fallas[Detencion_Min] ), Fallas[Estado] = \"Cerrada\" ),",
+              "    60",
+              ")"
+            ],
+            "lineageTag": "4959517a-b464-474a-92a7-e042ce2f1af1"
+          },
+          {
+            "name": "Horas Operacion por Dia",
+            "expression": [
+              "24"
+            ],
+            "lineageTag": "ea9b9253-9567-4a33-bdc0-c310ca858b72"
+          },
+          {
+            "name": "Horas Operacion Estimadas",
+            "expression": [
+              "[Horas Operacion por Dia]",
+              "    * COUNTROWS ( Calendario )",
+              "    * DISTINCTCOUNT ( Maquinas[ID_Maquina] )"
+            ],
+            "lineageTag": "b29c4df9-e1d2-42df-8fbb-02ee3c521485"
+          },
+          {
+            "name": "MTBF Horas",
+            "expression": [
+              "DIVIDE (",
+              "    [Horas Operacion Estimadas] - [Horas Detencion Fallas],",
+              "    [Numero Fallas]",
+              ")"
+            ],
+            "lineageTag": "0e2e121c-c496-4b13-abe9-40702bb7d9b7"
+          },
+          {
+            "name": "Disponibilidad %",
+            "expression": [
+              "DIVIDE (",
+              "    [Horas Operacion Estimadas] - [Horas Detencion Fallas],",
+              "    [Horas Operacion Estimadas]",
+              ")"
+            ],
+            "lineageTag": "b862de02-8da8-49e7-96a5-2402aef84790"
+          },
+          {
+            "name": "Antiguedad Backlog Dias",
+            "expression": [
+              "AVERAGEX (",
+              "    CALCULATETABLE (",
+              "        FILTER ( Fallas, Fallas[Estado] <> \"Cerrada\" ),",
+              "        REMOVEFILTERS ( Calendario )",
+              "    ),",
+              "    INT ( TODAY () - Fallas[Fecha] )",
+              ")"
+            ],
+            "lineageTag": "7bd94d39-dc82-460c-af66-8a9e0a25178f"
+          },
+          {
+            "name": "Antiguedad Backlog Max Dias",
+            "expression": [
+              "MAXX (",
+              "    CALCULATETABLE (",
+              "        FILTER ( Fallas, Fallas[Estado] <> \"Cerrada\" ),",
+              "        REMOVEFILTERS ( Calendario )",
+              "    ),",
+              "    INT ( TODAY () - Fallas[Fecha] )",
+              ")"
+            ],
+            "lineageTag": "81e1844c-8d76-4bde-bfd7-a9f084fffa7b"
+          },
+          {
+            "name": "% Fallas Resueltas Mismo Dia",
+            "expression": [
+              "VAR Cerradas =",
+              "    FILTER (",
+              "        Fallas,",
+              "        Fallas[Estado] = \"Cerrada\" && NOT ISBLANK ( Fallas[Fecha_Hora_Cierre] )",
+              "    )",
+              "RETURN",
+              "    DIVIDE (",
+              "        COUNTROWS (",
+              "            FILTER ( Cerradas, INT ( Fallas[Fecha_Hora_Cierre] ) = INT ( Fallas[Fecha_Hora_Falla] ) )",
+              "        ),",
+              "        COUNTROWS ( Cerradas )",
+              "    )"
+            ],
+            "lineageTag": "f9f9d49a-3b34-4742-bf0c-a6583b1b7a1c"
+          },
+          {
+            "name": "Fallas Reincidentes 30d",
+            "expression": [
+              "COUNTROWS (",
+              "    FILTER (",
+              "        Fallas,",
+              "        VAR EquipoActual = Fallas[ID_Maquina]",
+              "        VAR TipoActual = Fallas[Tipo_Falla]",
+              "        VAR FechaActual = Fallas[Fecha_Hora_Falla]",
+              "        RETURN",
+              "            NOT ISEMPTY (",
+              "                FILTER (",
+              "                    ALL ( Fallas ),",
+              "                    Fallas[ID_Maquina] = EquipoActual",
+              "                        && Fallas[Tipo_Falla] = TipoActual",
+              "                        && Fallas[Fecha_Hora_Falla] < FechaActual",
+              "                        && Fallas[Fecha_Hora_Falla] >= FechaActual - 30",
+              "                )",
+              "            )",
+              "    )",
+              ")"
+            ],
+            "lineageTag": "08b6b16e-49ef-46c2-b220-e1130d59febb"
+          }
+        ]
+      },
+      {
+        "name": "MantencionMensual",
+        "lineageTag": "ef1471d5-fc15-475a-be4e-b9f1a21e9d27",
+        "columns": [
+          {
+            "name": "ID_OT",
+            "dataType": "string",
+            "lineageTag": "8be87a07-b145-4ce5-a77c-961e462162f8",
+            "sourceColumn": "ID_OT"
+          },
+          {
+            "name": "ID_Maquina",
+            "dataType": "string",
+            "lineageTag": "7a1aed33-1cef-4c8a-b72f-f2a91b3363ae",
+            "sourceColumn": "ID_Maquina"
+          },
+          {
+            "name": "Tarea",
+            "dataType": "string",
+            "lineageTag": "70944241-3160-48c2-a8b7-52f64a1ad5a4",
+            "sourceColumn": "Tarea"
+          },
+          {
+            "name": "Frecuencia",
+            "dataType": "string",
+            "lineageTag": "cb378398-b379-4065-b344-a1b045f6b16f",
+            "sourceColumn": "Frecuencia"
+          },
+          {
+            "name": "Fecha_Programada",
+            "dataType": "dateTime",
+            "lineageTag": "09f462cc-5c66-4ab4-b0c3-edd66933686f",
+            "sourceColumn": "Fecha_Programada"
+          },
+          {
+            "name": "Fecha_Realizada",
+            "dataType": "dateTime",
+            "lineageTag": "e5bb6640-718c-4db9-b194-70aa0b233dcb",
+            "sourceColumn": "Fecha_Realizada"
+          },
+          {
+            "name": "Estado",
+            "dataType": "string",
+            "lineageTag": "616ebfbb-5bca-46cd-af29-4c332c2554dd",
+            "sourceColumn": "Estado"
+          },
+          {
+            "name": "Tecnico",
+            "dataType": "string",
+            "lineageTag": "ccd3ca87-af0b-4280-a8e8-f789c092c53b",
+            "sourceColumn": "Tecnico"
+          },
+          {
+            "name": "Duracion_Min",
+            "dataType": "int64",
+            "lineageTag": "5b594e85-2543-4ac6-802a-56c5439e45ca",
+            "sourceColumn": "Duracion_Min",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Observaciones",
+            "dataType": "string",
+            "lineageTag": "c76761f1-1fae-4c8c-b40b-4b3a8db53465",
+            "sourceColumn": "Observaciones"
+          },
+          {
+            "name": "Estado Ejecucion",
+            "dataType": "string",
+            "type": "calculated",
+            "lineageTag": "54082354-c34f-4716-acd0-794086100bbc",
+            "expression": [
+              "SWITCH (",
+              "    TRUE (),",
+              "    MantencionMensual[Estado] = \"Cancelada\", \"Cancelada\",",
+              "    MantencionMensual[Estado] = \"Realizada\"",
+              "        && NOT ISBLANK ( MantencionMensual[Fecha_Realizada] )",
+              "        && MantencionMensual[Fecha_Realizada] <= MantencionMensual[Fecha_Programada], \"Realizada en fecha\",",
+              "    MantencionMensual[Estado] = \"Realizada\", \"Realizada con atraso\",",
+              "    MantencionMensual[Estado] = \"Reprogramada\"",
+              "        && MantencionMensual[Fecha_Programada] < TODAY (), \"Atrasada\",",
+              "    MantencionMensual[Estado] = \"Reprogramada\", \"Reprogramada\",",
+              "    MantencionMensual[Fecha_Programada] < TODAY (), \"Atrasada\",",
+              "    \"Programada\"",
+              ")"
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "MantencionMensual",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "// ============================================================================",
+                "// Consulta: MantencionMensual   (conector nativo de Google Sheets)",
+                "// Requiere el parámetro URL_GoogleSheets (ver Bitacora.m).",
+                "// ============================================================================",
+                "let",
+                "    Origen = GoogleSheets.Contents(URL_GoogleSheets),",
+                "    Hoja = Origen{[name = \"MantencionMensual\", ItemKind = \"Sheet\"]}[Data],",
+                "    Encabezados = Table.PromoteHeaders(Hoja, [PromoteAllScalars = true]),",
+                "    Columnas = Table.SelectColumns(",
+                "        Encabezados,",
+                "        {\"ID_OT\", \"ID_Maquina\", \"Tarea\", \"Frecuencia\", \"Fecha_Programada\",",
+                "         \"Fecha_Realizada\", \"Estado\", \"Tecnico\", \"Duracion_Min\", \"Observaciones\"},",
+                "        MissingField.UseNull",
+                "    ),",
+                "    SinVacias = Table.SelectRows(Columnas, each [ID_OT] <> null and [ID_OT] <> \"\"),",
+                "    Limpieza = Table.ReplaceValue(SinVacias, \"\", null, Replacer.ReplaceValue,",
+                "        {\"Fecha_Realizada\", \"Duracion_Min\"}),",
+                "    Tipos = Table.TransformColumnTypes(",
+                "        Limpieza,",
+                "        {{\"ID_OT\", type text}, {\"ID_Maquina\", type text}, {\"Tarea\", type text},",
+                "         {\"Frecuencia\", type text}, {\"Fecha_Programada\", type date},",
+                "         {\"Fecha_Realizada\", type date}, {\"Estado\", type text}, {\"Tecnico\", type text},",
+                "         {\"Duracion_Min\", Int64.Type}, {\"Observaciones\", type text}},",
+                "        \"es-CL\"",
+                "    )",
+                "in",
+                "    Tipos"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "OT Programadas",
+            "expression": [
+              "CALCULATE ( COUNTROWS ( MantencionMensual ), MantencionMensual[Estado] <> \"Cancelada\" )"
+            ],
+            "lineageTag": "72cab93f-b923-4581-bf9a-fbaa5e91e1b7"
+          },
+          {
+            "name": "OT Realizadas",
+            "expression": [
+              "CALCULATE ( COUNTROWS ( MantencionMensual ), MantencionMensual[Estado] = \"Realizada\" )"
+            ],
+            "lineageTag": "0e666e7c-42bb-40c6-97bd-0a022896566d"
+          },
+          {
+            "name": "Cumplimiento PM %",
+            "expression": [
+              "DIVIDE ( [OT Realizadas], [OT Programadas] )"
+            ],
+            "lineageTag": "f459aa9a-c08d-4e45-9fc5-66c417889486"
+          },
+          {
+            "name": "OT Realizadas En Fecha",
+            "expression": [
+              "COUNTROWS (",
+              "    FILTER (",
+              "        MantencionMensual,",
+              "        MantencionMensual[Estado] = \"Realizada\"",
+              "            && NOT ISBLANK ( MantencionMensual[Fecha_Realizada] )",
+              "            && MantencionMensual[Fecha_Realizada] <= MantencionMensual[Fecha_Programada]",
+              "    )",
+              ")"
+            ],
+            "lineageTag": "4e06bb57-d91f-4ce8-bce6-aeb8d11c0375"
+          },
+          {
+            "name": "Puntualidad PM %",
+            "expression": [
+              "DIVIDE ( [OT Realizadas En Fecha], [OT Realizadas] )"
+            ],
+            "lineageTag": "f4671c3f-afba-4526-a39e-e158d12093e0"
+          },
+          {
+            "name": "OT Atrasadas",
+            "expression": [
+              "CALCULATE (",
+              "    COUNTROWS (",
+              "        FILTER (",
+              "            MantencionMensual,",
+              "            MantencionMensual[Estado] IN { \"Programada\", \"Reprogramada\" }",
+              "                && MantencionMensual[Fecha_Programada] < TODAY ()",
+              "        )",
+              "    ),",
+              "    REMOVEFILTERS ( Calendario )",
+              ")"
+            ],
+            "lineageTag": "99de0f2d-c217-422a-b6c3-eb87c020b775"
+          },
+          {
+            "name": "OT Proximas 7 Dias",
+            "expression": [
+              "CALCULATE (",
+              "    COUNTROWS (",
+              "        FILTER (",
+              "            MantencionMensual,",
+              "            MantencionMensual[Estado] IN { \"Programada\", \"Reprogramada\" }",
+              "                && MantencionMensual[Fecha_Programada] >= TODAY ()",
+              "                && MantencionMensual[Fecha_Programada] <= TODAY () + 7",
+              "        )",
+              "    ),",
+              "    REMOVEFILTERS ( Calendario )",
+              ")"
+            ],
+            "lineageTag": "22ffbf8d-321f-4a92-90d2-bfcf161e9f61"
+          },
+          {
+            "name": "Dias Atraso Promedio",
+            "expression": [
+              "AVERAGEX (",
+              "    FILTER (",
+              "        MantencionMensual,",
+              "        MantencionMensual[Estado] = \"Realizada\"",
+              "            && NOT ISBLANK ( MantencionMensual[Fecha_Realizada] )",
+              "            && MantencionMensual[Fecha_Realizada] > MantencionMensual[Fecha_Programada]",
+              "    ),",
+              "    INT ( MantencionMensual[Fecha_Realizada] - MantencionMensual[Fecha_Programada] )",
+              ")"
+            ],
+            "lineageTag": "4bf14131-3a1a-49c4-acfc-d2fdeff1a0a6"
+          },
+          {
+            "name": "Horas PM Ejecutadas",
+            "expression": [
+              "DIVIDE (",
+              "    CALCULATE ( SUM ( MantencionMensual[Duracion_Min] ), MantencionMensual[Estado] = \"Realizada\" ),",
+              "    60",
+              ")"
+            ],
+            "lineageTag": "80d4a510-5fe6-4210-82b2-4c3f2a465a20"
+          }
+        ]
+      },
+      {
+        "name": "Pautas",
+        "lineageTag": "45c6ed7f-aefa-4880-8177-9cd643ea6bc0",
+        "columns": [
+          {
+            "name": "ID_Pauta",
+            "dataType": "string",
+            "lineageTag": "60764d5a-52b5-4ae6-ba9e-987140ff331f",
+            "sourceColumn": "ID_Pauta"
+          },
+          {
+            "name": "ID_Maquina",
+            "dataType": "string",
+            "lineageTag": "98877e5f-7a45-45cc-bfcc-9047f728519b",
+            "sourceColumn": "ID_Maquina"
+          },
+          {
+            "name": "Frecuencia",
+            "dataType": "string",
+            "lineageTag": "5037b3e9-9ab2-4825-ab90-609eec85772d",
+            "sourceColumn": "Frecuencia"
+          },
+          {
+            "name": "Tarea",
+            "dataType": "string",
+            "lineageTag": "44252a82-0315-425f-b77b-a95a6a281df4",
+            "sourceColumn": "Tarea"
+          },
+          {
+            "name": "Duracion_Min_Est",
+            "dataType": "int64",
+            "lineageTag": "a8cb960d-1d04-466c-9c5a-5c2116de10fa",
+            "sourceColumn": "Duracion_Min_Est",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Link_Pauta",
+            "dataType": "string",
+            "lineageTag": "d6d31447-66ee-4660-9a13-96312ff5b4bd",
+            "sourceColumn": "Link_Pauta",
+            "dataCategory": "WebUrl"
+          },
+          {
+            "name": "Observaciones",
+            "dataType": "string",
+            "lineageTag": "136fbaef-9f64-4094-b662-69f3d6bc0d7c",
+            "sourceColumn": "Observaciones"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Pautas",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "// ============================================================================",
+                "// Consulta: Pautas   (conector nativo de Google Sheets)",
+                "// Requiere el parámetro URL_GoogleSheets (ver Bitacora.m).",
+                "// Pauta de mantención por equipo y frecuencia, con link al documento del",
+                "// fabricante. Después de cargar: seleccionar la columna Link_Pauta >",
+                "// Herramientas de columna > Categoría de datos > \"Dirección URL web\".",
+                "// ============================================================================",
+                "let",
+                "    Origen = GoogleSheets.Contents(URL_GoogleSheets),",
+                "    Hoja = Origen{[name = \"Pautas\", ItemKind = \"Sheet\"]}[Data],",
+                "    Encabezados = Table.PromoteHeaders(Hoja, [PromoteAllScalars = true]),",
+                "    Columnas = Table.SelectColumns(",
+                "        Encabezados,",
+                "        {\"ID_Pauta\", \"ID_Maquina\", \"Frecuencia\", \"Tarea\", \"Duracion_Min_Est\",",
+                "         \"Link_Pauta\", \"Observaciones\"},",
+                "        MissingField.UseNull",
+                "    ),",
+                "    SinVacias = Table.SelectRows(Columnas, each [ID_Pauta] <> null and [ID_Pauta] <> \"\"),",
+                "    Limpieza = Table.ReplaceValue(SinVacias, \"\", null, Replacer.ReplaceValue, {\"Duracion_Min_Est\"}),",
+                "    Tipos = Table.TransformColumnTypes(",
+                "        Limpieza,",
+                "        {{\"ID_Pauta\", type text}, {\"ID_Maquina\", type text}, {\"Frecuencia\", type text},",
+                "         {\"Tarea\", type text}, {\"Duracion_Min_Est\", Int64.Type},",
+                "         {\"Link_Pauta\", type text}, {\"Observaciones\", type text}},",
+                "        \"es-CL\"",
+                "    )",
+                "in",
+                "    Tipos"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Calendario",
+        "lineageTag": "70214dc5-d5b8-41f9-a7d6-0fdd12f9665b",
+        "columns": [
+          {
+            "name": "Fecha",
+            "dataType": "dateTime",
+            "lineageTag": "23a27ebf-9ca3-4256-bb0c-5f18e839a259",
+            "type": "calculatedTableColumn",
+            "sourceColumn": "[Fecha]",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "isKey": true
+          },
+          {
+            "name": "Anio",
+            "dataType": "int64",
+            "lineageTag": "2c0ff2df-361a-40f0-90be-bddc6b034dc9",
+            "type": "calculatedTableColumn",
+            "sourceColumn": "[Anio]",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "summarizeBy": "none"
+          },
+          {
+            "name": "MesNum",
+            "dataType": "int64",
+            "lineageTag": "18bddeca-e9ba-4951-b6de-2903cdccc2ac",
+            "type": "calculatedTableColumn",
+            "sourceColumn": "[MesNum]",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "summarizeBy": "none"
+          },
+          {
+            "name": "AnioMes",
+            "dataType": "string",
+            "lineageTag": "9ca25e13-d7e0-4e23-a209-d65fbb926cbb",
+            "type": "calculatedTableColumn",
+            "sourceColumn": "[AnioMes]",
+            "isNameInferred": true,
+            "isDataTypeInferred": true
+          },
+          {
+            "name": "Mes",
+            "dataType": "string",
+            "lineageTag": "784be584-9abb-449a-83a1-1f86d71500ac",
+            "type": "calculatedTableColumn",
+            "sourceColumn": "[Mes]",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sortByColumn": "AnioMes"
+          },
+          {
+            "name": "MesCorto",
+            "dataType": "string",
+            "lineageTag": "a0a1c701-9b3f-4b9a-8e2c-bb19d0dab396",
+            "type": "calculatedTableColumn",
+            "sourceColumn": "[MesCorto]",
+            "isNameInferred": true,
+            "isDataTypeInferred": true
+          },
+          {
+            "name": "Semana",
+            "dataType": "int64",
+            "lineageTag": "c7ab6ea6-2bb5-4375-8259-3e44d51e707d",
+            "type": "calculatedTableColumn",
+            "sourceColumn": "[Semana]",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Dia",
+            "dataType": "int64",
+            "lineageTag": "02d502ba-738c-4d01-b89d-c1db380fc149",
+            "type": "calculatedTableColumn",
+            "sourceColumn": "[Dia]",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "summarizeBy": "none"
+          },
+          {
+            "name": "DiaSemanaNum",
+            "dataType": "int64",
+            "lineageTag": "6f513b95-52f7-47a8-91a2-cd5b24b97d2d",
+            "type": "calculatedTableColumn",
+            "sourceColumn": "[DiaSemanaNum]",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "summarizeBy": "none"
+          },
+          {
+            "name": "DiaSemana",
+            "dataType": "string",
+            "lineageTag": "bc92bfba-a382-4ce4-9851-d44902b09fb8",
+            "type": "calculatedTableColumn",
+            "sourceColumn": "[DiaSemana]",
+            "isNameInferred": true,
+            "isDataTypeInferred": true,
+            "sortByColumn": "DiaSemanaNum"
+          },
+          {
+            "name": "EsFinDeSemana",
+            "dataType": "boolean",
+            "lineageTag": "1a2c5f8b-bccf-41f3-be06-2769713ce1d1",
+            "type": "calculatedTableColumn",
+            "sourceColumn": "[EsFinDeSemana]",
+            "isNameInferred": true,
+            "isDataTypeInferred": true
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Calendario",
+            "mode": "import",
+            "source": {
+              "type": "calculated",
+              "expression": [
+                "ADDCOLUMNS (",
+                "    SELECTCOLUMNS ( CALENDARAUTO (), \"Fecha\", [Date] ),",
+                "    \"Anio\", YEAR ( [Fecha] ),",
+                "    \"MesNum\", MONTH ( [Fecha] ),",
+                "    \"AnioMes\", FORMAT ( [Fecha], \"yyyy-MM\" ),",
+                "    \"Mes\", FORMAT ( [Fecha], \"mmm yyyy\" ),",
+                "    \"MesCorto\", FORMAT ( [Fecha], \"mmm\" ),",
+                "    \"Semana\", WEEKNUM ( [Fecha], 2 ),",
+                "    \"Dia\", DAY ( [Fecha] ),",
+                "    \"DiaSemanaNum\", WEEKDAY ( [Fecha], 2 ),",
+                "    \"DiaSemana\", FORMAT ( [Fecha], \"ddd\" ),",
+                "    \"EsFinDeSemana\", WEEKDAY ( [Fecha], 2 ) > 5",
+                ")"
+              ]
+            }
+          }
+        ],
+        "dataCategory": "Time"
+      }
+    ],
+    "relationships": [
+      {
+        "name": "c93b26c9-52d9-44c1-977e-99190fc41106",
+        "fromTable": "Bitacora",
+        "fromColumn": "ID_Maquina",
+        "toTable": "Maquinas",
+        "toColumn": "ID_Maquina"
+      },
+      {
+        "name": "10643ccc-00f9-4f40-b77b-2f959fdb0749",
+        "fromTable": "Fallas",
+        "fromColumn": "ID_Maquina",
+        "toTable": "Maquinas",
+        "toColumn": "ID_Maquina"
+      },
+      {
+        "name": "a8f2e31e-d638-4801-80ec-4677f0eb3129",
+        "fromTable": "MantencionMensual",
+        "fromColumn": "ID_Maquina",
+        "toTable": "Maquinas",
+        "toColumn": "ID_Maquina"
+      },
+      {
+        "name": "58678c1a-0ec0-4ad0-a7f0-e4ee28b77bf2",
+        "fromTable": "Pautas",
+        "fromColumn": "ID_Maquina",
+        "toTable": "Maquinas",
+        "toColumn": "ID_Maquina"
+      },
+      {
+        "name": "9d9ea647-58f7-4f4a-86bc-ad4398f06fa0",
+        "fromTable": "Bitacora",
+        "fromColumn": "Fecha",
+        "toTable": "Calendario",
+        "toColumn": "Fecha"
+      },
+      {
+        "name": "251777c1-d536-4a44-867c-6715046f0959",
+        "fromTable": "Fallas",
+        "fromColumn": "Fecha",
+        "toTable": "Calendario",
+        "toColumn": "Fecha"
+      },
+      {
+        "name": "d7c5cfb8-a7e5-45bd-8f2f-5544e3c62a3d",
+        "fromTable": "MantencionMensual",
+        "fromColumn": "Fecha_Programada",
+        "toTable": "Calendario",
+        "toColumn": "Fecha"
+      }
+    ],
+    "expressions": [
+      {
+        "name": "URL_GoogleSheets",
+        "kind": "m",
+        "lineageTag": "9b486781-957d-4875-af20-3b8404663bea",
+        "expression": "\"https://docs.google.com/spreadsheets/d/REEMPLAZAR_CON_TU_ID/edit\" meta [IsParameterQuery=true, Type=\"Text\", IsParameterQueryRequired=true]"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "__PBI_TimeIntelligenceEnabled",
+        "value": "0"
+      }
+    ]
+  }
+}
