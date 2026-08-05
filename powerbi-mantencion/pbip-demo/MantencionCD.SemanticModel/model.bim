@@ -95,7 +95,8 @@
             "name": "Turno",
             "dataType": "string",
             "sourceColumn": "Turno",
-            "lineageTag": "92e682c0-5e2a-4e51-92e6-bfecf572c26d"
+            "lineageTag": "92e682c0-5e2a-4e51-92e6-bfecf572c26d",
+            "sortByColumn": "TurnoNum"
           },
           {
             "name": "Tecnico",
@@ -151,6 +152,15 @@
             "dataType": "string",
             "sourceColumn": "Clase_Mantencion",
             "lineageTag": "5263c07f-afb4-43a1-b288-04dc37a4a4c7"
+          },
+          {
+            "name": "TurnoNum",
+            "dataType": "int64",
+            "type": "calculated",
+            "isHidden": true,
+            "lineageTag": "4060ede2-2abd-493c-ae98-86db87726fea",
+            "summarizeBy": "none",
+            "expression": "SWITCH ( Bitacora[Turno], \"Mañana\", 1, \"Tarde\", 2, \"Noche\", 3, 4 )"
           }
         ],
         "partitions": [
