@@ -362,6 +362,36 @@
   .cta-band h2{font-family:var(--serif);font-weight:600;font-size:clamp(24px,4vw,36px);margin:0 0 10px;text-wrap:balance}
   .cta-band p{color:var(--ink-soft);margin:0 auto 24px;max-width:50ch;font-size:15px}
 
+  /* — Capa 3D (astrolabio WebGL, detrás del contenido) — */
+  #bg3d{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0;visibility:hidden}
+  /* Velo suave tras el texto del héroe: el 3D se ve alrededor sin competir con el titular */
+  .has-3d .hero,.has-3d .section-head{position:relative}
+  .has-3d .section-head::before{content:"";position:absolute;z-index:-1;inset:-40px -18%;pointer-events:none;
+    background:radial-gradient(closest-side,color-mix(in srgb,var(--bg) 84%,transparent),color-mix(in srgb,var(--bg) 50%,transparent) 60%,transparent)}
+  .has-3d .hero::before{content:"";position:absolute;z-index:-1;left:50%;top:48%;width:min(900px,140vw);height:calc(100% + 140px);
+    transform:translate(-50%,-50%);pointer-events:none;
+    background:radial-gradient(closest-side,color-mix(in srgb,var(--bg) 86%,transparent),color-mix(in srgb,var(--bg) 55%,transparent) 55%,transparent)}
+  /* Tarjetas de cristal: el astrolabio brilla a través (la herramienta se mantiene sólida) */
+  .has-3d .feature,.has-3d .step,.has-3d .why > .card,.has-3d .faq details,.has-3d .cta-band{
+    background:color-mix(in srgb,var(--panel) 70%,transparent);
+    -webkit-backdrop-filter:blur(14px) saturate(1.25);backdrop-filter:blur(14px) saturate(1.25)}
+  .has-3d .cta-band{background:radial-gradient(130% 170% at 50% 0%,color-mix(in srgb,var(--gold) 16%,transparent),transparent 60%),color-mix(in srgb,var(--panel) 66%,transparent)}
+  @media (max-width:760px){.has-3d .feature,.has-3d .step,.has-3d .why > .card,.has-3d .faq details,.has-3d .cta-band{
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}}
+
+  /* — Tarjetas con inclinación 3D (sólo con puntero fino) — */
+  .tilt{position:relative;transform-style:preserve-3d;will-change:transform}
+  .tilt::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+    background:radial-gradient(380px circle at var(--mx,50%) var(--my,50%),color-mix(in srgb,var(--gold) 20%,transparent),transparent 62%);
+    opacity:0;transition:opacity .35s}
+  .tilt.is-tilting::after{opacity:1}
+  .tilt .ic,.tilt .no,.tilt .wk{transform:translateZ(26px)}
+  .tilt h3,.tilt h4{transform:translateZ(14px)}
+
+  /* — Medallón como moneda 3D — */
+  .medallion{transform-style:preserve-3d}
+  #featNum{display:block;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+
   @media (prefers-reduced-motion:no-preference){
     .reveal{animation:fadeUp .5s cubic-bezier(.2,.7,.3,1) both}
   }
@@ -903,6 +933,7 @@ function render(m,d,mo,y){
   [feat, document.getElementById("result")].forEach(el=>{
     el.classList.remove("reveal"); void el.offsetWidth; el.classList.add("reveal");
   });
+  if(window.__afterRender) window.__afterRender();   // gancho de animación (medallón 3D)
 }
 
 /* ===== Interacción ===== */
@@ -1045,9 +1076,11 @@ calc(false);
     // Gancho invocado por drawMatrix en cada (re)cálculo.
     window.__afterDraw=function(el){
       if(reduce){ gsap.set(el,{autoAlpha:1}); return; }
-      if(window.__animChart) animateChart(el); else gsap.set(el,{autoAlpha:1});
+      if(window.__animChart){ animateChart(el); chartIn(); } else gsap.set(el,{autoAlpha:1});
       ScrollTrigger.refresh();
     };
+    // Gancho invocado por render(): el medallón gira como una moneda al revelar el arcano.
+    window.__afterRender=function(){ if(!reduce && window.__animChart) coinFlip(); };
 
     if(reduce){                                    // accesibilidad: sin movimiento
       gsap.set([svg(),...document.querySelectorAll(REVEAL)],{autoAlpha:1,clearProps:"transform"});
@@ -1064,15 +1097,301 @@ calc(false);
       .from(".hero .trust",{autoAlpha:0,y:10,duration:.5},.6);
 
     // Trazado inicial del octograma (ya dibujado en la carga).
-    gsap.set(svg(),{autoAlpha:0}); animateChart(svg());
+    gsap.set(svg(),{autoAlpha:0}); animateChart(svg()); chartIn(); coinFlip();
 
     // Reveals al hacer scroll (batch, una sola vez).
     const items=gsap.utils.toArray(REVEAL);
     gsap.set(items,{autoAlpha:0,y:24});
     ScrollTrigger.batch(items,{
-      start:"top 86%", once:true,
+      start:"top 92%", once:true,
       onEnter:els=>gsap.to(els,{autoAlpha:1,y:0,duration:.6,ease:"power3.out",stagger:.1})
     });
+
+    // Tarjetas con inclinación 3D + brillo que sigue al puntero (sólo puntero fino).
+    if(window.matchMedia("(hover:hover) and (pointer:fine)").matches){
+      gsap.utils.toArray(".feature, .step, .why > .card").forEach(el=>{
+        el.classList.add("tilt");
+        gsap.set(el,{transformPerspective:900});
+        const rx=gsap.quickTo(el,"rotationX",{duration:.6,ease:"power3.out"});
+        const ry=gsap.quickTo(el,"rotationY",{duration:.6,ease:"power3.out"});
+        el.addEventListener("pointerenter",()=>el.classList.add("is-tilting"));
+        el.addEventListener("pointermove",e=>{
+          const r=el.getBoundingClientRect(), px=(e.clientX-r.left)/r.width, py=(e.clientY-r.top)/r.height;
+          ry((px-.5)*12); rx((.5-py)*10);
+          el.style.setProperty("--mx",(px*100)+"%"); el.style.setProperty("--my",(py*100)+"%");
+        });
+        el.addEventListener("pointerleave",()=>{ rx(0); ry(0); el.classList.remove("is-tilting"); });
+      });
+    }
   });
+
+  // La carta entra con perspectiva, como una lámina que se asienta sobre la mesa.
+  function chartIn(){
+    const card=document.querySelector(".chart-card"); if(!card) return;
+    gsap.fromTo(card,{rotationX:12,transformPerspective:1400,transformOrigin:"50% 0%"},
+      {rotationX:0,duration:1.2,ease:"power3.out",clearProps:"transform"});
+  }
+  // El medallón del arcano central gira 180° y muestra su cara.
+  function coinFlip(){
+    const med=document.querySelector(".medallion"); if(!med) return;
+    gsap.fromTo(med,{rotationY:-180,transformPerspective:700},
+      {rotationY:0,duration:1.2,ease:"back.out(1.3)",delay:.15});
+  }
+})();
+</script>
+
+<script>
+/* ===== Astrolabio 3D (Three.js r128 + GSAP) =====
+   El octograma de la carta convertido en un instrumento celeste: dos marcos dorados
+   entrelazados, el octágono de la línea de la vida, anillos armilares con los 22
+   arcanos en órbita y un campo de estrellas. El scroll lo guía de sección en sección.
+   Se carga de forma asíncrona (la página ya es usable antes) y se omite con
+   prefers-reduced-motion o sin WebGL: en esos casos queda el motivo 2D. */
+(function(){
+  if(window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const probe=document.createElement("canvas");
+  if(!(probe.getContext("webgl")||probe.getContext("experimental-webgl"))) return;
+  const s=document.createElement("script");
+  s.src="three.min.js"; s.async=true;
+  s.onload=()=>{ try{ init(); }catch(e){ console.warn("Astrolabio 3D desactivado:",e); } };
+  document.head.appendChild(s);
+
+  function init(){
+    const T=window.THREE; if(!T||!window.gsap) return;
+    const small=window.matchMedia("(max-width: 760px)").matches;
+    const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+    /* — Renderer, escena, cámara — */
+    const canvas=document.createElement("canvas");
+    canvas.id="bg3d"; canvas.setAttribute("aria-hidden","true");
+    document.body.prepend(canvas);
+    const renderer=new T.WebGLRenderer({canvas,alpha:true,antialias:!small,powerPreference:"high-performance"});
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, small?1.25:1.75));
+    renderer.setClearColor(0x000000,0);
+    const scene=new T.Scene();
+    const camera=new T.PerspectiveCamera(45,1,.1,100);
+
+    const amb=new T.AmbientLight(0xffffff,.6); scene.add(amb);
+    const keyL=new T.DirectionalLight(0xfff0d2,1.1); keyL.position.set(4,6,8); scene.add(keyL);
+    const rimL=new T.PointLight(0x8f7bff,1.3,30); rimL.position.set(-6,-3,5); scene.add(rimL);
+
+    /* — Materiales con opacidad controlada por el scroll/tema — */
+    const fades=[];                                     // {mat, light, dark, base}
+    const reg=(mat,light,dark)=>{ mat.transparent=true; fades.push({mat,light,dark,base:light}); return mat; };
+    const metal=()=>reg(new T.MeshStandardMaterial({color:0xa9793a,metalness:.55,roughness:.32,emissive:0x2a1a06}),.9,1);
+    const lineM=()=>reg(new T.LineBasicMaterial({color:0x3b2f66}),.28,.4);
+
+    function glowTexture(hard){
+      const c=document.createElement("canvas"); c.width=c.height=128;
+      const g=c.getContext("2d"), gr=g.createRadialGradient(64,64,0,64,64,64);
+      gr.addColorStop(0,"rgba(255,255,255,1)");
+      gr.addColorStop(hard?.35:.25,"rgba(255,255,255,"+(hard?.9:.45)+")");
+      gr.addColorStop(1,"rgba(255,255,255,0)");
+      g.fillStyle=gr; g.fillRect(0,0,128,128);
+      return new T.CanvasTexture(c);
+    }
+    const glowTex=glowTexture(false), starTex=glowTexture(true);
+    const sprites=[];
+    function glow(color,scale,light,dark){
+      const m=reg(new T.SpriteMaterial({map:glowTex,color,depthWrite:false}),light,dark);
+      const sp=new T.Sprite(m); sp.scale.setScalar(scale); sprites.push(m); return sp;
+    }
+
+    /* — El astrolabio — */
+    const root=new T.Group(); scene.add(root);          // transformación guiada por el scroll
+    const astro=new T.Group(); root.add(astro);         // vaivén continuo
+    const R=2.2;
+
+    const sqGeo=new T.TorusGeometry(R,.034,8,4);        // 4 segmentos = marco cuadrado
+    const diamond=new T.Mesh(sqGeo,metal()); diamond.position.z=.07; astro.add(diamond);
+    const square=new T.Mesh(sqGeo,metal()); square.rotation.z=Math.PI/4; square.position.z=-.07; astro.add(square);
+    const octagon=new T.Mesh(new T.TorusGeometry(R,.012,6,8),metal()); astro.add(octagon);   // línea de la vida
+    const inner=new T.Mesh(new T.TorusGeometry(R*.55,.011,6,96),metal()); astro.add(inner);
+    const axes=new T.LineSegments(new T.BufferGeometry().setFromPoints([
+      new T.Vector3(0,R,0),new T.Vector3(0,-R,0),new T.Vector3(-R,0,0),new T.Vector3(R,0,0),
+      new T.Vector3(-R*.7,R*.7,0),new T.Vector3(R*.7,-R*.7,0),new T.Vector3(R*.7,R*.7,0),new T.Vector3(-R*.7,-R*.7,0)
+    ]),lineM()); astro.add(axes);
+
+    // Vértices con los colores de la carta: corona (N, O), raíz (E, S), linaje (diagonales).
+    const nodeGeo=new T.SphereGeometry(.13,24,24);
+    const nodeMats=[];
+    [[0,"--k-root"],[45,null],[90,"--k-crown"],[135,null],[180,"--k-crown"],[225,null],[270,"--k-root"],[315,null]]
+      .forEach(([deg,v])=>{
+        const m=reg(new T.MeshStandardMaterial({roughness:.4,metalness:.2}),.95,1);
+        nodeMats.push([m,v]);
+        const n=new T.Mesh(nodeGeo,m), a=deg*Math.PI/180;
+        n.position.set(Math.cos(a)*R,Math.sin(a)*R,deg%90===0?.07:-.07);
+        if(!v) n.scale.setScalar(.8);
+        astro.add(n);
+      });
+
+    // Núcleo: el alma (Manipura dorado) con halo.
+    const coreMat=reg(new T.MeshStandardMaterial({color:0xe0a63a,emissive:0x8a5a10,emissiveIntensity:.7,roughness:.35,metalness:.3}),.95,1);
+    const core=new T.Mesh(new T.SphereGeometry(.34,40,40),coreMat); astro.add(core);
+    const coreGlow=glow(0xe0a63a,2.6,.35,.75); astro.add(coreGlow);
+
+    // Anillos armilares; los 22 arcanos orbitan sobre el primero.
+    const ringGeo=r=>new T.TorusGeometry(r,.011,6,180);
+    const pivot1=new T.Group(); pivot1.rotation.set(.78,.38,0); root.add(pivot1);
+    const spin1=new T.Group(); pivot1.add(spin1);
+    spin1.add(new T.Mesh(ringGeo(3.05),metal()));
+    const pivot2=new T.Group(); pivot2.rotation.set(-.9,.8,.2); root.add(pivot2);
+    pivot2.add(new T.Mesh(ringGeo(3.4),metal()));
+    const pivot3=new T.Group(); pivot3.rotation.set(.25,1.35,0); root.add(pivot3);
+    pivot3.add(new T.Mesh(ringGeo(2.75),metal()));
+
+    // Graduaciones del astrolabio sobre el anillo exterior (72 marcas).
+    const tickPos=[]; for(let i=0;i<72;i++){ const a=i/72*Math.PI*2; tickPos.push(Math.cos(a)*3.4,Math.sin(a)*3.4,0); }
+    const tickGeo=new T.BufferGeometry(); tickGeo.setAttribute("position",new T.Float32BufferAttribute(tickPos,3));
+    const tickMat=reg(new T.PointsMaterial({size:.05,map:starTex,color:0xa9793a,depthWrite:false}),.8,1);
+    pivot2.add(new T.Points(tickGeo,tickMat));
+
+    const CHAKRA=["--k-crown","--k-ajna","--k-vish","--k-ana","--k-manip","--k-svad","--k-root"];
+    const orbGeo=new T.SphereGeometry(.06,14,14), orbMats=[];
+    for(let i=0;i<22;i++){
+      const a=i/22*Math.PI*2, v=CHAKRA[i%7];
+      const m=reg(new T.MeshBasicMaterial(),.95,1); orbMats.push([m,v]);
+      const orb=new T.Mesh(orbGeo,m); orb.position.set(Math.cos(a)*3.05,Math.sin(a)*3.05,0);
+      const g=glow(0xffffff,.42,.3,.8); g.position.copy(orb.position); orbMats.push([g.material,v]);
+      spin1.add(orb); spin1.add(g);
+    }
+
+    // Campo de estrellas.
+    const N=small?450:1300, sp=new Float32Array(N*3);
+    for(let i=0;i<N;i++){
+      const r=8+Math.random()*16, th=Math.random()*Math.PI*2, ph=Math.acos(2*Math.random()-1);
+      sp[i*3]=r*Math.sin(ph)*Math.cos(th); sp[i*3+1]=r*Math.sin(ph)*Math.sin(th); sp[i*3+2]=r*Math.cos(ph)-6;
+    }
+    const starGeo=new T.BufferGeometry(); starGeo.setAttribute("position",new T.BufferAttribute(sp,3));
+    const starMat=reg(new T.PointsMaterial({size:small?.09:.07,map:starTex,depthWrite:false}),.45,.9);
+    const stars=new T.Points(starGeo,starMat); scene.add(stars);
+
+    /* — Paleta ligada al tema claro/oscuro — */
+    let themeF=1;
+    function palette(){
+      const dark=(typeof curTheme==="function"?curTheme():"light")==="dark";
+      const gold=new T.Color(css("--gold")||"#a9793a"), star=new T.Color(css("--star")||"#3b2f66");
+      fades.forEach(e=>{
+        e.base=dark?e.dark:e.light;
+        if(e.mat.isMeshStandardMaterial && e.mat!==coreMat && !nodeMats.some(n=>n[0]===e.mat)){
+          e.mat.color.copy(gold); e.mat.emissive.copy(gold).multiplyScalar(dark?.28:.08);
+        }
+      });
+      axes.material.color.copy(star); starMat.color.copy(star); tickMat.color.copy(gold);
+      nodeMats.forEach(([m,v])=>{
+        const c=new T.Color(v?css(v):(dark?"#f3e7cf":"#fffdf8"));
+        m.color.copy(c); m.emissive=m.emissive||new T.Color(); m.emissive.copy(c).multiplyScalar(dark?.35:.12);
+      });
+      orbMats.forEach(([m,v])=>m.color.set(css(v)||"#e0a63a"));
+      sprites.forEach(m=>{ m.blending=dark?T.AdditiveBlending:T.NormalBlending; m.needsUpdate=true; });
+      amb.intensity=dark?.45:.8; rimL.intensity=dark?1.6:.8;
+      themeF=dark?1:.72;
+    }
+    palette();
+    new MutationObserver(palette).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change",palette);
+
+    /* — Recorrido por secciones: posiciones clave ligadas al scroll — */
+    // Cada pose se alcanza cuando su sección está centrada en pantalla ("mid"),
+    // o al entrar/salir de ella ("in"/"out") — así la herramienta queda despejada.
+    const KEYS=[
+      [".hero",    "top",{x:0,   y:-.15,z:-1.4,rx:.42, ry:0,   s:1.2, f:.78}],
+      ["#revela",  "mid",{x:3.2, y:0,   z:-1,  rx:-.25,ry:.6,  s:.86, f:.95}],
+      ["#como",    "mid",{x:-3.2,y:.2,  z:-1,  rx:.55, ry:-.5, s:.86, f:.95}],
+      ["#calc",    "in", {x:0,   y:0,   z:-7,  rx:.2,  ry:0,   s:1.25,f:.14}],
+      ["#calc",    "out",{x:0,   y:0,   z:-7,  rx:.2,  ry:0,   s:1.25,f:.14}],
+      ["#porque",  "mid",{x:3.3, y:-.2, z:-1.2,rx:-.3, ry:.8,  s:.9,  f:.9 }],
+      ["#faq",     "mid",{x:-3.3,y:0,   z:-1.4,rx:.45, ry:-.7, s:.9,  f:.85}],
+      [".cta-band","mid",{x:0,   y:0,   z:.4,  rx:.25, ry:0,   s:1.05,f:1  }]
+    ];
+    let keys=[];
+    function measure(){
+      const max=Math.max(1,document.documentElement.scrollHeight-innerHeight), vh=innerHeight;
+      keys=KEYS.map(([sel,mode,v])=>{
+        const el=document.querySelector(sel); if(!el) return null;
+        const r=el.getBoundingClientRect(), top=r.top+scrollY, h=r.height;
+        const at=mode==="top"?0:mode==="in"?top-vh*.55:mode==="out"?top+h-vh*.45:top+h/2-vh/2;
+        const p=Math.min(1,Math.max(0,at/max));
+        const o=Object.assign({},v);
+        if(small){ o.x*=.2; o.s*=.72; o.z-=1; o.f*=o.f<.3?.45:.55; }
+        return {p,v:o};
+      }).filter(Boolean).sort((a,b)=>a.p-b.p);
+    }
+    const ease=t=>t*t*(3-2*t);
+    function sample(p){
+      if(p<=keys[0].p) return keys[0].v;
+      for(let i=1;i<keys.length;i++){
+        if(p<=keys[i].p){
+          const a=keys[i-1],b=keys[i],t=ease((p-a.p)/Math.max(1e-4,b.p-a.p)),o={};
+          for(const k in a.v) o[k]=a.v[k]+(b.v[k]-a.v[k])*t;
+          return o;
+        }
+      }
+      return keys[keys.length-1].v;
+    }
+
+    function resize(){
+      const w=innerWidth,h=innerHeight;
+      renderer.setSize(w,h,false); camera.aspect=w/h;
+      camera.position.z=camera.aspect<.8?13:9.5;
+      camera.updateProjectionMatrix(); measure();
+    }
+    resize();
+    addEventListener("resize",resize);
+    if(window.ScrollTrigger) ScrollTrigger.addEventListener("refresh",measure);
+
+    /* — Parallax del puntero y velocidad de scroll — */
+    const mouse={x:0,y:0,tx:0,ty:0};
+    if(window.matchMedia("(pointer:fine)").matches){
+      addEventListener("pointermove",e=>{ mouse.tx=e.clientX/innerWidth-.5; mouse.ty=e.clientY/innerHeight-.5; },{passive:true});
+    }
+    let lastY=scrollY, vel=0;
+
+    /* — Bucle de render — */
+    const cur=Object.assign({},keys[0].v), intro={s:.72,f:0};
+    const clock=new T.Clock();
+    let running=true;
+    function frame(){
+      if(!running) return;
+      requestAnimationFrame(frame);
+      const dt=Math.min(clock.getDelta(),.05), t=clock.elapsedTime;
+      const max=Math.max(1,document.documentElement.scrollHeight-innerHeight);
+      const tgt=sample(scrollY/max), k=1-Math.exp(-dt*2.6);
+      for(const key in cur) cur[key]+=(tgt[key]-cur[key])*k;
+
+      vel+=((Math.min(Math.abs(scrollY-lastY)/Math.max(dt,1e-3),3000)/3000)-vel)*.08; lastY=scrollY;
+
+      root.position.set(cur.x,cur.y,cur.z);
+      root.rotation.set(cur.rx,cur.ry,0);
+      root.scale.setScalar(cur.s*intro.s);
+      astro.rotation.y=Math.sin(t*.25)*.55;
+      astro.rotation.z=Math.sin(t*.17)*.06;
+      spin1.rotation.z+=dt*(.16+vel*1.4);
+      pivot2.rotation.z-=dt*(.05+vel*.5);
+      pivot3.rotation.x+=dt*(.04+vel*.4);
+      core.scale.setScalar(1+Math.sin(t*1.6)*.05);
+      coreGlow.scale.setScalar(2.6+Math.sin(t*1.6)*.25);
+      stars.rotation.y=t*.012; stars.rotation.x=Math.sin(t*.05)*.05;
+
+      mouse.x+=(mouse.tx-mouse.x)*.05; mouse.y+=(mouse.ty-mouse.y)*.05;
+      camera.position.x=mouse.x*.9; camera.position.y=-mouse.y*.6;
+      camera.lookAt(0,0,0);
+
+      const f=cur.f*intro.f*themeF;
+      for(let i=0;i<fades.length;i++) fades[i].mat.opacity=fades[i].base*f;
+      renderer.render(scene,camera);
+    }
+    document.addEventListener("visibilitychange",()=>{
+      if(document.hidden){ running=false; }
+      else if(!running){ running=true; clock.getDelta(); frame(); }
+    });
+    frame();
+
+    // Entrada: el astrolabio se enciende y reemplaza al motivo 2D del héroe.
+    document.body.classList.add("has-3d");
+    gsap.to(canvas,{autoAlpha:1,duration:1.2,ease:"power2.out"});
+    gsap.to(intro,{s:1,f:1,duration:2.2,ease:"expo.out"});
+    gsap.to(".hero-motif",{autoAlpha:0,duration:1,overwrite:true});
+  }
 })();
 </script>
