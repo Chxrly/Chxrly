@@ -86,7 +86,7 @@
         hipoF:`${pat?"El mandato":"El nudo"} en Hipo es una lealtad silenciosa: repetir la limitación para no traicionar a la familia.`,
         hiperF:`${pat?"El mandato":"El nudo"} en Híper es una carga: sostener el exceso como si fuera una obligación heredada.`,
         sig:`Sientes culpa cuando haces algo distinto a lo que se hacía en tu línea ${line}.`,
-        preg:`¿Qué ${pat?"mandato":"lealtad"} de mi línea ${line} sigo cumpliendo sin haberlo elegido?`,short:pat?"mandato heredado":"nudo o lealtad"},
+        preg:`¿Qué ${pat?"mandato":"lealtad"} de mi línea ${line} sigo cumpliendo sin ${pat?"haberlo":"haberla"} elegido?`,short:pat?"mandato heredado":"nudo o lealtad"},
       recurso:{frame:`${P} es el recurso que se libera al integrar el programa de la línea ${line}: la ${pat?"maestría de acción":"sabiduría"} disponible cuando ${pat?"el mandato":"el nudo"} se resuelve.`,
         hipoF:`Mientras ${pat?"el mandato":"el nudo"} no se resuelve, este recurso queda en Hipo: disponible, pero sin usar.`,
         hiperF:`Si se fuerza, el recurso se usa en su versión distorsionada: {hiperC}.`,
@@ -328,13 +328,14 @@
       contexto:`En ${zonaNom}, este programa se interpreta en relación con ${lens}.`+(prg.cola26?" La combinación figura en el catálogo de colas, pero fuera de D1-D2-D no se etiqueta como Cola Kármica: se lee en el contexto de esta zona.":""),
       dist:seq.pts.map((P,i)=>({P,a:vals[i],rol:ROLE[P].short,func:DATA.pts[P].func})),
       eje,ea,
-      enfasis:`El punto eje de esta zona es ${eje} (${ROLE[eje].short}) y lo ocupa ${nm(ea)} (${ea}): por eso el programa gira sobre todo en torno a ${c.kern}, y su versión sana depende de ${c.obj}.`,
+      enfasis:`El punto eje de esta zona es ${eje} (${ROLE[eje].short}) y lo ocupa ${nm(ea)} (${ea}): por eso el programa gira sobre todo en torno a ${c.kern}, y su versión sana depende de ${c.obj}.`.replace(/\bde el\b/g,"del").replace(/\ba el\b/g,"al"),
       potencial:prg.rec,
       hipo:`En Hipo, ese potencial queda sin desarrollar. Con ${nm(ea)} en el eje, la evitación suele verse así: ${c.hipoC}.`,
       hiper:`En Híper aparece la sombra del programa: ${low(prg.sombra)} Con el eje en ${nm(ea)}, la compensación suele verse así: ${c.hiperC}.`,
       ciclo:c.cicloTxt, chain:c.ciclo,
       costo:`${cap(c.cons)}; o, en el otro extremo, ${c.consH}.`,
-      equilibrio:prg.tarea, integ:c.integ,
+      equilibrio:prg.tarea, integ:c.integ, sombra:prg.sombra, tarea:prg.tarea, trig:pick(c.trig,0,3), eq:c.eq.slice(0,2),
+      acc:c.acc.replace("{amb}",ZT[ROLE[eje].zt].amb),
       alertas:[c.sHipo[0],c.sHiper[0],`notas en ti esta dinámica: ${low(nodot(prg.sombra))}`],
       progreso:pick(c.prog,1,3),
       preguntas:[`¿Dónde aparece en mi vida «${prg.nombre}»?`,...pick(c.preg,0,2)],
@@ -391,7 +392,7 @@
       const ev=ORDER.filter(P=>pt.arc[p[P]]&&(W[P]||0)>0).map(P=>({P,a:p[P],w:W[P],pole:pt.arc[p[P]]}));
       const distinct=new Set(ev.map(e=>e.a)).size, score=ev.reduce((s,e)=>s+e.w,0);
       return {pt,ev,distinct,score};
-    }).filter(x=>x.distinct>=2&&x.score>=4).sort((a,b)=>b.score-a.score).slice(0,3).map(x=>({...x,
+    }).filter(x=>x.distinct>=2&&x.score>=4).sort((a,b)=>b.score-a.score).map(x=>({...x,
       ev:x.ev.map(e=>({...e,txt:e.pole==="hipo"?CORE[e.a].hipoC:e.pole==="hiper"?CORE[e.a].hiperC:`${CORE[e.a].hipoC} → ${CORE[e.a].hiperC}`}))}));
   }
 
@@ -402,9 +403,12 @@
     const age=((ageYears%80)+80)%80, seg=Math.floor(age/10), j=Math.floor((age-seg*10)/1.25);
     const vals=subdivide(p[RING[seg]],p[RING[(seg+1)%8]]);
     const a=vals[j], nextAge=Math.floor(ageYears/1.25+1)*1.25;
-    const seg2=Math.floor((nextAge%80)/10), j2=Math.round(((nextAge%80)-seg2*10)/1.25);
+    const nm80=((nextAge%80)+80)%80, seg2=Math.floor(nm80/10), j2=Math.round((nm80-seg2*10)/1.25);
     const vals2=subdivide(p[RING[seg2]],p[RING[(seg2+1)%8]]), a2=j2===8?p[RING[(seg2+1)%8]]:vals2[j2];
-    return {age:ageYears,from:Math.floor(ageYears/1.25)*1.25,to:nextAge,a,next:a2,txt:DATA.anual[a]};
+    const upcoming=[];
+    for(let i=0;i<6;i++){ const st=Math.floor(ageYears/1.25+i)*1.25, sm=((st%80)+80)%80, s2=Math.floor(sm/10), jj=Math.round((sm-s2*10)/1.25);
+      const vv=subdivide(p[RING[s2]],p[RING[(s2+1)%8]]); upcoming.push({from:st,to:st+1.25,a:jj===8?p[RING[(s2+1)%8]]:vv[jj]}); }
+    return {age:ageYears,from:Math.floor(ageYears/1.25)*1.25,to:nextAge,a,next:a2,txt:DATA.anual[a],upcoming};
   }
 
   /* ---------- Cómputo completo ---------- */
@@ -412,9 +416,9 @@
     const {p,prop}=points(day,month,year);
     const reads={}; ORDER.forEach((P,i)=>reads[P]=readPoint(P,p[P],i));
     const programs=detectPrograms(p).map(o=>readProgram(o,p));
-    const cola=readCola(p), reps=readRepetitions(p), axes=readAxes(p,prop), patterns=readPatterns(p);
+    const cola=readCola(p), reps=readRepetitions(p), axes=readAxes(p,prop), patternsAll=readPatterns(p), patterns=patternsAll.slice(0,3);
     const cycle=readCycle(p,new Date(year,month-1,day),today||new Date());
-    return {p,prop,reads,programs,cola,reps,axes,patterns,cycle};
+    return {p,prop,reads,programs,cola,reps,axes,patterns,patternsAll,cycle};
   }
 
   /* ---------- J. Cómo se conecta todo ---------- */
@@ -554,6 +558,6 @@
     for(let el=t;el;el=el.parentElement) if(el.tagName==="DETAILS") el.open=true;
   });
 
-  window.MatrixReading={compute,render,points};
+  window.MatrixReading={compute,render,points,_lib:{DATA,CORE,ROLE,ZT,GROUPS,ROOT,PATTERNS,RESOURCE,CHALLENGE}};
   if(window.__lastDate) render(window.__lastDate);   // si la carta ya se calculó antes de cargar el motor
 })();
