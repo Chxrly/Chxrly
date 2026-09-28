@@ -1127,7 +1127,12 @@ document.addEventListener("DOMContentLoaded",()=>{
   b.addEventListener("click",async()=>{
     if(b.getAttribute("aria-busy")==="true") return;
     b.setAttribute("aria-busy","true"); b.textContent="Preparando tu informe…"; m.className="rep-msg"; m.textContent="Esto tarda unos segundos.";
-    try{ const f=await window.MatrixReport.download({name:n.value}); m.textContent="Listo: "+f; }
+    try{
+      const r=await window.MatrixReport.download({name:n.value});
+      m.textContent=r.status==="saved"?"Listo: "+r.file+". ":r.status==="declined"?"Descarga cancelada. ":"Si la descarga no empezó, ";
+      const l=document.createElement("a"); l.href=r.url; l.target="_blank"; l.rel="noopener"; l.download=r.file;
+      l.textContent=r.status==="link"?"abre el PDF aquí":"Abrir el PDF"; m.appendChild(l);
+    }
     catch(e){ console.error(e); m.className="rep-msg err"; m.textContent="No se pudo generar el informe. "+(e&&e.message||"Inténtalo de nuevo."); }
     finally{ b.removeAttribute("aria-busy"); b.textContent=label; }
   });

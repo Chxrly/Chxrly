@@ -443,7 +443,21 @@
     const file=`Informe-MATRIX-${(name||birth).replace(/[^\p{L}\p{N}]+/gu,"-").replace(/^-|-$/g,"")}.pdf`;
     return {doc,file,R};
   }
-  async function download(opts){ const {doc,file}=await generate(opts); window.pdfMake.createPdf(doc).download(file); return file; }
+  // Descarga: dentro del visor de Claude se usa la capacidad "downloads" (el iframe bloquea las descargas
+  // directas); en el sitio publicado, un enlace blob. Siempre se devuelve la URL para ofrecer "Abrir el PDF".
+  async function download(opts){
+    const {doc,file}=await generate(opts);
+    const blob=await new Promise((ok,ko)=>{ try{ window.pdfMake.createPdf(doc).getBlob(ok); }catch(e){ ko(e); } });
+    const url=URL.createObjectURL(blob);
+    const dl=window.claude&&typeof window.claude.use==="function"?await window.claude.use("downloads").catch(()=>null):null;
+    if(dl){
+      try{ await dl.save({filename:file,data:blob}); return {file,url,status:"saved"}; }
+      catch(e){ if(e&&e.code==="declined") return {file,url,status:"declined"}; /* si no, se intenta el enlace */ }
+    }
+    const a=document.createElement("a"); a.href=url; a.download=file; a.rel="noopener"; a.style.display="none";
+    document.body.appendChild(a); a.click(); setTimeout(()=>a.remove(),0);
+    return {file,url,status:"link"};
+  }
 
   window.MatrixReport={build,generate,download,_toPdf:toPdf};
 })();
