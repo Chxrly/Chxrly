@@ -605,7 +605,7 @@
       <h3 id="featName">—</h3>
       <p class="fmean" id="featMean">—</p>
       <div class="fstats">
-        <div class="fstat"><span class="fv" id="fMision">–</span><span class="fk">Misión</span></div>
+        <div class="fstat"><span class="fv" id="fMision">–</span><span class="fk">Prop. planetario</span></div>
         <div class="fstat"><span class="fv" id="fPersonal">–</span><span class="fk">Prop. personal</span></div>
         <div class="fstat"><span class="fv" id="fEspiritual">–</span><span class="fk">Prop. espiritual</span></div>
       </div>
@@ -634,7 +634,7 @@
         <span><i class="dot" style="background:var(--k-ana)"></i>Anahata</span>
         <span><i class="dot" style="background:var(--k-manip)"></i>Centro · Alma</span>
         <span><i class="dot" style="background:var(--k-svad)"></i>Svadhisthana</span>
-        <span><i class="dot" style="background:var(--k-root)"></i>Raíz (año · misión)</span>
+        <span><i class="dot" style="background:var(--k-root)"></i>Raíz (año · bagaje kármico)</span>
       </div>
     </div>
 
@@ -649,7 +649,7 @@
 
         <div class="block">
           <h3>Energías principales</h3>
-          <p class="hint">Los arcanos que rigen tu identidad, tu día, tu linaje y tu misión.</p>
+          <p class="hint">Los arcanos de tu centro, de los cuatro vértices de la fecha y de las cuatro raíces del linaje.</p>
           <div class="rows" id="mainRows"></div>
         </div>
 
@@ -657,9 +657,9 @@
           <h3>Tabla de salud · 7 chakras</h3>
           <p class="hint">Cómo fluye tu energía por cada chakra: cuerpo, energía y emoción.</p>
           <table id="health">
-            <thead><tr><th>Chakra</th><th>Físico</th><th>Energía</th><th>Emoción</th></tr></thead>
+            <thead><tr><th>Chakra</th><th>Físico</th><th>Energía</th><th>Emoción</th><th>Conclusión</th></tr></thead>
             <tbody></tbody>
-            <tfoot><tr id="healthTotal"><td>Total</td><td></td><td></td><td></td></tr></tfoot>
+            <tfoot><tr id="healthTotal"><td>Total</td><td></td><td></td><td></td><td></td></tr></tfoot>
           </table>
         </div>
 
@@ -671,17 +671,17 @@
 
         <details>
           <summary>¿Cómo se calcula? (método verificado)</summary>
-          <p><b>Reducción:</b> cada número se reduce sumando sus dígitos hasta quedar en 1–22
-             (ej. 31 → 3+1 = 4; año 2003 → 2+0+0+3 = 5).<br>
-             <b>Diamante:</b> Día(izq), Mes(arriba), Año(der), Misión = Día+Mes+Año, Centro = suma de los cuatro.<br>
-             <b>Linaje:</b> cada esquina diagonal = suma de los dos vértices vecinos.<br>
-             <b>Chakras:</b> en cada radio, punto medio = vértice+centro; y sus dos subdivisiones.<br>
-             <b>Tabla de salud:</b> Físico recorre el eje horizontal (día→centro→año) y Energía el vertical
-             (mes→centro→misión); Emoción = Físico+Energía; el Total reduce la suma de cada columna.<br>
-             <b>Propósitos:</b> personal = (Cielo=mes+misión)+(Tierra=día+año); social = suma de las dos
-             diagonales del linaje; espiritual = personal+social.<br>
-             Verificado punto por punto contra los ejemplos de dinaraaxanova.com: octograma,
-             tabla de salud (7 chakras + total) y los tres propósitos coinciden exactamente.</p>
+          <p><b>Reducción R22:</b> si un número supera 22 se suman sus dígitos (ej. 31 → 3+1 = 4; año 2003 → 2+0+0+3 = 5). Nunca se resta 22.<br>
+             <b>Vértices:</b> A = día, B = mes, C = año, D (bagaje kármico) = A+B+C, E (centro) = A+B+C+D.<br>
+             <b>Linaje:</b> F = A+B, G = B+C, Y = C+D, K = D+A.<br>
+             <b>Radios:</b> A2 = A+E, A1 = A+A2, A3 = A2+E (y B igual); C1 = C+E, C2 = C+C1; D1 = D+E, D2 = D+D1.<br>
+             <b>Centro y sexualidad:</b> E1 = F+G+K+Y (una sola reducción), E2 = E+E1.<br>
+             <b>Diagonales:</b> S1 = E1+F, S2 = S1+F · P1 = G+E1, P2 = G+P1 · P3 = K+E1, P4 = K+P3 · S3 = Y+E1, S4 = S3+Y.<br>
+             <b>Amor y dinero:</b> X = D1+C1, X2 (pareja) = X+D1, X1 (trabajo) = X+C1.<br>
+             <b>Tabla de salud:</b> Físico recorre A, A1, A2, A3, E, C1, C; Energía recorre B, B1, B2, B3, E, D1, D; Emoción = Físico+Energía; Conclusión = Físico+Energía+Emoción; el Total reduce la suma de cada columna.<br>
+             <b>Propósitos:</b> Cielo = B+D, Tierra = A+C, personal = Cielo+Tierra; línea masculina = F+Y, femenina = G+K, social = masculina+femenina; espiritual = personal+social; planetario = espiritual+social.<br>
+             <b>Ciclos:</b> el perímetro A→F→B→G→C→Y→D→K recorre 80 años (10 por lado); cada punto intermedio es la suma reducida de sus dos vecinos, en tramos de 1,25 años.<br>
+             Todas las fórmulas siguen la Biblioteca Maestra MATRIX (10_FORMULAS) y coinciden con sus casos de control.</p>
         </details>
       </div>
     </div>
@@ -771,7 +771,7 @@
 const ARCANA={
   1:["El Mago","Voluntad, iniciativa, comunicación"],2:["La Sacerdotisa","Intuición, sabiduría, secretos"],
   3:["La Emperatriz","Abundancia, creatividad, feminidad"],4:["El Emperador","Estructura, poder, estabilidad"],
-  5:["El Sumo Sacerdote","Tradición, guía espiritual, ética"],6:["Los Enamorados","Elección, amor, vínculos"],
+  5:["El Hierofante","Tradición, guía espiritual, ética"],6:["Los Enamorados","Elección, amor, vínculos"],
   7:["El Carro","Voluntad victoriosa, avance, control"],8:["La Justicia","Equilibrio, causa-efecto, verdad"],
   9:["El Ermitaño","Introspección, búsqueda, prudencia"],10:["La Rueda de la Fortuna","Ciclos, destino, cambios"],
   11:["La Fuerza","Coraje interior, dominio, pasión"],12:["El Colgado","Entrega, pausa, otra perspectiva"],
@@ -792,7 +792,7 @@ function subdivide(a,b){const mid=reduce(a+b),q1=reduce(a+mid),q2=reduce(mid+b);
 
 function computeMatrix(day,month,year){
   const W=reduce(day), N=reduce(month), E=reduce(year);      // día · mes · año
-  const S=reduce(W+N+E);                                     // misión (cometa)
+  const S=reduce(W+N+E);                                     // D · bagaje kármico
   const C=reduce(W+N+E+S);                                   // centro / alma
   // Cuadrado del linaje (esquinas diagonales)
   const NW=reduce(W+N), NE=reduce(N+E), SE=reduce(E+S), SW=reduce(S+W);
@@ -878,11 +878,9 @@ function drawMatrix(m){
         +`font-size="7.5" fill="var(--muted)">${ageP%1?ageP.toFixed(2).replace(/0$/,''):ageP}</text>`;
     }
   });
-  // Círculos de eje: misión (corona) = reduce(social+espiritual); espiritual (raíz).
-  // Ambas fórmulas verificadas en 31/01/2003, 26/04/2001 y 01/01/2003.
-  const mision=reduce(m.social+m.espiritual);
-  s+=node(0,-R-98,mision,"var(--paper)",20,"var(--ink)");
-  s+=lbl(0,-R-98,"Misión",0,-30);
+  // Círculos de eje: propósito planetario = R22(espiritual+social) (arriba) y espiritual (abajo).
+  s+=node(0,-R-98,m.planetario,"var(--paper)",20,"var(--ink)");
+  s+=lbl(0,-R-98,"Planetario",0,-30);
   s+=node(0,R+98,m.espiritual,"var(--paper)",20,"var(--ink)");
   s+=lbl(0,R+98,"Espiritual",0,32);
   // === Círculos generacionales (orla exterior) — verificado en 31/01/2003 y 01/01/2008 ===
@@ -910,11 +908,10 @@ function drawMatrix(m){
   // Línea punteada del dinero ($): del 7 (mid_E, derecha) al 3 (mid_S, abajo), cruzando la esquina SE.
   // Pasa exactamente por el 17 (dinero) y el 13 (amor).
   s+=`<line x1="${P(0,R*0.68)[0]}" y1="${P(0,R*0.68)[1]}" x2="${P(270,R*0.68)[0]}" y2="${P(270,R*0.68)[1]}" stroke="var(--muted)" stroke-width="1" stroke-dasharray="4 3" opacity=".7"/>`;
-  // Canal del amor (♥): dos puntos a la derecha del centro (dentro del anillo)
-  //   L1 = reduce(2·Centro), L2 = reduce(Centro+social) — verificado en varias fechas
-  const love1=reduce(m.C+m.C), love2=reduce(m.C+m.social);
-  s+=node(...P(0,R*0.19),love1,WHITE,10,"var(--ink)");
-  s+=node(...P(0,R*0.33),love2,WHITE,10,"var(--ink)");
+  // Centro / sexualidad: E1 y E2, «interior derecha del centro» (Biblioteca Maestra, 02_PUNTOS).
+  //   E1 = R22(F+G+K+Y) (junto al centro) · E2 = R22(E+E1) (hacia el anillo).
+  s+=node(...P(0,R*0.19),m.pts.E1,WHITE,10,"var(--ink)");
+  s+=node(...P(0,R*0.33),m.pts.E2,WHITE,10,"var(--ink)");
   // Ejes (N,S,W,E): inner .33R (dentro del anillo, coloreado por chakra), mid .68R, outer .83R.
   // Diagonales (NW,NE,SE,SW): DOS puntos blancos — anillo (.70R) = R22(E1+vértice) (S1/P1/P3/S3)
   //   y subpunto (.82R) = R22(anillo+vértice) (S2/P2/P4/S4). Coincide con 01/01/2001 y 31/01/2003.
@@ -967,7 +964,7 @@ function mainRow(num,tag){const[n,mean]=ARCANA[num];
 
 // Chakras con nombre y tema exactos de dinaraaxanova.com (7=corona ... 1=raíz)
 const CHAKRAS=[
-  ["Sahasrara","Mission","var(--c-crown)"],
+  ["Sahasrara","Misión","var(--c-crown)"],
   ["Ajna","Destino, Egregores","var(--c-brow)"],
   ["Vishuddha","Destino, Egregores","var(--c-throat)"],
   ["Anahata","Relaciones, Cosmovisión","var(--c-heart)"],
@@ -982,7 +979,7 @@ function chakraValues(m){
   const fisCol=[m.W, m.sp.W.outer, m.sp.W.mid, m.sp.W.inner, m.C, m.sp.E.mid, m.E];
   const eneCol=[m.N, m.sp.N.outer, m.sp.N.mid, m.sp.N.inner, m.C, m.sp.S.mid, m.S];
   const rows=CHAKRAS.map((c,i)=>({name:c[0],theme:c[1],col:c[2],
-    fis:fisCol[i], ene:eneCol[i], emo:reduce(fisCol[i]+eneCol[i])}));
+    fis:fisCol[i], ene:eneCol[i], emo:reduce(fisCol[i]+eneCol[i]), con:reduce(fisCol[i]+eneCol[i]+reduce(fisCol[i]+eneCol[i]))}));
   const sum=a=>reduce(a.reduce((x,y)=>x+y,0));
   return {rows, totFis:sum(fisCol), totEne:sum(eneCol), totEmo:sum(rows.map(r=>r.emo))};
 }
@@ -999,22 +996,22 @@ function render(m,d,mo,y){
   document.getElementById("featNum").textContent=m.C;
   document.getElementById("featName").textContent=arc(m.C);
   document.getElementById("featMean").textContent=ARCANA[m.C][1]+".";
-  document.getElementById("fMision").textContent=reduce(m.social+m.espiritual);
+  document.getElementById("fMision").textContent=m.planetario;
   document.getElementById("fPersonal").textContent=m.personal;
   document.getElementById("fEspiritual").textContent=m.espiritual;
   document.getElementById("mainRows").innerHTML=
-      mainRow(m.C,"Centro · Alma")+mainRow(m.W,"Día · Cuerpo")+mainRow(m.N,"Mes · Social")
-    + mainRow(m.E,"Año · Linaje")+mainRow(m.S,"Misión")
-    + mainRow(m.NW,"Linaje ↖")+mainRow(m.NE,"Linaje ↗")
-    + mainRow(m.SE,"Linaje ↘")+mainRow(m.SW,"Linaje ↙");
+      mainRow(m.C,"E · Centro")+mainRow(m.W,"A · Día")+mainRow(m.N,"B · Mes")
+    + mainRow(m.E,"C · Año")+mainRow(m.S,"D · Bagaje kármico")
+    + mainRow(m.NW,"F · Linaje paterno ↖")+mainRow(m.NE,"G · Linaje materno ↗")
+    + mainRow(m.SE,"Y · Linaje paterno ↘")+mainRow(m.SW,"K · Linaje materno ↙");
   // Tabla de salud + total
   const h=chakraValues(m);
   document.getElementById("health").querySelector("tbody").innerHTML=
     h.rows.map((c,i)=>`<tr>
       <td><span class="chk" style="background:${c.col}"></span>${7-i}. ${c.name}<br><small style="color:var(--muted)">${c.theme}</small></td>
-      <td class="cross">${c.fis}</td><td class="cross">${c.ene}</td><td><b>${c.emo}</b></td></tr>`).join("");
+      <td class="cross">${c.fis}</td><td class="cross">${c.ene}</td><td><b>${c.emo}</b></td><td>${c.con}</td></tr>`).join("");
   document.getElementById("healthTotal").innerHTML=
-    `<td>Total</td><td><b>${h.totFis}</b></td><td><b>${h.totEne}</b></td><td><b>${h.totEmo}</b></td>`;
+    `<td>Total</td><td><b>${h.totFis}</b></td><td><b>${h.totEne}</b></td><td><b>${h.totEmo}</b></td><td></td>`;
   // Propósitos (formato de la página): dos entradas -> resultado
   const pair=(l1,v1,l2,v2,res,age)=>`
     <div class="purpose">
@@ -1036,8 +1033,9 @@ function render(m,d,mo,y){
     </div>`;
   document.getElementById("purposes").innerHTML=
       pair("Cielo",m.cielo,"Tierra",m.tierra,{title:"♥ Propósito personal",v:m.personal},"20 – 40 años")
-    + pair("Hombre",m.hombre,"Mujer",m.mujer,{title:"✦ Propósito social",v:m.social},"40 – 60 años")
-    + single("✦ Propósito espiritual",m.espiritual,"Siempre activo");
+    + pair("Masculina",m.hombre,"Femenina",m.mujer,{title:"✦ Propósito social",v:m.social},"40 – 60 años")
+    + pair("Personal",m.personal,"Social",m.social,{title:"✦ Propósito espiritual",v:m.espiritual},"Siempre activo")
+    + pair("Espiritual",m.espiritual,"Social",m.social,{title:"✦ Propósito planetario",v:m.planetario},"Siempre activo");
   // Revelado suave (se reproduce en cada cálculo)
   [feat, document.getElementById("result")].forEach(el=>{
     el.classList.remove("reveal"); void el.offsetWidth; el.classList.add("reveal");

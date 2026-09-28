@@ -399,7 +399,12 @@
   /* ---------- Ciclo actual (perímetro validado) ---------- */
   function readCycle(p,birth,today){
     const RING=["A","F","B","G","C","Y","D","K"];
-    const ageYears=(today-birth)/(365.2425*864e5);
+    // Edad cumplida + fracción del año en curso (calendario real): el día del cumpleaños cae
+    // exactamente en el inicio de un tramo, sin el desfase de dividir por 365,24 días.
+    const t0=new Date(today.getFullYear(),today.getMonth(),today.getDate());
+    const anniv=n=>new Date(birth.getFullYear()+n,birth.getMonth(),birth.getDate());
+    let yrs=t0.getFullYear()-birth.getFullYear(); if(anniv(yrs)>t0) yrs--;
+    const ageYears=yrs+(t0-anniv(yrs))/(anniv(yrs+1)-anniv(yrs));
     const age=((ageYears%80)+80)%80, seg=Math.floor(age/10), j=Math.floor((age-seg*10)/1.25);
     const vals=subdivide(p[RING[seg]],p[RING[(seg+1)%8]]);
     const a=vals[j], nextAge=Math.floor(ageYears/1.25+1)*1.25;
