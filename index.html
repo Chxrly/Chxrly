@@ -2,200 +2,246 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Las Uñitas de Anto · Manicura &amp; Nail Art</title>
 <meta name="description" content="Las Uñitas de Anto — manicura profesional, esmaltado semipermanente, uñas esculpidas y nail art personalizado. Agenda tu cita.">
+<meta name="theme-color" content="#fbfbfd">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💅</text></svg>">
 <style>
+  /* ============================================================
+     Tokens — colores semánticos (claro / oscuro salen del mismo set)
+     ============================================================ */
   :root{
-    --rosa:        #e8a4b8;
-    --rosa-suave:  #f7dde5;
-    --rosa-palo:   #fdf3f6;
-    --nude:        #f3e6de;
-    --crema:       #fffaf7;
-    --vino:        #8a3b52;
-    --tinta:       #3d2530;
-    --oro:         #c9a24b;
-    --oro-claro:   #e9d5a7;
-    --blanco:      #ffffff;
-    --sombra:      0 18px 50px rgba(138,59,82,.14);
-    --radio:       22px;
-    --serif: "Cormorant Garamond", Georgia, serif;
-    --sans:  "Jost", "Segoe UI", sans-serif;
+    --fondo:        #fbfbfd;   /* fondo primario */
+    --fondo-2:      #f5f5f7;   /* fondo agrupado */
+    --superficie:   #ffffff;
+    --texto:        #1d1d1f;   /* label · 16.1:1 sobre #fbfbfd */
+    --texto-2:      #6e6e73;   /* secondaryLabel · 4.6:1 */
+    --texto-3:      #86868b;   /* tertiaryLabel, solo ≥18px o bold */
+    --separador:    rgba(0,0,0,.08);
+    --acento:       #c2185b;   /* rosa profundo · 5.9:1 sobre blanco */
+    --acento-suave: #f7dbe5;
+    --acento-tinte: #fbeef3;
+    --oro:          #b8934a;
+    --radio-s: 12px; --radio-m: 20px; --radio-l: 28px;
+    --sombra-1: 0 1px 2px rgba(0,0,0,.04), 0 6px 20px rgba(0,0,0,.05);
+    --sombra-2: 0 2px 6px rgba(0,0,0,.05), 0 24px 60px rgba(0,0,0,.10);
+    --fuente: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --ease-out: cubic-bezier(.16,1,.3,1);
+    --ease-inout: cubic-bezier(.76,0,.24,1);
   }
+  /* tema oscuro: se activa por scroll en la sección "Acabado" (clase en <body>) */
+  body.oscuro{
+    --fondo:        #0a0a0c;
+    --fondo-2:      #151518;
+    --superficie:   #1c1c21;
+    --texto:        #f5f5f7;
+    --texto-2:      #a1a1a6;
+    --texto-3:      #86868b;
+    --separador:    rgba(255,255,255,.10);
+    --acento:       #ff6fa3;   /* más saturado en oscuro · 7.2:1 sobre #0a0a0c */
+    --acento-suave: #3a1f2b;
+    --acento-tinte: #1f1418;
+  }
+
   *{margin:0;padding:0;box-sizing:border-box}
-  html{scroll-behavior:smooth}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
   body{
-    font-family:var(--sans);
-    color:var(--tinta);
-    background:var(--crema);
-    line-height:1.65;
+    font-family:var(--fuente);
+    font-size:1.0625rem;              /* 17px — Body */
+    line-height:1.47;
+    letter-spacing:-.01em;
+    color:var(--texto);
+    background:var(--fondo);
     overflow-x:hidden;
+    transition:color .6s ease;
+    -webkit-font-smoothing:antialiased;
   }
   img{max-width:100%;display:block}
   a{color:inherit;text-decoration:none}
   ul{list-style:none}
+  :focus-visible{outline:3px solid var(--acento);outline-offset:3px;border-radius:6px}
 
-  /* ---------- utilidades ---------- */
-  .contenedor{width:min(1120px,92%);margin-inline:auto}
-  .etiqueta{
-    display:inline-flex;align-items:center;gap:.5rem;
-    font-size:.78rem;letter-spacing:.28em;text-transform:uppercase;
-    color:var(--vino);font-weight:500;
+  /* ============================================================
+     Lienzo 3D — fijo detrás de todo; las secciones con fondo lo tapan
+     ============================================================ */
+  #escena{position:fixed;inset:0;z-index:0;opacity:0;transition:opacity 1.2s ease}
+  #escena.lista{opacity:1}
+  .contenido{position:relative;z-index:1}
+
+  /* ============================================================
+     Utilidades
+     ============================================================ */
+  .contenedor{width:min(1080px,calc(100% - 40px));margin-inline:auto}
+  .eyebrow{
+    display:block;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--acento);margin-bottom:.9rem;
   }
-  .etiqueta::before{content:"";width:34px;height:1px;background:var(--oro)}
-  .titulo{
-    font-family:var(--serif);
-    font-size:clamp(2rem,4.2vw,3.1rem);
-    font-weight:600;line-height:1.15;margin:.55rem 0 1rem;
+  .display{
+    font-size:clamp(2.4rem,6vw,4.5rem);font-weight:700;line-height:1.02;letter-spacing:-.03em;
+    max-width:18ch;
   }
-  .titulo em{font-style:italic;color:var(--vino)}
+  .display .suave{color:var(--texto-2)}
+  .lead{font-size:clamp(1.125rem,1.6vw,1.375rem);line-height:1.4;color:var(--texto-2);max-width:42ch;margin-top:1.1rem;letter-spacing:-.015em}
+  .enlace{
+    display:inline-flex;align-items:center;gap:.25rem;color:var(--acento);font-weight:500;
+    font-size:1.0625rem;min-height:44px;
+  }
+  .enlace::after{content:"›";font-size:1.3em;line-height:1;transition:transform .25s var(--ease-out)}
+  .enlace:hover::after{transform:translateX(3px)}
   .boton{
-    display:inline-flex;align-items:center;gap:.55rem;
-    padding:.95rem 2.1rem;border-radius:999px;
-    font-family:var(--sans);font-size:.92rem;font-weight:500;letter-spacing:.06em;
-    transition:transform .25s ease,box-shadow .25s ease,background .25s ease;
-    cursor:pointer;border:none;
+    display:inline-flex;align-items:center;justify-content:center;gap:.4rem;
+    min-height:48px;padding:0 1.5rem;border-radius:999px;
+    font-size:1.0625rem;font-weight:500;letter-spacing:-.01em;border:none;cursor:pointer;
+    transition:transform .3s var(--ease-out),background .25s,box-shadow .3s;
+    -webkit-tap-highlight-color:transparent;
   }
-  .boton:hover{transform:translateY(-3px)}
-  .boton-primario{
-    background:linear-gradient(120deg,var(--vino),#b25a74);
-    color:var(--blanco);box-shadow:0 12px 30px rgba(138,59,82,.35);
+  .boton:hover{transform:translateY(-2px)}
+  .boton:active{transform:scale(.98)}
+  .boton-lleno{background:var(--acento);color:#fff}
+  .boton-lleno:hover{box-shadow:0 10px 30px rgba(194,24,91,.28)}
+  .boton-suave{background:var(--acento-tinte);color:var(--acento)}
+  .boton-vidrio{
+    background:rgba(255,255,255,.55);color:var(--texto);
+    backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.6),var(--sombra-1);
   }
-  .boton-primario:hover{box-shadow:0 16px 36px rgba(138,59,82,.45)}
-  .boton-borde{
-    background:transparent;color:var(--vino);
-    box-shadow:inset 0 0 0 1.5px var(--rosa);
-  }
-  .boton-borde:hover{background:var(--rosa-palo)}
-  section{padding:5.5rem 0}
+  body.oscuro .boton-vidrio{background:rgba(255,255,255,.10);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+  section{position:relative}
+  .rev{opacity:0;transform:translateY(28px)}
+  @media (prefers-reduced-motion:reduce){.rev{opacity:1;transform:none}}
 
-  /* animación de aparición */
-  .aparece{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease}
-  .aparece.visible{opacity:1;transform:none}
-
-  /* ---------- navegación ---------- */
-  header{
-    position:fixed;inset:0 0 auto;z-index:50;
-    background:rgba(255,250,247,.85);backdrop-filter:blur(14px);
-    border-bottom:1px solid rgba(232,164,184,.25);
+  /* ============================================================
+     Barra de navegación — capa flotante translúcida (glass)
+     ============================================================ */
+  .barra{
+    position:fixed;inset:0 0 auto;z-index:50;height:52px;
+    background:rgba(251,251,253,.72);
+    backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);
+    border-bottom:1px solid var(--separador);
+    transition:background .5s ease;
   }
-  .nav{display:flex;align-items:center;justify-content:space-between;height:72px}
-  .logo{font-family:var(--serif);font-size:1.45rem;font-weight:700;letter-spacing:.02em}
-  .logo span{color:var(--vino);font-style:italic}
-  .nav ul{display:flex;gap:2.1rem;font-size:.9rem;letter-spacing:.05em}
-  .nav ul a{position:relative;padding:.3rem 0;transition:color .2s}
-  .nav ul a::after{
-    content:"";position:absolute;left:0;bottom:0;width:0;height:1.5px;
-    background:var(--oro);transition:width .3s ease;
+  body.oscuro .barra{background:rgba(10,10,12,.72)}
+  .barra-inner{height:100%;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  .marca{font-weight:600;font-size:1.0625rem;letter-spacing:-.02em;display:flex;align-items:center;gap:.5rem;min-height:44px}
+  .marca i{width:8px;height:8px;border-radius:50%;background:var(--acento);display:inline-block}
+  .barra ul{display:flex;gap:1.6rem;font-size:.8125rem;color:var(--texto-2)}
+  .barra ul a{display:inline-flex;align-items:center;min-height:44px;transition:color .2s}
+  .barra ul a:hover{color:var(--texto)}
+  .barra .cta{
+    font-size:.8125rem;font-weight:500;min-height:32px;padding:0 .95rem;border-radius:999px;
+    background:var(--acento);color:#fff;display:inline-flex;align-items:center;
+    transition:transform .3s var(--ease-out);
   }
-  .nav ul a:hover{color:var(--vino)}
-  .nav ul a:hover::after{width:100%}
-  .nav .boton{padding:.6rem 1.5rem;font-size:.82rem}
-  .menu-btn{display:none;background:none;border:none;font-size:1.6rem;color:var(--vino);cursor:pointer}
+  .barra .cta:hover{transform:scale(1.04)}
+  .menu-btn{display:none;width:44px;height:44px;border:none;background:none;color:var(--texto);cursor:pointer;font-size:1.4rem}
 
-  /* ---------- hero ---------- */
-  .hero{
-    min-height:100svh;display:flex;align-items:center;
-    padding:8.5rem 0 4rem;position:relative;
+  /* ============================================================
+     Hero — transparente para dejar ver la escena 3D
+     ============================================================ */
+  .hero{min-height:100svh;display:flex;flex-direction:column;align-items:center;text-align:center;padding:7.5rem 0 1.5rem}
+  .hero .display{max-width:16ch;margin-inline:auto}
+  .hero .lead{margin-inline:auto;max-width:36ch}
+  .hero-acciones{display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap;margin-top:1.8rem}
+  .hero-espacio{flex:1;min-height:22svh}   /* aire donde vive el 3D */
+  .cifras{background:var(--fondo-2);padding:2.6rem 0 0;transition:background .6s ease}
+  .cifras-inner{display:flex;gap:3rem;justify-content:center;flex-wrap:wrap;color:var(--texto-2);font-size:.8125rem;text-align:center}
+  .cifras b{display:block;color:var(--texto);font-size:1.75rem;font-weight:600;letter-spacing:-.03em;line-height:1.1}
+  .scroll-pista{
+    width:22px;height:36px;border-radius:12px;border:2px solid var(--texto-3);position:relative;opacity:.7;
+  }
+  .scroll-pista::after{
+    content:"";position:absolute;left:50%;top:6px;width:4px;height:8px;border-radius:2px;background:var(--texto-3);
+    transform:translateX(-50%);animation:pista 1.8s ease-in-out infinite;
+  }
+  @keyframes pista{50%{transform:translate(-50%,10px);opacity:.2}}
+  /* respaldo si WebGL no está disponible: manchas de color suaves */
+  .hero-respaldo{
+    position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:0;transition:opacity 1s;
     background:
-      radial-gradient(60% 80% at 85% 15%,rgba(232,164,184,.35),transparent 65%),
-      radial-gradient(45% 60% at 8% 90%,rgba(233,213,167,.4),transparent 60%),
-      var(--crema);
+      radial-gradient(40% 35% at 30% 65%,rgba(247,219,229,.9),transparent 70%),
+      radial-gradient(35% 30% at 70% 60%,rgba(240,225,205,.9),transparent 70%);
   }
-  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:3.5rem;align-items:center}
-  .hero h1{
-    font-family:var(--serif);
-    font-size:clamp(2.7rem,6vw,4.6rem);
-    font-weight:600;line-height:1.08;margin:1rem 0 1.2rem;
-  }
-  .hero h1 em{font-style:italic;color:var(--vino)}
-  .hero p.intro{font-size:1.08rem;font-weight:300;max-width:32rem;color:#5c4450}
-  .hero-cta{display:flex;flex-wrap:wrap;gap:1rem;margin-top:2.2rem}
-  .hero-datos{display:flex;gap:2.6rem;margin-top:3rem;flex-wrap:wrap}
-  .dato b{font-family:var(--serif);font-size:1.9rem;color:var(--vino);display:block;line-height:1}
-  .dato span{font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:#8c6f7b}
+  body.sin-webgl .hero-respaldo{opacity:1}
 
-  /* tarjeta visual del hero: mano estilizada dibujada en SVG */
-  .hero-visual{position:relative;display:flex;justify-content:center}
-  .vitrina{
-    width:min(420px,100%);aspect-ratio:4/5;border-radius:200px 200px var(--radio) var(--radio);
-    background:linear-gradient(160deg,var(--rosa-suave),var(--nude) 55%,#f9ece2);
-    box-shadow:var(--sombra);position:relative;overflow:hidden;
-    display:flex;align-items:center;justify-content:center;
+  /* ============================================================
+     Servicios — bento grid sobre fondo agrupado
+     ============================================================ */
+  .servicios{background:var(--fondo-2);padding:5.5rem 0 7rem;transition:background .6s ease}
+  .cabecera{margin-bottom:3rem}
+  .bento{
+    display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:minmax(200px,auto);gap:14px;
   }
-  .vitrina::before{
-    content:"";position:absolute;inset:14px;border-radius:inherit;
-    border:1px solid rgba(201,162,75,.45);
-  }
-  .vitrina svg{width:78%;height:auto}
-  .flor{position:absolute;font-size:1.5rem;opacity:.85;animation:flotar 6s ease-in-out infinite;z-index:2}
-  .flor:nth-child(1){top:8%;left:6%;animation-delay:-1s}
-  .flor:nth-child(2){top:16%;right:8%;animation-delay:-2.5s}
-  .flor:nth-child(3){bottom:12%;left:10%;animation-delay:-4s}
-  @keyframes flotar{50%{transform:translateY(-14px) rotate(8deg)}}
-
-  /* ---------- cinta ---------- */
-  .cinta{
-    background:linear-gradient(120deg,var(--vino),#a44e68);
-    color:#fff;padding:1rem 0;overflow:hidden;white-space:nowrap;
-  }
-  .cinta-inner{display:inline-block;animation:desliza 26s linear infinite}
-  .cinta span{
-    font-family:var(--serif);font-style:italic;font-size:1.05rem;letter-spacing:.12em;
-    margin:0 1.4rem;
-  }
-  .cinta span::after{content:"✦";margin-left:2.8rem;color:var(--oro-claro);font-style:normal}
-  @keyframes desliza{to{transform:translateX(-50%)}}
-
-  /* ---------- servicios ---------- */
-  .servicios{background:var(--rosa-palo)}
-  .servicios-grid{
-    display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-    gap:1.6rem;margin-top:2.8rem;
-  }
-  .servicio{
-    background:var(--blanco);border-radius:var(--radio);padding:2.2rem 1.9rem;
-    box-shadow:0 8px 26px rgba(138,59,82,.08);
-    border:1px solid rgba(232,164,184,.25);
-    transition:transform .3s ease,box-shadow .3s ease;
+  .tile{
+    background:var(--superficie);border-radius:var(--radio-l);padding:1.9rem;
+    box-shadow:var(--sombra-1);display:flex;flex-direction:column;justify-content:space-between;gap:1.6rem;
     position:relative;overflow:hidden;
+    transition:transform .5s var(--ease-out),box-shadow .5s var(--ease-out);
   }
-  .servicio:hover{transform:translateY(-8px);box-shadow:var(--sombra)}
-  .servicio::after{
-    content:"";position:absolute;top:0;left:0;right:0;height:4px;
-    background:linear-gradient(90deg,var(--rosa),var(--oro-claro));
-    opacity:0;transition:opacity .3s;
+  .tile:hover{transform:translateY(-4px);box-shadow:var(--sombra-2)}
+  .tile h3{font-size:1.5rem;font-weight:600;letter-spacing:-.025em;line-height:1.15}
+  .tile p{color:var(--texto-2);font-size:.9375rem;line-height:1.45;margin-top:.5rem;max-width:34ch}
+  .tile .glifo{
+    width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-size:1.35rem;
+    background:var(--acento-tinte);
   }
-  .servicio:hover::after{opacity:1}
-  .servicio .icono{
-    width:56px;height:56px;border-radius:18px;
-    background:linear-gradient(140deg,var(--rosa-suave),var(--nude));
-    display:grid;place-items:center;font-size:1.5rem;margin-bottom:1.2rem;
+  .tile.grande{grid-column:span 4;grid-row:span 2;min-height:420px;justify-content:flex-start}
+  .tile.grande h3{font-size:clamp(1.9rem,3.4vw,2.6rem)}
+  .tile.grande p{font-size:1.0625rem;max-width:40ch}
+  .tile.alto{grid-column:span 2;grid-row:span 2}
+  .tile.medio{grid-column:span 2}
+  .tile.ancho{grid-column:span 3}
+  .tile.destacado{background:linear-gradient(160deg,#1d1d1f,#3a2330);color:#f5f5f7}
+  .tile.destacado p{color:#c7c7cc}
+  .tile.destacado .glifo{background:rgba(255,255,255,.12)}
+  .tile.destacado .enlace{color:#ff8ab5}
+  /* frasco de esmalte en CSS 3D dentro del tile grande */
+  .frasco3d{
+    position:absolute;right:6%;bottom:-2%;width:150px;height:260px;
+    perspective:900px;pointer-events:none;
   }
-  .servicio h3{font-family:var(--serif);font-size:1.35rem;font-weight:600;margin-bottom:.5rem}
-  .servicio p{font-size:.92rem;font-weight:300;color:#6b5260}
-  .servicio .nota{
-    display:inline-block;margin-top:1rem;font-size:.78rem;letter-spacing:.12em;
-    text-transform:uppercase;color:var(--vino);font-weight:500;
+  .frasco3d .cuerpo{
+    position:absolute;left:25px;bottom:0;width:100px;height:150px;border-radius:26px 26px 30px 30px;
+    background:
+      linear-gradient(90deg,rgba(255,255,255,.55),rgba(255,255,255,0) 30%,rgba(0,0,0,.05) 70%,rgba(255,255,255,.35)),
+      linear-gradient(180deg,#ff9ec0,#c2185b);
+    box-shadow:0 30px 60px rgba(194,24,91,.25),inset 0 -20px 30px rgba(0,0,0,.12);
+    transform-style:preserve-3d;animation:balanceo 7s ease-in-out infinite;
   }
+  .frasco3d .tapa{
+    position:absolute;left:50px;bottom:146px;width:50px;height:96px;border-radius:14px 14px 6px 6px;
+    background:linear-gradient(90deg,#4a4a4f,#1d1d1f 40%,#6c6c72 70%,#2a2a2e);
+    box-shadow:0 10px 24px rgba(0,0,0,.25);animation:balanceo 7s ease-in-out infinite;
+  }
+  @keyframes balanceo{50%{transform:rotate(-3deg) translateY(-8px)}}
 
-  /* ---------- portafolio ---------- */
-  .porta-intro{display:flex;justify-content:space-between;align-items:flex-end;gap:2rem;flex-wrap:wrap}
-  .porta-grid{
-    display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
-    gap:1.4rem;margin-top:2.6rem;
-  }
+  /* ============================================================
+     Acabado — sección oscura, transparente, con la escena 3D al lado
+     ============================================================ */
+  .acabado{min-height:120svh;padding:9rem 0;display:flex;align-items:center}
+  .acabado-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
+  .specs{margin-top:2.4rem;display:grid;gap:0;border-top:1px solid var(--separador)}
+  .specs li{display:grid;grid-template-columns:1fr auto;gap:1rem;padding:1.05rem 0;border-bottom:1px solid var(--separador);font-size:1rem}
+  .specs li b{font-weight:600;letter-spacing:-.01em}
+  .specs li small{color:var(--texto-2);font-size:.875rem;display:block;margin-top:.15rem}
+  .specs li span{color:var(--acento);font-weight:600;font-size:1.25rem;letter-spacing:-.02em;white-space:nowrap}
+
+  /* ============================================================
+     Portafolio — tarjetas con inclinación 3D
+     ============================================================ */
+  .portafolio{background:var(--fondo);padding:7rem 0;transition:background .6s ease}
+  .porta-cab{display:flex;justify-content:space-between;align-items:flex-end;gap:2rem;flex-wrap:wrap;margin-bottom:2.6rem}
+  .porta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;perspective:1400px}
   .p-card{
-    position:relative;border-radius:var(--radio);overflow:hidden;
-    aspect-ratio:4/5;box-shadow:0 10px 28px rgba(138,59,82,.10);
-    transition:transform .35s ease,box-shadow .35s ease;
-    display:flex;align-items:flex-end;
+    position:relative;aspect-ratio:4/5;border-radius:var(--radio-m);overflow:hidden;
+    box-shadow:var(--sombra-1);transform-style:preserve-3d;
+    transition:transform .2s ease-out,box-shadow .4s var(--ease-out);
+    will-change:transform;display:flex;align-items:flex-end;
   }
-  .p-card:hover{transform:translateY(-6px) scale(1.01);box-shadow:var(--sombra)}
+  .p-card:hover{box-shadow:var(--sombra-2)}
   /*
     ▼▼▼ CÓMO PONER LAS FOTOS REALES DE INSTAGRAM ▼▼▼
     1. Descarga la foto desde @lasunitasdeanto (o desde el celular de Anto).
@@ -203,427 +249,367 @@
     3. Dentro de cada .p-card, descomenta la etiqueta <img> y pon la ruta.
        La imagen cubrirá automáticamente el fondo de la tarjeta.
   */
-  .p-card > img{
-    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-    transition:transform .5s ease;
-  }
-  .p-card:hover > img{transform:scale(1.06)}
+  .p-card > img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
   .p-fondo{position:absolute;inset:0}
-  /* muestrario de uñas dibujado en CSS (vista previa mientras llegan las fotos) */
-  .unas{
-    position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);
-    display:flex;gap:9px;align-items:flex-end;
+  .brillo{ /* reflejo que sigue al cursor */
+    position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .3s;
+    background:radial-gradient(60% 50% at var(--mx,50%) var(--my,50%),rgba(255,255,255,.55),transparent 70%);
+    mix-blend-mode:soft-light;
   }
+  .p-card:hover .brillo{opacity:1}
+  .unas{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%) translateZ(30px);display:flex;gap:8px;align-items:flex-end}
   .una{
-    width:34px;height:86px;border-radius:17px 17px 14px 14px;
-    box-shadow:inset 0 -6px 12px rgba(0,0,0,.08),0 6px 14px rgba(61,37,48,.18);
+    width:32px;height:84px;border-radius:16px 16px 13px 13px;position:relative;
+    box-shadow:inset 0 -8px 14px rgba(0,0,0,.10),0 10px 22px rgba(0,0,0,.14);
   }
-  .una:nth-child(1){height:70px}
-  .una:nth-child(2){height:82px}
-  .una:nth-child(4){height:80px}
-  .una:nth-child(5){height:64px}
+  .una::after{ /* brillo espejo */
+    content:"";position:absolute;left:5px;top:6px;width:7px;height:36%;border-radius:6px;
+    background:linear-gradient(180deg,rgba(255,255,255,.85),rgba(255,255,255,0));
+  }
+  .una:nth-child(1){height:68px}.una:nth-child(2){height:80px}.una:nth-child(4){height:78px}.una:nth-child(5){height:62px}
   .p-info{
-    position:relative;width:100%;padding:1.1rem 1.2rem;
-    background:linear-gradient(to top,rgba(61,37,48,.78),transparent);
-    color:#fff;
+    position:relative;width:100%;padding:1.1rem 1.15rem;color:#fff;
+    background:linear-gradient(to top,rgba(29,29,31,.72),rgba(29,29,31,0));
+    transform:translateZ(20px);
   }
-  .p-info h4{font-family:var(--serif);font-size:1.15rem;font-weight:600}
-  .p-info span{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;opacity:.85}
-  .porta-aviso{
-    margin-top:2.4rem;padding:1.4rem 1.8rem;border-radius:var(--radio);
-    background:var(--rosa-palo);border:1px dashed var(--rosa);
-    display:flex;gap:1rem;align-items:center;flex-wrap:wrap;justify-content:space-between;
-  }
-  .porta-aviso p{font-size:.95rem;color:#6b5260;max-width:40rem}
-  .porta-aviso a.boton{white-space:nowrap}
+  .p-info h4{font-size:1.0625rem;font-weight:600;letter-spacing:-.015em}
+  .p-info span{font-size:.75rem;color:rgba(255,255,255,.78);letter-spacing:.02em}
+  .tema-frances .p-fondo{background:linear-gradient(150deg,#fdf3f6,#f1e4dc)}
+  .tema-frances .una{background:linear-gradient(to bottom,#f4e3da 62%,#fff 62%)}
+  .tema-rosa .p-fondo{background:linear-gradient(150deg,#f9dfe8,#efc3d2)}
+  .tema-rosa .una{background:linear-gradient(160deg,#eaa6ba,#d67697)}
+  .tema-glitter .p-fondo{background:linear-gradient(150deg,#f9ece2,#f1d6c2)}
+  .tema-glitter .una{background:radial-gradient(circle at 30% 20%,rgba(255,255,255,.9) 1.5px,transparent 2px),radial-gradient(circle at 70% 45%,rgba(255,255,255,.85) 1.5px,transparent 2px),radial-gradient(circle at 45% 70%,rgba(255,255,255,.8) 1.2px,transparent 2px),linear-gradient(160deg,#e9d5a7,#c9a24b)}
+  .tema-marmol .p-fondo{background:linear-gradient(150deg,#f4f0ef,#e4dad6)}
+  .tema-marmol .una{background:linear-gradient(115deg,transparent 42%,rgba(180,160,150,.5) 45%,transparent 50%),linear-gradient(75deg,transparent 60%,rgba(201,162,75,.45) 62%,transparent 66%),linear-gradient(160deg,#fff,#efe7e3)}
+  .tema-rojo .p-fondo{background:linear-gradient(150deg,#f7dde5,#efc9d5)}
+  .tema-rojo .una{background:linear-gradient(160deg,#c2185b,#7d1a3a)}
+  .tema-lila .p-fondo{background:linear-gradient(150deg,#efe6f5,#dccceb)}
+  .tema-lila .una{background:linear-gradient(160deg,#c9a8dd,#a57cc2)}
+  .tema-menta .p-fondo{background:linear-gradient(150deg,#e4f2ec,#cbe5d8)}
+  .tema-menta .una{background:linear-gradient(160deg,#9fd4bb,#66b28f)}
+  .tema-nude .p-fondo{background:linear-gradient(150deg,#f9f0ea,#eddcce)}
+  .tema-nude .una{background:linear-gradient(160deg,#e7c9b4,#cfa284)}
+  .porta-nota{margin-top:1.6rem;color:var(--texto-2);font-size:.875rem}
+  .porta-nota a{color:var(--acento);font-weight:500}
 
-  /* fondos temáticos de cada tarjeta */
-  .tema-frances .p-fondo{background:linear-gradient(150deg,#fdf3f6,#f3e6de)}
-  .tema-frances .una{background:linear-gradient(to bottom,#f6e7e0 62%,#fff 62%)}
-  .tema-rosa .p-fondo{background:linear-gradient(150deg,#f7dde5,#efc3d2)}
-  .tema-rosa .una{background:linear-gradient(160deg,#e8a4b8,#d87f9d)}
-  .tema-glitter .p-fondo{background:linear-gradient(150deg,#f9ece2,#f3d9c8)}
-  .tema-glitter .una{
-    background:
-      radial-gradient(circle at 30% 20%,rgba(255,255,255,.9) 1.5px,transparent 2px),
-      radial-gradient(circle at 70% 45%,rgba(255,255,255,.85) 1.5px,transparent 2px),
-      radial-gradient(circle at 45% 70%,rgba(255,255,255,.8) 1.2px,transparent 2px),
-      linear-gradient(160deg,#e9d5a7,#c9a24b);
-  }
-  .tema-marmol .p-fondo{background:linear-gradient(150deg,#f4f0ef,#e6dcd8)}
-  .tema-marmol .una{
-    background:
-      linear-gradient(115deg,transparent 42%,rgba(180,160,150,.5) 45%,transparent 50%),
-      linear-gradient(75deg,transparent 60%,rgba(201,162,75,.45) 62%,transparent 66%),
-      linear-gradient(160deg,#fff,#efe7e3);
-  }
-  .tema-rojo .p-fondo{background:linear-gradient(150deg,#f7dde5,#f0cdd8)}
-  .tema-rojo .una{background:linear-gradient(160deg,#b0304d,#8a3b52)}
-  .tema-lila .p-fondo{background:linear-gradient(150deg,#efe6f5,#ddcdeb)}
-  .tema-lila .una{background:linear-gradient(160deg,#c9a8dd,#a97fc4)}
-  .tema-menta .p-fondo{background:linear-gradient(150deg,#e4f2ec,#cde6da)}
-  .tema-menta .una{background:linear-gradient(160deg,#9fd4bb,#6fb897)}
-  .tema-nude .p-fondo{background:linear-gradient(150deg,#f9f0ea,#efdfd3)}
-  .tema-nude .una{background:linear-gradient(160deg,#e7c9b4,#d3a98d)}
-
-  /* ---------- sobre mí ---------- */
-  .sobre{background:var(--rosa-palo)}
-  .sobre-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:3.5rem;align-items:center}
+  /* ============================================================
+     Sobre mí
+     ============================================================ */
+  .sobre{background:var(--fondo-2);padding:7rem 0;transition:background .6s ease}
+  .sobre-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:4rem;align-items:center}
   .retrato{
-    aspect-ratio:4/5;border-radius:200px 200px var(--radio) var(--radio);
-    background:
-      radial-gradient(60% 50% at 50% 30%,rgba(255,255,255,.55),transparent 70%),
-      linear-gradient(160deg,var(--rosa-suave),var(--rosa) 80%);
-    box-shadow:var(--sombra);position:relative;overflow:hidden;
-    display:grid;place-items:center;
+    aspect-ratio:4/5;border-radius:var(--radio-l);overflow:hidden;position:relative;
+    background:radial-gradient(70% 60% at 50% 25%,rgba(255,255,255,.7),transparent 70%),linear-gradient(160deg,#f7dbe5,#e8a4b8);
+    box-shadow:var(--sombra-2);display:grid;place-items:center;
   }
-  /* Para la foto de Anto: descomenta el <img> dentro de .retrato en el HTML */
+  /* Foto de Anto: descomenta el <img> dentro de .retrato en el HTML */
   .retrato > img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-  .retrato .inicial{
-    font-family:var(--serif);font-style:italic;font-size:7rem;color:var(--vino);opacity:.8;
+  .retrato .inicial{font-size:7rem;font-weight:700;letter-spacing:-.05em;color:var(--acento);opacity:.85}
+  .sobre p{color:var(--texto-2);margin-top:1rem;max-width:52ch}
+  .valores{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:2rem}
+  .valor{
+    background:var(--superficie);border-radius:var(--radio-s);padding:1rem 1.1rem;box-shadow:var(--sombra-1);
+    font-size:.9375rem;font-weight:500;display:flex;gap:.6rem;align-items:center;
   }
-  .sobre p{font-weight:300;color:#5c4450;margin-bottom:1rem}
-  .sobre-lista{margin-top:1.6rem;display:grid;gap:.8rem}
-  .sobre-lista li{display:flex;gap:.7rem;align-items:baseline;font-size:.97rem}
-  .sobre-lista li::before{content:"✦";color:var(--oro);font-size:.8rem}
+  .valor i{width:8px;height:8px;border-radius:50%;background:var(--acento);flex:none}
 
-  /* ---------- testimonios ---------- */
-  .testi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.6rem;margin-top:2.8rem}
+  /* ============================================================
+     Testimonios
+     ============================================================ */
+  .testimonios{background:var(--fondo);padding:7rem 0;transition:background .6s ease}
+  .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:2.6rem}
   .testi{
-    background:var(--blanco);border-radius:var(--radio);padding:2.1rem;
-    border:1px solid rgba(232,164,184,.25);box-shadow:0 8px 26px rgba(138,59,82,.07);
-    display:flex;flex-direction:column;gap:1.1rem;
+    background:var(--superficie);border-radius:var(--radio-m);padding:1.9rem;box-shadow:var(--sombra-1);
+    display:flex;flex-direction:column;gap:1.2rem;
+    transition:transform .5s var(--ease-out),box-shadow .5s var(--ease-out);
   }
-  .testi .estrellas{color:var(--oro);letter-spacing:.2em;font-size:.95rem}
-  .testi blockquote{font-family:var(--serif);font-style:italic;font-size:1.12rem;line-height:1.5;color:#4d3542}
-  .testi footer{font-size:.85rem;letter-spacing:.08em;color:#8c6f7b;text-transform:uppercase}
+  .testi:hover{transform:translateY(-4px);box-shadow:var(--sombra-2)}
+  .testi .estrellas{color:var(--oro);letter-spacing:.15em;font-size:.9rem}
+  .testi blockquote{font-size:1.25rem;font-weight:500;letter-spacing:-.02em;line-height:1.35}
+  .testi footer{color:var(--texto-2);font-size:.875rem}
 
-  /* ---------- contacto ---------- */
-  .contacto{background:linear-gradient(150deg,var(--vino),#6e2d40);color:#fff}
-  .contacto .etiqueta{color:var(--oro-claro)}
-  .contacto .etiqueta::before{background:var(--oro-claro)}
-  .contacto .titulo em{color:var(--oro-claro)}
-  .contacto-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:3rem;align-items:center}
-  .contacto p{font-weight:300;color:#f3dfe7;max-width:30rem}
-  .contacto-lista{margin-top:1.8rem;display:grid;gap:1.1rem}
-  .contacto-lista a{
-    display:flex;align-items:center;gap:1rem;padding:1.05rem 1.4rem;border-radius:16px;
-    background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);
-    transition:background .25s,transform .25s;
-  }
-  .contacto-lista a:hover{background:rgba(255,255,255,.16);transform:translateX(6px)}
-  .contacto-lista .ic{font-size:1.35rem}
-  .contacto-lista b{display:block;font-weight:500;letter-spacing:.04em}
-  .contacto-lista small{color:#eccdd9;font-weight:300}
+  /* ============================================================
+     Contacto / CTA
+     ============================================================ */
+  .contacto{background:var(--fondo-2);padding:8rem 0;text-align:center;transition:background .6s ease}
+  .contacto .display{margin-inline:auto}
+  .contacto .lead{margin-inline:auto}
+  .contacto-acciones{display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap;margin-top:2.2rem}
   .horario{
-    background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);
-    border-radius:var(--radio);padding:2.2rem;
+    margin:3.5rem auto 0;max-width:520px;background:var(--superficie);border-radius:var(--radio-m);
+    padding:1.6rem 1.8rem;box-shadow:var(--sombra-1);text-align:left;
   }
-  .horario h3{font-family:var(--serif);font-size:1.5rem;margin-bottom:1.2rem}
-  .horario table{width:100%;border-collapse:collapse;font-size:.95rem}
-  .horario td{padding:.55rem 0;border-bottom:1px solid rgba(255,255,255,.12)}
-  .horario td:last-child{text-align:right;color:#f3dfe7}
-  .horario tr:last-child td{border-bottom:none}
+  .horario h3{font-size:1.0625rem;font-weight:600;margin-bottom:.6rem}
+  .horario table{width:100%;border-collapse:collapse;font-size:.9375rem}
+  .horario td{padding:.65rem 0;border-top:1px solid var(--separador)}
+  .horario td:last-child{text-align:right;color:var(--texto-2)}
+  .horario small{display:block;margin-top:.9rem;color:var(--texto-3);font-size:.8125rem}
 
-  /* ---------- footer ---------- */
-  footer.pie{background:#2c1a23;color:#cdb2bd;padding:2.4rem 0;font-size:.88rem}
-  .pie-inner{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
-  .pie a{color:var(--rosa);transition:color .2s}
-  .pie a:hover{color:#fff}
+  /* ============================================================
+     Pie
+     ============================================================ */
+  .pie{background:var(--fondo-2);border-top:1px solid var(--separador);padding:1.6rem 0 calc(1.6rem + env(safe-area-inset-bottom));font-size:.75rem;color:var(--texto-2)}
+  .pie-inner{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+  .pie a{color:var(--texto);font-weight:500}
 
-  /* botón flotante de WhatsApp */
-  .wsp-flotante{
-    position:fixed;right:1.4rem;bottom:1.4rem;z-index:60;
-    width:58px;height:58px;border-radius:50%;
-    background:#25d366;color:#fff;display:grid;place-items:center;
-    box-shadow:0 10px 26px rgba(37,211,102,.45);
-    transition:transform .25s;
+  /* WhatsApp flotante */
+  .wsp{
+    position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:60;
+    width:56px;height:56px;border-radius:50%;background:#25d366;display:grid;place-items:center;
+    box-shadow:0 10px 26px rgba(37,211,102,.4);transition:transform .3s var(--ease-out);
   }
-  .wsp-flotante:hover{transform:scale(1.1)}
-  .wsp-flotante svg{width:30px;height:30px;fill:#fff}
+  .wsp:hover{transform:scale(1.08)}
+  .wsp svg{width:28px;height:28px;fill:#fff}
 
-  /* ---------- responsive ---------- */
-  @media (max-width:900px){
-    .hero-grid,.sobre-grid,.contacto-grid{grid-template-columns:1fr}
-    .hero-visual{order:-1}
-    .vitrina{width:min(320px,80%)}
-    .retrato{max-width:340px;margin-inline:auto}
+  /* ============================================================
+     Responsive
+     ============================================================ */
+  @media (max-width:1000px){
+    .porta-grid{grid-template-columns:repeat(3,1fr)}
+    .bento{grid-template-columns:repeat(4,1fr)}
+    .tile.ancho{grid-column:span 4}
   }
-  @media (max-width:760px){
-    .nav ul{
-      position:fixed;top:72px;right:0;flex-direction:column;gap:0;
-      background:var(--crema);width:min(300px,80vw);height:calc(100vh - 72px);
-      padding:1.6rem;box-shadow:-12px 0 30px rgba(138,59,82,.12);
-      transform:translateX(100%);transition:transform .3s ease;
+  @media (max-width:820px){
+    .acabado-grid,.sobre-grid{grid-template-columns:1fr}
+    .acabado{min-height:auto;padding-top:56svh}   /* deja el 3D arriba, texto abajo */
+    .retrato{max-width:360px}
+    .testi-grid{grid-template-columns:1fr}
+    .porta-grid{grid-template-columns:repeat(2,1fr)}
+    .bento{grid-template-columns:repeat(2,1fr)}
+    .tile.grande,.tile.ancho,.tile.alto,.tile.medio{grid-column:span 2;grid-row:auto}
+    .tile.grande{min-height:0;padding-bottom:200px}   /* el frasco vive debajo del texto */
+    .frasco3d{transform:scale(.72);transform-origin:bottom right;right:4%;bottom:-4%}
+    .barra ul{
+      position:fixed;top:52px;right:0;flex-direction:column;gap:0;width:min(300px,82vw);height:calc(100vh - 52px);
+      padding:1rem 1.4rem;background:var(--fondo);border-left:1px solid var(--separador);
+      transform:translateX(100%);transition:transform .35s var(--ease-out);font-size:1.0625rem;color:var(--texto);
     }
-    .nav ul.abierto{transform:none}
-    .nav ul a{display:block;padding:.9rem 0;border-bottom:1px solid var(--rosa-suave)}
-    .menu-btn{display:block}
-    .nav .boton{display:none}
-    section{padding:4rem 0}
+    .barra ul.abierto{transform:none}
+    .barra ul a{width:100%;border-bottom:1px solid var(--separador);min-height:52px}
+    .barra .cta{display:none}
+    .menu-btn{display:grid;place-items:center}
+    .servicios,.portafolio,.sobre,.testimonios,.contacto{padding:5rem 0}
+  }
+  @media (max-width:480px){
+    .porta-grid{gap:12px}
+    .valores{grid-template-columns:1fr}
+    .hero{padding-top:7.5rem}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .scroll-pista::after,.frasco3d .cuerpo,.frasco3d .tapa{animation:none}
+    .p-card{transition:none}
   }
 </style>
 </head>
 <body>
 
-<!-- ============ NAVEGACIÓN ============ -->
-<header>
-  <nav class="nav contenedor">
-    <a class="logo" href="#inicio">Las Uñitas <span>de Anto</span></a>
+<canvas id="escena" aria-hidden="true"></canvas>
+
+<!-- ============ BARRA ============ -->
+<header class="barra">
+  <nav class="barra-inner contenedor" aria-label="Principal">
+    <a class="marca" href="#inicio"><i></i>Las Uñitas de Anto</a>
     <ul id="menu">
-      <li><a href="#inicio">Inicio</a></li>
       <li><a href="#servicios">Servicios</a></li>
+      <li><a href="#acabado">Acabado</a></li>
       <li><a href="#portafolio">Portafolio</a></li>
       <li><a href="#sobre">Sobre mí</a></li>
       <li><a href="#contacto">Contacto</a></li>
     </ul>
-    <a class="boton boton-primario" href="#contacto">Reservar cita</a>
-    <button class="menu-btn" id="menuBtn" aria-label="Abrir menú">☰</button>
+    <a class="cta" href="#contacto">Reservar cita</a>
+    <button class="menu-btn" id="menuBtn" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu">☰</button>
   </nav>
 </header>
 
-<!-- ============ HERO ============ -->
-<section class="hero" id="inicio">
-  <div class="contenedor hero-grid">
-    <div>
-      <span class="etiqueta">Manicura profesional · Nail art</span>
-      <h1>Uñas que cuentan <em>tu historia</em></h1>
-      <p class="intro">
-        Hola, soy <strong>Anto</strong> 💕. Transformo tus uñas en pequeñas obras de arte:
-        esmaltado semipermanente, uñas esculpidas y diseños personalizados hechos con
-        dedicación, higiene y mucho amor por el detalle.
-      </p>
-      <div class="hero-cta">
-        <a class="boton boton-primario" href="#contacto">💅 Agenda tu cita</a>
-        <a class="boton boton-borde" href="#portafolio">Ver mis trabajos</a>
-      </div>
-      <div class="hero-datos">
-        <div class="dato"><b>+200</b><span>Clientas felices</span></div>
-        <div class="dato"><b>100%</b><span>Materiales de calidad</span></div>
-        <div class="dato"><b>💖</b><span>Diseños únicos</span></div>
-      </div>
-    </div>
+<div class="contenido">
 
-    <div class="hero-visual aparece">
-      <span class="flor">🌸</span>
-      <span class="flor">✨</span>
-      <span class="flor">🌷</span>
-      <div class="vitrina" aria-hidden="true">
-        <!-- Mano estilizada con manicura, dibujada en SVG -->
-        <svg viewBox="0 0 300 380" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="piel" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#f6dccb"/><stop offset="1" stop-color="#eec9b3"/>
-            </linearGradient>
-            <linearGradient id="esmalte" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#e8a4b8"/><stop offset="1" stop-color="#b0304d"/>
-            </linearGradient>
-          </defs>
-          <!-- palma y dedos -->
-          <path fill="url(#piel)" d="M96 380 V210 q0-16 12-16 t12 16 v-60 q0-16 12-16 t12 16 v-30 q0-16 12-16 t12 16 v22 q0-16 12-16 t12 16 v96 q22-34 34-26 t2 34 q-22 40-26 74 t-4 60 Z"/>
-          <!-- uñas -->
-          <ellipse cx="108" cy="200" rx="9" ry="13" fill="url(#esmalte)"/>
-          <ellipse cx="132" cy="140" rx="9" ry="13" fill="url(#esmalte)"/>
-          <ellipse cx="156" cy="110" rx="9" ry="13" fill="url(#esmalte)"/>
-          <ellipse cx="180" cy="130" rx="9" ry="13" fill="url(#esmalte)"/>
-          <!-- destellos -->
-          <g fill="#c9a24b">
-            <path d="M226 96 l4 10 10 4 -10 4 -4 10 -4-10 -10-4 10-4 Z"/>
-            <path d="M74 150 l3 7 7 3 -7 3 -3 7 -3-7 -7-3 7-3 Z"/>
-            <path d="M210 220 l3 7 7 3 -7 3 -3 7 -3-7 -7-3 7-3 Z"/>
-          </g>
-        </svg>
-      </div>
+<!-- ============ HERO ============ -->
+<section class="hero contenedor" id="inicio">
+  <div class="hero-respaldo"></div>
+  <span class="eyebrow rev">Manicura profesional · Nail art</span>
+  <h1 class="display rev">Uñas que cuentan <span class="suave">tu historia.</span></h1>
+  <p class="lead rev">Esmaltado semipermanente, uñas esculpidas y diseños a mano, hechos con calma y obsesión por el detalle.</p>
+  <div class="hero-acciones rev">
+    <a class="boton boton-lleno" href="#contacto">Agenda tu cita</a>
+    <a class="enlace" href="#portafolio">Ver portafolio</a>
+  </div>
+  <div class="hero-espacio" aria-hidden="true"></div>
+  <div class="scroll-pista" aria-hidden="true"></div>
+</section>
+
+<div class="cifras">
+  <div class="contenedor cifras-inner rev">
+    <div><b>+200</b>clientas felices</div>
+    <div><b>3 sem.</b>de brillo intacto</div>
+    <div><b>100%</b>materiales esterilizados</div>
+  </div>
+</div>
+
+<!-- ============ SERVICIOS (bento) ============ -->
+<section class="servicios" id="servicios">
+  <div class="contenedor">
+    <div class="cabecera">
+      <span class="eyebrow rev">Servicios</span>
+      <h2 class="display rev">Todo lo que tus uñas necesitan. <span class="suave">Y un poco más.</span></h2>
+    </div>
+    <div class="bento">
+      <article class="tile grande rev">
+        <div>
+          <div class="glifo">💅</div>
+          <h3 style="margin-top:1.2rem">Esmaltado semipermanente</h3>
+          <p>Color impecable y brillo espejo hasta por tres semanas. Preparación completa de la uña, cutícula cuidada y sellado perfecto.</p>
+          <a class="enlace" href="#contacto">Reservar</a>
+        </div>
+        <div class="frasco3d" aria-hidden="true"><div class="cuerpo"></div><div class="tapa"></div></div>
+      </article>
+      <article class="tile alto destacado rev">
+        <div class="glifo">✨</div>
+        <div>
+          <h3>Uñas esculpidas</h3>
+          <p>Acrílico o polygel con la forma que sueñas: almendra, coffin, cuadrada o stiletto. Ligeras y resistentes.</p>
+          <a class="enlace" href="#contacto">Reservar</a>
+        </div>
+      </article>
+      <article class="tile medio rev">
+        <div class="glifo">🎨</div>
+        <div><h3>Nail art</h3><p>Flores, francesas modernas, mármol, glitter y pedrería, a mano alzada.</p></div>
+      </article>
+      <article class="tile medio rev">
+        <div class="glifo">🛡️</div>
+        <div><h3>Kapping</h3><p>Refuerzo sobre tu uña natural para que crezca fuerte y sin quiebres.</p></div>
+      </article>
+      <article class="tile ancho rev">
+        <div class="glifo">🤍</div>
+        <div><h3>Manicura rusa</h3><p>Limpieza profunda de cutícula con torno para un acabado ultra prolijo que dura mucho más.</p></div>
+      </article>
+      <article class="tile ancho rev">
+        <div class="glifo">🌷</div>
+        <div><h3>Retiro y spa de manos</h3><p>Retiro seguro sin dañar tu uña, más hidratación y cuidado para tus manos.</p></div>
+      </article>
     </div>
   </div>
 </section>
 
-<!-- ============ CINTA ============ -->
-<div class="cinta" aria-hidden="true">
-  <div class="cinta-inner">
-    <span>Semipermanente</span><span>Uñas esculpidas</span><span>Nail art</span><span>Kapping</span><span>Manicura rusa</span><span>Diseños personalizados</span>
-    <span>Semipermanente</span><span>Uñas esculpidas</span><span>Nail art</span><span>Kapping</span><span>Manicura rusa</span><span>Diseños personalizados</span>
-  </div>
-</div>
-
-<!-- ============ SERVICIOS ============ -->
-<section class="servicios" id="servicios">
-  <div class="contenedor">
-    <span class="etiqueta">Servicios</span>
-    <h2 class="titulo">Todo lo que tus uñas <em>necesitan</em></h2>
-    <div class="servicios-grid">
-      <article class="servicio aparece">
-        <div class="icono">💅</div>
-        <h3>Esmaltado semipermanente</h3>
-        <p>Color impecable y brillo espejo hasta por 3 semanas, con preparación completa de la uña y cuidado de cutícula.</p>
-        <span class="nota">El favorito de mis clientas</span>
-      </article>
-      <article class="servicio aparece">
-        <div class="icono">✨</div>
-        <h3>Uñas esculpidas</h3>
-        <p>Extensiones en acrílico o polygel con la forma que sueñas: almendra, coffin, cuadrada o stiletto. Naturales y resistentes.</p>
-        <span class="nota">Duración y estilo</span>
-      </article>
-      <article class="servicio aparece">
-        <div class="icono">🎨</div>
-        <h3>Nail art personalizado</h3>
-        <p>Diseños a mano alzada: flores, francesas modernas, efecto mármol, glitter, pedrería y todo lo que imagines.</p>
-        <span class="nota">Arte en tus manos</span>
-      </article>
-      <article class="servicio aparece">
-        <div class="icono">🛡️</div>
-        <h3>Kapping / Rubber base</h3>
-        <p>Capa de refuerzo sobre tu uña natural para que crezca fuerte, sana y sin quiebres, con acabado perfecto.</p>
-        <span class="nota">Uñas naturales fuertes</span>
-      </article>
-      <article class="servicio aparece">
-        <div class="icono">🤍</div>
-        <h3>Manicura rusa</h3>
-        <p>Limpieza profunda de cutícula con torno para un acabado ultra prolijo y un esmaltado que dura mucho más.</p>
-        <span class="nota">Acabado de salón premium</span>
-      </article>
-      <article class="servicio aparece">
-        <div class="icono">🌷</div>
-        <h3>Retiro y spa de uñas</h3>
-        <p>Retiro seguro de semipermanente o acrílico sin dañar tu uña, más hidratación y cuidado para tus manos.</p>
-        <span class="nota">Mimos para tus manos</span>
-      </article>
+<!-- ============ ACABADO (oscuro, con 3D) ============ -->
+<section class="acabado" id="acabado">
+  <div class="contenedor acabado-grid">
+    <div>
+      <span class="eyebrow rev">El acabado</span>
+      <h2 class="display rev">Brillo espejo. <span class="suave">Hasta tres semanas.</span></h2>
+      <p class="lead rev">Cada esmalte se aplica en capas finas y se sella con top coat de alta densidad. El resultado: superficie lisa, color uniforme y cero levantamientos.</p>
+      <ul class="specs rev">
+        <li><div><b>Duración</b><small>semipermanente sellado</small></div><span>21 días</span></li>
+        <li><div><b>Espesor</b><small>capas finas, sin sensación pesada</small></div><span>0,3 mm</span></li>
+        <li><div><b>Formas</b><small>almendra · coffin · cuadrada · stiletto</small></div><span>4</span></li>
+        <li><div><b>Colores en carta</b><small>y mezclas a medida</small></div><span>+120</span></li>
+      </ul>
     </div>
+    <div aria-hidden="true"><!-- aquí vive la escena 3D (canvas fijo detrás) --></div>
   </div>
 </section>
 
 <!-- ============ PORTAFOLIO ============ -->
-<section id="portafolio">
+<section class="portafolio" id="portafolio">
   <div class="contenedor">
-    <div class="porta-intro">
+    <div class="porta-cab">
       <div>
-        <span class="etiqueta">Portafolio</span>
-        <h2 class="titulo">Mis trabajos <em>recientes</em></h2>
+        <span class="eyebrow rev">Portafolio</span>
+        <h2 class="display rev">Trabajos recientes.</h2>
       </div>
-      <a class="boton boton-borde" href="https://www.instagram.com/lasunitasdeanto" target="_blank" rel="noopener">
-        Ver todo en Instagram ↗
-      </a>
+      <a class="enlace rev" href="https://www.instagram.com/lasunitasdeanto" target="_blank" rel="noopener">Ver todo en Instagram</a>
     </div>
-
-    <div class="porta-grid">
-      <!--
-        Cada tarjeta tiene un diseño de muestra dibujado en CSS.
-        Para usar la FOTO REAL: descomenta el <img> y apunta a tu archivo.
-      -->
-      <a class="p-card tema-frances aparece" href="https://www.instagram.com/lasunitasdeanto" target="_blank" rel="noopener">
+    <div class="porta-grid" id="portaGrid">
+      <!-- Cada tarjeta tiene un diseño de muestra en CSS. Para la FOTO REAL: descomenta el <img>. -->
+      <a class="p-card tema-frances rev" href="https://www.instagram.com/lasunitasdeanto" target="_blank" rel="noopener">
         <!-- <img src="img/trabajo-1.jpg" alt="Francesa moderna"> -->
-        <div class="p-fondo"></div>
-        <div class="unas"><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i></div>
-        <div class="p-info"><h4>Francesa moderna</h4><span>Semipermanente</span></div>
+        <div class="p-fondo"></div><div class="unas"><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i></div>
+        <div class="brillo"></div><div class="p-info"><h4>Francesa moderna</h4><span>Semipermanente</span></div>
       </a>
-      <a class="p-card tema-rosa aparece" href="https://www.instagram.com/lasunitasdeanto" target="_blank" rel="noopener">
+      <a class="p-card tema-rosa rev" href="https://www.instagram.com/lasunitasdeanto" target="_blank" rel="noopener">
         <!-- <img src="img/trabajo-2.jpg" alt="Rosa romántico"> -->
-        <div class="p-fondo"></div>
-        <div class="unas"><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i></div>
-        <div class="p-info"><h4>Rosa romántico</h4><span>Esculpidas almendra</span></div>
+        <div class="p-fondo"></div><div class="unas"><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i></div>
+        <div class="brillo"></div><div class="p-info"><h4>Rosa romántico</h4><span>Esculpidas almendra</span></div>
       </a>
-      <a class="p-card tema-glitter aparece" href="https://www.instagram.com/lasunitasdeanto" target="_blank" rel="noopener">
+      <a class="p-card tema-glitter rev" href="https://www.instagram.com/lasunitasdeanto" target="_blank" rel="noopener">
         <!-- <img src="img/trabajo-3.jpg" alt="Glitter dorado"> -->
-        <div class="p-fondo"></div>
-        <div class="unas"><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i></div>
-        <div class="p-info"><h4>Glitter dorado</h4><span>Nail art de fiesta</span></div>
+        <div class="p-fondo"></div><div class="unas"><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i></div>
+        <div class="brillo"></div><div class="p-info"><h4>Glitter dorado</h4><span>Nail art de fiesta</span></div>
       </a>
-      <a class="p-card tema-marmol aparece" href="https://www.instagram.com/lasunitasdeanto" target="_blank" rel="noopener">
+      <a class="p-card tema-marmol rev" href="https://www.instagram.com/lasunitasdeanto" target="_blank" rel="noopener">
         <!-- <img src="img/trabajo-4.jpg" alt="Efecto mármol"> -->
-        <div class="p-fondo"></div>
-        <div class="unas"><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i></div>
-        <div class="p-info"><h4>Efecto mármol</h4><span>Con líneas doradas</span></div>
+        <div class="p-fondo"></div><div class="unas"><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i></div>
+        <div class="brillo"></div><div class="p-info"><h4>Efecto mármol</h4><span>Con líneas doradas</span></div>
       </a>
-      <a class="p-card tema-rojo aparece" href="https://www.instagram.com/lasunitasdeanto" target="_blank" rel="noopener">
-        <!-- <img src="img/trabajo-5.jpg" alt="Rojo clásico"> -->
-        <div class="p-fondo"></div>
-        <div class="unas"><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i></div>
-        <div class="p-info"><h4>Rojo pasión</h4><span>Clásico atemporal</span></div>
+      <a class="p-card tema-rojo rev" href="https://www.instagram.com/lasunitasdeanto" target="_blank" rel="noopener">
+        <!-- <img src="img/trabajo-5.jpg" alt="Rojo pasión"> -->
+        <div class="p-fondo"></div><div class="unas"><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i></div>
+        <div class="brillo"></div><div class="p-info"><h4>Rojo pasión</h4><span>Clásico atemporal</span></div>
       </a>
-      <a class="p-card tema-lila aparece" href="https://www.instagram.com/lasunitasdeanto" target="_blank" rel="noopener">
+      <a class="p-card tema-lila rev" href="https://www.instagram.com/lasunitasdeanto" target="_blank" rel="noopener">
         <!-- <img src="img/trabajo-6.jpg" alt="Lila soñador"> -->
-        <div class="p-fondo"></div>
-        <div class="unas"><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i></div>
-        <div class="p-info"><h4>Lila soñador</h4><span>Tendencia primavera</span></div>
+        <div class="p-fondo"></div><div class="unas"><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i></div>
+        <div class="brillo"></div><div class="p-info"><h4>Lila soñador</h4><span>Tendencia primavera</span></div>
       </a>
-      <a class="p-card tema-menta aparece" href="https://www.instagram.com/lasunitasdeanto" target="_blank" rel="noopener">
+      <a class="p-card tema-menta rev" href="https://www.instagram.com/lasunitasdeanto" target="_blank" rel="noopener">
         <!-- <img src="img/trabajo-7.jpg" alt="Verde menta"> -->
-        <div class="p-fondo"></div>
-        <div class="unas"><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i></div>
-        <div class="p-info"><h4>Verde menta</h4><span>Fresco y delicado</span></div>
+        <div class="p-fondo"></div><div class="unas"><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i></div>
+        <div class="brillo"></div><div class="p-info"><h4>Verde menta</h4><span>Fresco y delicado</span></div>
       </a>
-      <a class="p-card tema-nude aparece" href="https://www.instagram.com/lasunitasdeanto" target="_blank" rel="noopener">
+      <a class="p-card tema-nude rev" href="https://www.instagram.com/lasunitasdeanto" target="_blank" rel="noopener">
         <!-- <img src="img/trabajo-8.jpg" alt="Nude elegante"> -->
-        <div class="p-fondo"></div>
-        <div class="unas"><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i></div>
-        <div class="p-info"><h4>Nude elegante</h4><span>Para el día a día</span></div>
+        <div class="p-fondo"></div><div class="unas"><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i><i class="una"></i></div>
+        <div class="brillo"></div><div class="p-info"><h4>Nude elegante</h4><span>Para el día a día</span></div>
       </a>
     </div>
-
-    <div class="porta-aviso aparece">
-      <p>
-        📸 <strong>Estas tarjetas son una vista previa del estilo.</strong> Todas las fotos reales de mis
-        trabajos están en Instagram — y cada tarjeta se puede reemplazar por una foto siguiendo las
-        instrucciones que están en el código de esta página.
-      </p>
-      <a class="boton boton-primario" href="https://www.instagram.com/lasunitasdeanto" target="_blank" rel="noopener">@lasunitasdeanto</a>
-    </div>
+    <p class="porta-nota rev">Las fotos reales de cada trabajo están en <a href="https://www.instagram.com/lasunitasdeanto" target="_blank" rel="noopener">@lasunitasdeanto</a>. Cada tarjeta se reemplaza por una foto siguiendo las instrucciones del código.</p>
   </div>
 </section>
 
 <!-- ============ SOBRE MÍ ============ -->
 <section class="sobre" id="sobre">
   <div class="contenedor sobre-grid">
-    <div class="retrato aparece">
+    <div class="retrato rev">
       <!-- Foto de Anto: guarda tu foto como img/anto.jpg y descomenta la línea siguiente -->
       <!-- <img src="img/anto.jpg" alt="Anto, manicurista"> -->
       <span class="inicial">A</span>
     </div>
     <div>
-      <span class="etiqueta">Sobre mí</span>
-      <h2 class="titulo">Hola, soy <em>Anto</em> 🌷</h2>
-      <p>
-        Las uñas son mi pasión y mi forma de arte. Detrás de <strong>Las Uñitas de Anto</strong> hay
-        horas de práctica, formación constante y el compromiso de que cada clienta salga con las
-        uñas de sus sueños — y con ganas de volver.
-      </p>
-      <p>
-        Trabajo con productos de calidad, materiales esterilizados y técnicas actualizadas, en un
-        espacio pensado para que te relajes mientras te consiento.
-      </p>
-      <ul class="sobre-lista">
-        <li>Atención personalizada, una clienta a la vez</li>
-        <li>Higiene y esterilización en cada servicio</li>
-        <li>Diseños adaptados a tu estilo y tu día a día</li>
-        <li>Asesoría para el cuidado de tus uñas en casa</li>
+      <span class="eyebrow rev">Sobre mí</span>
+      <h2 class="display rev">Hola, soy Anto.</h2>
+      <p class="rev">Las uñas son mi forma de arte. Detrás de Las Uñitas de Anto hay horas de práctica, formación constante y el compromiso de que cada clienta salga con las uñas de sus sueños, y con ganas de volver.</p>
+      <p class="rev">Trabajo con productos de calidad, materiales esterilizados y técnicas actualizadas, en un espacio pensado para que te relajes mientras te consiento.</p>
+      <ul class="valores rev">
+        <li class="valor"><i></i>Una clienta a la vez</li>
+        <li class="valor"><i></i>Esterilización en cada servicio</li>
+        <li class="valor"><i></i>Diseños a tu medida</li>
+        <li class="valor"><i></i>Asesoría de cuidado en casa</li>
       </ul>
-      <div class="hero-cta">
-        <a class="boton boton-primario" href="#contacto">Quiero mi cita ✨</a>
-      </div>
     </div>
   </div>
 </section>
 
 <!-- ============ TESTIMONIOS ============ -->
-<section id="testimonios">
+<section class="testimonios" id="testimonios">
   <div class="contenedor">
-    <span class="etiqueta">Testimonios</span>
-    <h2 class="titulo">Lo que dicen <em>mis clientas</em></h2>
+    <span class="eyebrow rev">Testimonios</span>
+    <h2 class="display rev">Lo que dicen mis clientas.</h2>
     <div class="testi-grid">
-      <article class="testi aparece">
-        <div class="estrellas">★★★★★</div>
-        <blockquote>“Las uñas más lindas que he tenido. Anto es súper detallista y el semipermanente me duró perfecto casi un mes.”</blockquote>
-        <footer>— Valentina</footer>
+      <article class="testi rev">
+        <div class="estrellas" aria-label="5 de 5 estrellas">★★★★★</div>
+        <blockquote>“Las uñas más lindas que he tenido. El semipermanente me duró perfecto casi un mes.”</blockquote>
+        <footer>Valentina</footer>
       </article>
-      <article class="testi aparece">
-        <div class="estrellas">★★★★★</div>
-        <blockquote>“Le mostré una foto de Pinterest y el resultado quedó igualito. El diseño a mano alzada es otro nivel.”</blockquote>
-        <footer>— Camila</footer>
+      <article class="testi rev">
+        <div class="estrellas" aria-label="5 de 5 estrellas">★★★★★</div>
+        <blockquote>“Le mostré una foto de referencia y el resultado quedó igualito. El diseño a mano es otro nivel.”</blockquote>
+        <footer>Camila</footer>
       </article>
-      <article class="testi aparece">
-        <div class="estrellas">★★★★★</div>
-        <blockquote>“Además de que las uñas quedan hermosas, el ambiente es súper agradable. Salgo relajada y feliz cada vez.”</blockquote>
-        <footer>— Daniela</footer>
+      <article class="testi rev">
+        <div class="estrellas" aria-label="5 de 5 estrellas">★★★★★</div>
+        <blockquote>“Además de que quedan hermosas, el ambiente es súper agradable. Salgo relajada y feliz cada vez.”</blockquote>
+        <footer>Daniela</footer>
       </article>
     </div>
   </div>
@@ -631,65 +617,269 @@
 
 <!-- ============ CONTACTO ============ -->
 <section class="contacto" id="contacto">
-  <div class="contenedor contacto-grid">
-    <div>
-      <span class="etiqueta">Reserva tu cita</span>
-      <h2 class="titulo">Tus uñas soñadas están a <em>un mensaje</em></h2>
-      <p>
-        Escríbeme por Instagram o WhatsApp, cuéntame qué diseño tienes en mente
-        (¡puedes mandarme fotos de referencia!) y agendamos tu cita.
-      </p>
-      <div class="contacto-lista">
-        <a href="https://ig.me/m/lasunitasdeanto" target="_blank" rel="noopener">
-          <span class="ic">📸</span>
-          <span><b>Instagram</b><small>@lasunitasdeanto — mensaje directo</small></span>
-        </a>
-        <!-- ⚠️ Reemplaza 000000000000 por el número real con código de país, ej: 573001234567 -->
-        <a href="https://wa.me/000000000000?text=Hola%20Anto%20%F0%9F%92%85%20quiero%20agendar%20una%20cita" target="_blank" rel="noopener">
-          <span class="ic">💬</span>
-          <span><b>WhatsApp</b><small>Respuesta rápida para agendar</small></span>
-        </a>
-      </div>
+  <div class="contenedor">
+    <span class="eyebrow rev">Reserva tu cita</span>
+    <h2 class="display rev">Tus uñas soñadas están a un mensaje.</h2>
+    <p class="lead rev">Escríbeme, cuéntame qué diseño tienes en mente (puedes mandar fotos de referencia) y agendamos.</p>
+    <div class="contacto-acciones rev">
+      <!-- ⚠️ Reemplaza 000000000000 por el número real con código de país, ej: 573001234567 -->
+      <a class="boton boton-lleno" href="https://wa.me/000000000000?text=Hola%20Anto%20%F0%9F%92%85%20quiero%20agendar%20una%20cita" target="_blank" rel="noopener">Escribir por WhatsApp</a>
+      <a class="boton boton-vidrio" href="https://ig.me/m/lasunitasdeanto" target="_blank" rel="noopener">Mensaje por Instagram</a>
     </div>
-    <div class="horario aparece">
+    <div class="horario rev">
       <h3>Horario de atención</h3>
       <table>
-        <tr><td>Lunes – Viernes</td><td>9:00 am – 7:00 pm</td></tr>
-        <tr><td>Sábado</td><td>9:00 am – 5:00 pm</td></tr>
+        <tr><td>Lunes a viernes</td><td>9:00 – 19:00</td></tr>
+        <tr><td>Sábado</td><td>9:00 – 17:00</td></tr>
         <tr><td>Domingo</td><td>Con cita previa</td></tr>
       </table>
-      <p style="margin-top:1.2rem;font-size:.85rem;color:#eccdd9;font-weight:300">
-        * Atención con cita previa. Ajusta este horario y tu ubicación a tu realidad 😉
-      </p>
+      <small>Atención solo con cita previa. Ajusta este horario y tu ubicación a tu realidad.</small>
     </div>
   </div>
 </section>
 
-<!-- ============ FOOTER ============ -->
 <footer class="pie">
   <div class="contenedor pie-inner">
-    <span>© 2026 Las Uñitas de Anto · Hecho con 💕</span>
-    <a href="https://www.instagram.com/lasunitasdeanto" target="_blank" rel="noopener">Instagram: @lasunitasdeanto</a>
+    <span>© 2026 Las Uñitas de Anto</span>
+    <a href="https://www.instagram.com/lasunitasdeanto" target="_blank" rel="noopener">Instagram · @lasunitasdeanto</a>
   </div>
 </footer>
 
-<!-- Botón flotante de WhatsApp (mismo número que arriba) -->
-<a class="wsp-flotante" href="https://wa.me/000000000000?text=Hola%20Anto%20%F0%9F%92%85%20quiero%20agendar%20una%20cita" target="_blank" rel="noopener" aria-label="Escríbeme por WhatsApp">
-  <svg viewBox="0 0 32 32"><path d="M16 3C9.4 3 4 8.3 4 14.9c0 2.6.8 5 2.3 7L4 29l7.3-2.2c1.9 1 3.9 1.5 4.7 1.5 6.6 0 12-5.3 12-11.9S22.6 3 16 3zm5.9 16.9c-.3.8-1.5 1.5-2.4 1.7-.6.1-1.4.2-4.2-.9-3.5-1.5-5.8-5-6-5.3-.2-.2-1.4-1.9-1.4-3.6s.9-2.6 1.2-2.9c.3-.3.7-.4 1-.4h.7c.2 0 .5-.1.8.6.3.8 1 2.6 1.1 2.8.1.2.2.4 0 .7-.1.2-.2.4-.4.6l-.6.7c-.2.2-.4.4-.2.8.2.4 1 1.7 2.2 2.7 1.5 1.3 2.8 1.7 3.2 1.9.4.2.6.2.8-.1.2-.2 1-1.1 1.2-1.5.2-.4.5-.3.8-.2.3.1 2.1 1 2.4 1.2.4.2.6.3.7.4.1.3.1 1-.2 1.8z"/></svg>
+</div><!-- /contenido -->
+
+<a class="wsp" href="https://wa.me/000000000000?text=Hola%20Anto%20%F0%9F%92%85%20quiero%20agendar%20una%20cita" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp">
+  <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C9.4 3 4 8.3 4 14.9c0 2.6.8 5 2.3 7L4 29l7.3-2.2c1.9 1 3.9 1.5 4.7 1.5 6.6 0 12-5.3 12-11.9S22.6 3 16 3zm5.9 16.9c-.3.8-1.5 1.5-2.4 1.7-.6.1-1.4.2-4.2-.9-3.5-1.5-5.8-5-6-5.3-.2-.2-1.4-1.9-1.4-3.6s.9-2.6 1.2-2.9c.3-.3.7-.4 1-.4h.7c.2 0 .5-.1.8.6.3.8 1 2.6 1.1 2.8.1.2.2.4 0 .7-.1.2-.2.4-.4.6l-.6.7c-.2.2-.4.4-.2.8.2.4 1 1.7 2.2 2.7 1.5 1.3 2.8 1.7 3.2 1.9.4.2.6.2.8-.1.2-.2 1-1.1 1.2-1.5.2-.4.5-.3.8-.2.3.1 2.1 1 2.4 1.2.4.2.6.3.7.4.1.3.1 1-.2 1.8z"/></svg>
 </a>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
-  // Menú móvil
+(function(){
+  'use strict';
+  const reducido = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const tieneGsap = typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined';
+  if (tieneGsap) gsap.registerPlugin(ScrollTrigger);
+
+  /* ---------- Menú móvil ---------- */
   const menuBtn = document.getElementById('menuBtn');
   const menu = document.getElementById('menu');
-  menuBtn.addEventListener('click', () => menu.classList.toggle('abierto'));
-  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => menu.classList.remove('abierto')));
+  menuBtn.addEventListener('click', () => {
+    const abierto = menu.classList.toggle('abierto');
+    menuBtn.setAttribute('aria-expanded', String(abierto));
+  });
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    menu.classList.remove('abierto'); menuBtn.setAttribute('aria-expanded', 'false');
+  }));
 
-  // Aparición al hacer scroll
-  const observador = new IntersectionObserver(entradas => {
-    entradas.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observador.unobserve(e.target); } });
-  }, { threshold: .15 });
-  document.querySelectorAll('.aparece').forEach(el => observador.observe(el));
+  /* ---------- Revelado al hacer scroll ---------- */
+  const revs = document.querySelectorAll('.rev');
+  if (reducido || !tieneGsap) {
+    revs.forEach(el => { el.style.opacity = 1; el.style.transform = 'none'; });
+  } else {
+    ScrollTrigger.batch('.rev', {
+      start: 'top 88%',
+      onEnter: b => gsap.to(b, { opacity: 1, y: 0, duration: .9, ease: 'power4.out', stagger: .07, overwrite: true }),
+      once: true
+    });
+  }
+
+  /* ---------- Tema oscuro en "Acabado" ---------- */
+  if (tieneGsap) {
+    ScrollTrigger.create({
+      trigger: '#acabado', start: 'top 55%', end: 'bottom 45%',
+      onToggle: s => document.body.classList.toggle('oscuro', s.isActive)
+    });
+  }
+
+  /* ---------- Tarjetas con inclinación 3D ---------- */
+  const puntero = matchMedia('(hover:hover) and (pointer:fine)').matches;
+  if (puntero && !reducido) {
+    document.querySelectorAll('.p-card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const r = card.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+        card.style.transform = `rotateY(${(px - .5) * 14}deg) rotateX(${(.5 - py) * 14}deg) translateZ(6px)`;
+        card.style.setProperty('--mx', `${px * 100}%`); card.style.setProperty('--my', `${py * 100}%`);
+      });
+      card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+    });
+  }
+
+  /* ============================================================
+     Escena 3D — frascos de esmalte y uñas en un estudio de luz blanca
+     ============================================================ */
+  const canvas = document.getElementById('escena');
+  let gl = null;
+  try { gl = canvas.getContext('webgl2') || canvas.getContext('webgl'); } catch (e) {}
+  if (typeof THREE === 'undefined' || !gl) { document.body.classList.add('sin-webgl'); return; }
+
+  const movil = innerWidth < 820;
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = .95;
+  renderer.shadowMap.enabled = !movil;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(movil ? 42 : 34, innerWidth / innerHeight, .1, 100);
+
+  // Entorno de estudio: una "sala" con softboxes emisivos convertida a mapa de entorno (reflejos suaves)
+  function crearEntorno() {
+    const sala = new THREE.Scene();
+    sala.add(new THREE.Mesh(new THREE.BoxGeometry(30, 30, 30), new THREE.MeshBasicMaterial({ color: 0xbfbfc6, side: THREE.BackSide })));
+    const panel = (w, h, x, y, z, ry, color, i) => {
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color }));
+      m.position.set(x, y, z); m.rotation.y = ry; m.rotation.x = i || 0; sala.add(m);
+    };
+    panel(10, 6, -9, 4, 0, Math.PI / 2, 0xffffff);          // softbox izquierdo
+    panel(8, 5, 9, 2, -2, -Math.PI / 2, 0xffe8ef);           // softbox derecho, rosado
+    panel(14, 14, 0, 14, 0, 0, 0xffffff, -Math.PI / 2);      // techo
+    panel(6, 3, 0, 3, -12, 0, 0xfff0e0);                     // fondo cálido
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    const tex = pmrem.fromScene(sala, .04).texture;
+    pmrem.dispose();
+    return tex;
+  }
+  scene.environment = crearEntorno();
+
+  // Luces (estudio blanco)
+  const key = new THREE.DirectionalLight(0xffffff, 1.1); key.position.set(4, 8, 6);
+  key.castShadow = !movil; key.shadow.mapSize.set(1024, 1024); key.shadow.radius = 6;
+  key.shadow.camera.left = key.shadow.camera.bottom = -6; key.shadow.camera.right = key.shadow.camera.top = 6;
+  scene.add(key);
+  const fill = new THREE.DirectionalLight(0xffe3ec, .45); fill.position.set(-6, 2, 4); scene.add(fill);
+  const rim = new THREE.DirectionalLight(0xffffff, .5); rim.position.set(0, 4, -8); scene.add(rim);
+  scene.add(new THREE.AmbientLight(0xffffff, .22));
+
+  // Materiales: esmalte con clearcoat (candy gloss), tapa metálica, oro
+  // r128 no gestiona el color: los hex se convierten a lineal para que se vean como en CSS
+  const lin = (hex) => new THREE.Color(hex).convertSRGBToLinear();
+  const esmalte = (color) => new THREE.MeshPhysicalMaterial({
+    color: lin(color), metalness: 0, roughness: .16, clearcoat: 1, clearcoatRoughness: .05, envMapIntensity: .9
+  });
+  const negroMate = new THREE.MeshStandardMaterial({ color: lin(0x1d1d1f), metalness: .6, roughness: .35, envMapIntensity: 1 });
+  const oro = new THREE.MeshStandardMaterial({ color: lin(0xd4a853), metalness: 1, roughness: .2, envMapIntensity: 1.2 });
+  const vidrio = new THREE.MeshPhysicalMaterial({
+    color: lin(0xffffff), metalness: 0, roughness: .04, transparent: true, opacity: .14, clearcoat: 1, envMapIntensity: 1.6, side: THREE.DoubleSide, depthWrite: false
+  });
+
+  // Frasco de esmalte: cuerpo torneado (lathe) + líquido interior + tapa
+  function crearFrasco(color, tapaMat) {
+    const g = new THREE.Group();
+    const perfil = [
+      [0, 0], [.46, 0], [.56, .06], [.6, .5], [.6, 1.0], [.52, 1.22], [.32, 1.32], [.3, 1.4], [0, 1.4]
+    ].map(p => new THREE.Vector2(p[0], p[1]));
+    const cuerpo = new THREE.Mesh(new THREE.LatheGeometry(perfil, 64), vidrio);
+    cuerpo.castShadow = true; g.add(cuerpo);
+    const liquido = new THREE.Mesh(new THREE.LatheGeometry(perfil.map(p => new THREE.Vector2(p.x * .9, .05 + p.y * .82)), 48), esmalte(color));
+    g.add(liquido);
+    const tapa = new THREE.Mesh(new THREE.CylinderGeometry(.3, .32, 1.05, 48), tapaMat);
+    tapa.position.y = 1.9; tapa.castShadow = true; g.add(tapa);
+    const aro = new THREE.Mesh(new THREE.TorusGeometry(.31, .035, 16, 48), oro);
+    aro.rotation.x = Math.PI / 2; aro.position.y = 1.39; g.add(aro);
+    const tope = new THREE.Mesh(new THREE.SphereGeometry(.3, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2), tapaMat);
+    tope.scale.y = .35; tope.position.y = 2.42; g.add(tope);
+    return g;
+  }
+
+  // Uña (chip) con bordes redondeados: forma 2D extruida con bisel
+  function crearUna(color) {
+    const w = .5, h = 1.1, r = .24, s = new THREE.Shape();
+    s.moveTo(-w / 2 + r, -h / 2);
+    s.lineTo(w / 2 - r, -h / 2); s.quadraticCurveTo(w / 2, -h / 2, w / 2, -h / 2 + r);
+    s.lineTo(w / 2, h / 2 - r); s.quadraticCurveTo(w / 2, h / 2, w / 2 - r, h / 2);
+    s.lineTo(-w / 2 + r, h / 2); s.quadraticCurveTo(-w / 2, h / 2, -w / 2, h / 2 - r);
+    s.lineTo(-w / 2, -h / 2 + r); s.quadraticCurveTo(-w / 2, -h / 2, -w / 2 + r, -h / 2);
+    const geo = new THREE.ExtrudeGeometry(s, { depth: .06, bevelEnabled: true, bevelThickness: .05, bevelSize: .05, bevelSegments: 8, curveSegments: 24 });
+    geo.center();
+    const m = new THREE.Mesh(geo, esmalte(color)); m.castShadow = true;
+    return m;
+  }
+
+  const grupo = new THREE.Group(); scene.add(grupo);
+  const flotantes = [];
+  const flotar = (obj, amp, vel) => flotantes.push({ obj, y: obj.position.y, amp, vel, fase: Math.random() * 6.28, rot: (Math.random() - .5) * .004 });
+
+  const fr1 = crearFrasco(0xd6336c, negroMate); fr1.position.set(0, -1.9, 0); grupo.add(fr1); flotar(fr1, .10, .9);
+  const fr2 = crearFrasco(0xf1b7c9, oro); fr2.position.set(-2.3, -2.1, -.9); fr2.scale.setScalar(.85); grupo.add(fr2); flotar(fr2, .12, 1.1);
+  const fr3 = crearFrasco(0x7a1f3d, negroMate); fr3.position.set(2.2, -2.2, -.6); fr3.scale.setScalar(.8); grupo.add(fr3); flotar(fr3, .11, .8);
+
+  // Chips de uña alrededor de los frascos, fuera de la columna de texto del hero
+  [[0xe98bab, -3.0, .1, .6, 1.1], [0xcaa14b, 3.0, .4, .4, 1.0], [0xd6336c, -2.7, -1.4, 1.6, .9], [0xfff6f8, 2.8, -1.2, 1.5, .95], [0xd9a98b, 1.0, -.6, 1.9, .65]]
+    .forEach(([c, x, y, z, s], i) => {
+      const u = crearUna(c); u.position.set(x, y, z);
+      u.rotation.set(Math.random() * .8 - .4, Math.random() * 1.2 - .6, Math.random() * .8 - .4);
+      u.scale.setScalar(s); grupo.add(u); flotar(u, .14 + i * .02, .7 + i * .15);
+    });
+
+  const esfera = new THREE.Mesh(new THREE.SphereGeometry(.42, 48, 32), esmalte(0xf3d3b8)); esfera.position.set(-3.7, 1.3, -1.6); esfera.castShadow = true; grupo.add(esfera); flotar(esfera, .2, .6);
+  const toro = new THREE.Mesh(new THREE.TorusGeometry(.5, .16, 32, 64), oro); toro.position.set(3.7, 1.5, -1.9); toro.rotation.set(.8, .3, 0); grupo.add(toro); flotar(toro, .18, .75);
+
+  // Suelo receptor de sombras (invisible salvo por la sombra)
+  const suelo = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.ShadowMaterial({ opacity: .10 }));
+  suelo.rotation.x = -Math.PI / 2; suelo.position.y = -2.25; suelo.receiveShadow = true; grupo.add(suelo);
+
+  // Estado animado por scroll (la cámara siempre mira a un punto fijo)
+  const heroY = movil ? -1.7 : -1.0, heroEsc = movil ? .78 : .85, heroZ = movil ? 13.5 : 11;
+  const S = { camX: 0, camY: movil ? .4 : .9, camZ: heroZ, gX: 0, gY: heroY, gZ: 0, rotY: 0, esc: heroEsc, mira: movil ? 0 : .1 };
+  const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
+  if (puntero) addEventListener('mousemove', e => { mouse.tx = (e.clientX / innerWidth - .5) * 2; mouse.ty = (e.clientY / innerHeight - .5) * 2; });
+
+  // Una sola línea de tiempo maestra: cada tramo dura exactamente los píxeles de scroll que ocupa
+  let tl = null;
+  function construirTimeline() {
+    if (tl) { tl.scrollTrigger.kill(); tl.kill(); }
+    Object.assign(S, { gX: 0, gY: heroY, rotY: 0, camZ: heroZ, esc: heroEsc });
+    const h = innerHeight, total = document.documentElement.scrollHeight - h;
+    const hero = document.getElementById('inicio'), acab = document.getElementById('acabado');
+    const finHero = hero.offsetTop + hero.offsetHeight;                 // hero sale por arriba
+    const iniAcab = Math.max(finHero + 1, acab.offsetTop - h);          // acabado asoma por abajo
+    const finAcab = Math.min(total, acab.offsetTop + acab.offsetHeight);// acabado sale por arriba
+    const dAcab = finAcab - iniAcab;
+    tl = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '.contenido', start: 'top top', end: () => '+=' + total, scrub: 1.2 } });
+    tl.to(S, { rotY: Math.PI * .55, gY: heroY - 3.4, camZ: '+=1.5', duration: finHero })                                  // hero: gira y se hunde
+      .to(S, { gX: movil ? 0 : 6.5, gY: movil ? 5 : -4, esc: movil ? .78 : .72, duration: iniAcab - finHero })            // oculto: se recoloca
+      .to(S, { gX: movil ? 0 : 2.9, gY: movil ? 2.3 : .2, rotY: Math.PI * 1.45, duration: dAcab * .45 })                  // acabado: entra girando
+      .to(S, { rotY: Math.PI * 1.75, duration: dAcab * .3 })                                                              // acabado: reposa girando
+      .to(S, { gY: movil ? 6.5 : 4.5, rotY: Math.PI * 2, duration: dAcab * .25 })                                         // acabado: sale por arriba
+      .to({}, { duration: Math.max(1, total - finAcab) });                                                                // resto de la página
+  }
+  if (tieneGsap && !reducido) {
+    construirTimeline();
+    let tmr; addEventListener('resize', () => { clearTimeout(tmr); tmr = setTimeout(() => { construirTimeline(); ScrollTrigger.refresh(); }, 250); });
+  }
+
+  const reloj = new THREE.Clock();
+  let necesitaRender = true;
+  function animar() {
+    requestAnimationFrame(animar);
+    const t = reloj.getElapsedTime();
+    if (!reducido) {
+      for (const f of flotantes) { f.obj.position.y = f.y + Math.sin(t * f.vel + f.fase) * f.amp; f.obj.rotation.y += f.rot; }
+    }
+    mouse.x += (mouse.tx - mouse.x) * .05; mouse.y += (mouse.ty - mouse.y) * .05;
+    grupo.position.set(S.gX, S.gY, S.gZ);
+    grupo.scale.setScalar(S.esc);
+    grupo.rotation.y = S.rotY + (reducido ? 0 : t * .04);
+    camera.position.set(S.camX + mouse.x * .35, S.camY - mouse.y * .18, S.camZ);
+    camera.lookAt(0, S.mira, 0);
+    // No renderizar cuando el lienzo está totalmente tapado (portafolio → pie): ahorra batería
+    const fin = document.getElementById('portafolio').getBoundingClientRect().top;
+    if (fin > 0 || necesitaRender) renderer.render(scene, camera);
+    necesitaRender = fin > 0;
+  }
+  animar();
+  canvas.classList.add('lista');
+
+  addEventListener('resize', () => {
+    camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+  });
+})();
 </script>
 </body>
 </html>
