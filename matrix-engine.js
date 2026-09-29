@@ -17,6 +17,16 @@
 (function(){
   "use strict";
   const DATA=window.MATRIX_DATA, CORE=window.MATRIX_CORE;
+  /* ---------- Biblioteca v2 · 770 lecturas Arcano × Posición (plantillas verificadas en el build) ---------- */
+  const V2=DATA.v2;
+  const CIDS={}; Object.entries(V2.pos).forEach(([cid,x])=>(CIDS[x.punto]=CIDS[x.punto]||[]).push(cid));   // D1, X y C1 tienen dos contextos
+  function v2read(a,cid,g){
+    const A=Object.assign({},V2.arc[a],g==="H"?V2.arcM[a]:null), Q=Object.assign({},V2.pos[cid],g==="H"?V2.posM[cid]:null), d=Object.assign({},A,Q);
+    const f=k=>V2.tpl[k][V2.use[k][cid]].replace(/\{(\w+)\}/g,(m,x)=>d[x]);
+    return {cid,zona:Q.zona,posf:Q.posf,func:Q.func,preg:Q.preg,disp:Q.disp,prueba:Q.prueba,nec:A.nec,miedo:A.miedo,
+      interp:f("interp"),hipo:f("hipo"),hiper:f("hiper"),eq:f("eq"),integ:f("integ"),pat:f("pat").replace(/\.$/,"").split(" → ")};
+  }
+  const v2arc=(a,g)=>Object.assign({},V2.arc[a],g==="H"?V2.arcM[a]:null);
   if(!DATA||!CORE){ console.warn("MATRIX: faltan datos"); return; }
 
   /* ---------- Cálculo canónico (Biblioteca Maestra · 10_FORMULAS) ---------- */
@@ -283,14 +293,15 @@
   const zoneQ=key=>{if(!key)return "";const k=Object.keys(DATA.zoneQ).find(z=>z.startsWith(key));return k?DATA.zoneQ[k]:"";};
 
   /* ---------- I. Lectura por punto ---------- */
-  function readPoint(P,a,idx){
+  function readPoint(P,a,idx,g){
     const c=CORE[a], R=ROLE[P], z=ZT[R.zt], arc=DATA.arc[a], k=idx;
+    const v2=CIDS[P].map(cid=>v2read(a,cid,g));
     const dk=DIC_KEY[P], dic=dk?DATA.dic[a][dk]:"";
     const ctxs=ctxFor(P);
     const base=dic?`${arc.n} en ${P}: ${dic}`:BASE[P](arc.n,arc.rec);
     const extra=P==="X"?`En el trabajo y el dinero: ${DATA.dic[a].dinero}`:"";
     const trg=pick(c.trig,k,4);
-    return {P,a,name:arc.n,role:R,
+    return {P,a,name:arc.n,role:R,v2,
       pos:`${R.frame} Función canónica: ${low(DATA.pts[P].func)}.`,
       patron:`${nodot(base)}.${extra?" "+nodot(extra)+".":""} El motor de fondo es la necesidad de ${c.nec}. Cuando esa necesidad se siente amenazada, aparece el miedo ${aMiedo(c.miedo)}, y la energía tiende a oscilar entre dos respuestas: en Hipo, la persona ${arc.hipo}; en Híper, ${arc.hiper}.`,
       nec:c.nec, miedo:c.miedo, dom:z.dom, trig:trg.slice(0,3),
@@ -323,7 +334,9 @@
   function readProgram(o,p){
     const {seq,prg,vals}=o, eje=ROOT[seq.id], ea=p[eje], c=CORE[ea];
     const nuc=DATA.nuc[prg.code], zonaNom=seq.nombre, lens=DATA.lens[seq.id]||"";
+    const pz=DATA.pz[`${seq.id}|${prg.code}`];
     return {id:`${seq.id}-${prg.code}`,seqId:seq.id,nombre:prg.nombre,code:prg.code,zona:zonaNom,seqPts:seq.pts,vals,
+      fuenteZona:pz?pz.txt:"",
       nucleo:nuc?nuc.def:`Su recurso: ${low(prg.rec)} Su sombra: ${low(prg.sombra)}`,
       contexto:`En ${zonaNom}, este programa se interpreta en relación con ${lens}.`+(prg.cola26?" La combinación figura en el catálogo de colas, pero fuera de D1-D2-D no se etiqueta como Cola Kármica: se lee en el contexto de esta zona.":""),
       dist:seq.pts.map((P,i)=>({P,a:vals[i],rol:ROLE[P].short,func:DATA.pts[P].func})),
@@ -356,7 +369,12 @@
   }
 
   /* ---------- F. Repeticiones ---------- */
-  function readRepetitions(p){
+  // Arcanos que no aparecen en ninguno de los 32 puntos (Biblioteca v2 · Fuente_Global_Ausencia)
+  function readAbsent(p,g){
+    const present=new Set(ORDER.map(P=>p[P]));
+    return Array.from({length:22},(_,i)=>i+1).filter(a=>!present.has(a)).map(a=>({a,name:nm(a),txt:v2arc(a,g).aus}));
+  }
+  function readRepetitions(p,g){
     const map={}; ORDER.forEach(P=>(map[p[P]]=map[p[P]]||[]).push(P));
     return Object.entries(map).filter(([a,ps])=>ps.length>=2).sort((x,y)=>y[1].length-x[1].length).map(([a,ps])=>{
       a=+a; const c=CORE[a];
@@ -368,7 +386,7 @@
         pos:ps.map(P=>({P,rol:ROLE[P].short,func:DATA.pts[P].func})),
         link:`En todas estas posiciones se juega ${c.kern}: la necesidad de ${c.nec}.`,
         risk:`El mismo automatismo —${c.hipoC}, o en el otro extremo ${c.hiperC}— puede repetirse en áreas que parecen no tener relación: ${ps.map(P=>ROLE[P].short).join(", ")}.`,
-        transfer, dicRep:DATA.dic[a].repeticion};
+        transfer, dicRep:DATA.dic[a].repeticion, v2rep:v2arc(a,g).rep};
     });
   }
 
@@ -417,13 +435,14 @@
   }
 
   /* ---------- Cómputo completo ---------- */
-  function compute(day,month,year,today){
+  function compute(day,month,year,today,opts){
+    const g=(opts&&opts.gender)||"M";
     const {p,prop}=points(day,month,year);
-    const reads={}; ORDER.forEach((P,i)=>reads[P]=readPoint(P,p[P],i));
+    const reads={}; ORDER.forEach((P,i)=>reads[P]=readPoint(P,p[P],i,g));
     const programs=detectPrograms(p).map(o=>readProgram(o,p));
-    const cola=readCola(p), reps=readRepetitions(p), axes=readAxes(p,prop), patternsAll=readPatterns(p), patterns=patternsAll.slice(0,3);
+    const cola=readCola(p), reps=readRepetitions(p,g), absent=readAbsent(p,g), center=v2arc(p.E,g), axes=readAxes(p,prop), patternsAll=readPatterns(p), patterns=patternsAll.slice(0,3);
     const cycle=readCycle(p,new Date(year,month-1,day),today||new Date());
-    return {p,prop,reads,programs,cola,reps,axes,patterns,patternsAll,cycle};
+    return {p,prop,reads,programs,cola,reps,absent,center,axes,patterns,patternsAll,cycle,gender:g};
   }
 
   /* ---------- J. Cómo se conecta todo ---------- */
@@ -431,6 +450,7 @@
     const {p,prop}=R, C=CORE, out=[];
     out.push(["Centro",`Tu centro es ${nm(p.E)} (${p.E}). ${cap(nodot(DATA.dic[p.E].centro))}. Todo lo demás se lee a su luz: la necesidad de ${C[p.E].nec} tiñe cada área, y cuando el centro se desbalancea el efecto se nota en varias zonas a la vez.`]);
     const dom=R.reps.filter(r=>r.count>=2);
+    if(R.absent.length) out.push(["Arcanos ausentes",`No aparecen en tu matriz: ${R.absent.map(x=>`${x.name} (${x.a})`).join(", ")}. Son cualidades que no llegan «de serie» y que puedes entrenar deliberadamente; muchas veces lo que falta se busca fuera, en personas o situaciones que la encarnan.`]);
     if(dom.length) out.push(["Arcanos dominantes",dom.map(r=>`${r.name} (${r.a}) aparece ${r.count} veces —${r.pos.map(x=>x.P).join(", ")}—`).join("; ")+`. Donde una energía se repite, sus dos extremos tienen más ocasiones de aparecer; por eso conviene observarla primero en el área donde más te cuesta y trabajarla desde el área donde mejor la manejas.`]);
     else out.push(["Arcanos dominantes","Ningún Arcano se repite: tu matriz reparte la energía entre muchas cualidades distintas. El reto no es moderar un tema dominante, sino integrar energías que a veces piden cosas contrarias."]);
     if(R.programs.length) out.push(["Programas",R.programs.map(g=>`«${g.nombre}» (${g.code}) en ${g.zona}, con ${nm(g.ea)} en el eje ${g.eje}`).join("; ")+"."+(R.programs.some(g=>g.ea===p.E)?` Uno de ellos tiene como eje a tu mismo Arcano central, así que el programa no es un tema lateral: expresa tu esencia en esa zona.`:` Ninguno tiene como eje a tu Arcano central: funcionan como temas de zona que tu centro puede ordenar.`)]);
@@ -464,32 +484,39 @@
   function li(arr){return `<ul>${arr.map(x=>`<li>${esc(cap(x))}</li>`).join("")}</ul>`;}
   function steps(st,cls){return `<ol class="rd-steps ${cls}">${st.map(([k,v])=>`<li><b>${esc(k)}</b><span>${esc(v)}</span></li>`).join("")}</ol>`;}
   function chainHtml(ch,loop){return `<p class="rd-chain">${ch.map(x=>`<span>${esc(cap(x))}</span>`).join('<i aria-hidden="true">→</i>')}${loop?'<i aria-hidden="true">↺</i>':""}</p>`;}
-  function pointCard(r,open){
-    return `<details class="rd-pt"${open?" open":""} id="rd-pt-${r.P}"><summary><span class="rd-pt-h"><b>${r.P} · ${esc(r.name)}</b> ${tag(r.a)}</span><span class="rd-pt-r">${esc(r.role.short)}</span></summary>
-    <div class="rd-pt-b">
-      <h5>Qué representa esta posición</h5><p>${esc(r.pos)}</p>
-      <h5>Patrón central</h5><p>${esc(r.patron)}</p>
-      <h5>Lo que esta energía necesita</h5><p><b>Necesidad nuclear:</b> ${esc(cap(r.nec))}. <b>Miedo nuclear:</b> ${esc(cap(r.miedo))}.</p>
-      <h5>Qué puede activarla</h5><p class="rd-muted">Sobre todo ${esc(r.dom)}:</p>${li(r.trig)}
+  function v2block(v,main){
+    return `<div class="rd-v2">
+      ${main?"":`<p class="rd-ctx">También en <b>${esc(v.zona)}</b> · ${esc(v.posf)}</p>`}
+      <p class="rd-lead">${esc(v.interp)}</p>
+      <p class="rd-q"><span>Pregunta clave</span>${esc(v.preg)}</p>
+      <h5>Qué puede activarla</h5><p>Situaciones como estas: ${esc(v.disp)}.</p>
       <div class="rd-two">
-        <div class="rd-pole rd-hipo"><h5>Cuando se va hacia Hipo</h5><p>${esc(r.hipo.frame)}</p>${steps(r.hipo.steps,"hipo")}</div>
-        <div class="rd-pole rd-hiper"><h5>Cuando se va hacia Híper</h5><p>${esc(r.hiper.frame)}</p>${steps(r.hiper.steps,"hiper")}</div>
+        <div class="rd-pole rd-hipo"><h5>Hipo · cuando el recurso se inhibe</h5><p>${esc(v.hipo)}</p></div>
+        <div class="rd-pole rd-hiper"><h5>Híper · cuando se sobrecompensa</h5><p>${esc(v.hiper)}</p></div>
       </div>
-      <h5>El ciclo que puede repetirse</h5>${chainHtml(r.ciclo.chain,true)}<p>${esc(r.ciclo.txt)}</p>
-      <h5>Cuando está equilibrada</h5>${li(r.eq)}
-      <h5>Cuando está integrada</h5><p>${esc(r.integ)}</p>
+      <h5>El patrón observable</h5>${chainHtml(v.pat,true)}
+      <h5>Equilibrio</h5><p>${esc(v.eq)}</p>
+      <h5>Integración</h5><p>${esc(v.integ)}</p></div>`;
+  }
+  function pointCard(r,open,R){
+    const m=r.v2[0], cen=r.P==="E"&&R?R.center:null;
+    return `<details class="rd-pt"${open?" open":""} id="rd-pt-${r.P}"><summary><span class="rd-pt-h"><b>${r.P} · ${esc(r.name)}</b> ${tag(r.a)}</span><span class="rd-pt-r">${esc(m.posf)}</span></summary>
+    <div class="rd-pt-b">
+      <h5>Qué representa esta posición</h5><p>${esc(cap(m.func))}. ${esc(r.role.frame)}</p>
+      <h5>Lo que esta energía necesita</h5><p><b>Necesidad nuclear:</b> ${esc(cap(m.nec))}. <b>Miedo nuclear:</b> ${esc(cap(m.miedo))}.</p>
+      ${cen?`<div class="rd-card rd-center"><h5>Tu centro según la biblioteca</h5><p>${esc(cen.cNuc)}</p><p><b>Sombra.</b> ${esc(cen.cSom)}</p><p><b>Clave estratégica.</b> ${esc(cen.cClave)}</p></div>`:""}
+      ${r.v2.map((v,i)=>v2block(v,i===0)).join("")}
       <div class="rd-two">
-        <div><h5>Puede que este patrón esté activo si…</h5><ul>${r.signals.map(([t,s])=>`<li><span class="rd-chip ${t==="Hipo"?"hipo":t==="Híper"?"hiper":""}">${t}</span> ${esc(cap(s))}</li>`).join("")}</ul></div>
+        <div><h5>Puede que este patrón esté activo si…</h5><ul>${r.signals.map(([t,x])=>`<li><span class="rd-chip ${t==="Hipo"?"hipo":t==="Híper"?"hiper":""}">${t}</span> ${esc(cap(x))}</li>`).join("")}</ul></div>
         <div><h5>Probablemente lo estás trabajando bien si…</h5>${li(r.prog)}</div>
       </div>
       <h5>Preguntas para observarte</h5>${li(r.preg)}
       <h5>Acción concreta</h5><p class="rd-action">${esc(r.acc)}</p>
-      <details class="rd-src"><summary>Lectura canónica de la Biblioteca MATRIX</summary>${r.canon.map(x=>`<p><b>${esc(cap(x.func))}.</b> ${esc(x.txt)}</p>`).join("")}</details>
     </div></details>`;
   }
   function programCard(g){
     return `<article class="rd-card rd-prog"><header><h4>${esc(g.nombre)}</h4><span class="rd-code">${esc(g.code)}</span><span class="rd-muted">${esc(g.zona)}</span></header>
-      <p><b>Núcleo.</b> ${esc(g.nucleo)}</p><p>${esc(g.contexto)}</p>
+      <p><b>Núcleo.</b> ${esc(g.nucleo)}</p><p>${esc(g.contexto)}</p>${g.fuenteZona?`<p class="rd-src-zone"><b>Lectura documentada para esta zona.</b> ${esc(g.fuenteZona)}</p>`:""}
       <p class="rd-dist">${g.dist.map(d=>`<span><b>${d.P}</b> ${tag(d.a)} <em>${esc(d.rol)}</em></span>`).join('<i aria-hidden="true">→</i>')}</p>
       <p><b>Arcano eje.</b> ${esc(g.enfasis)}</p>
       <p><b>Potencial.</b> ${esc(g.potencial)}</p>
@@ -502,11 +529,11 @@
   }
   function render(date){
     const host=document.getElementById("lectura"); if(!host) return;
-    const R=compute(date.d,date.mo,date.y);
+    const R=compute(date.d,date.mo,date.y,null,{gender:date.g});
     const {p}=R; let h="";
     h+=`<div class="section-head"><p class="eyebrow">Motor MATRIX · lectura profunda</p><h2>Tu patrón, paso a paso</h2>
       <p>La matriz muestra posibilidades de expresión, no tu estado actual. Lee cada señal y decide si te reconoces en ella o si la descartas.</p></div>
-      <nav class="rd-index" aria-label="Secciones de la lectura">${[["rd-sum","Resumen"],["rd-pts","Los 32 puntos"],["rd-prg","Programas"],["rd-cola","Cola kármica"],["rd-rep","Repeticiones"],["rd-ax","Ejes"],["rd-pat","Patrones globales"],["rd-int","Cómo se conecta todo"]].map(([id,t])=>`<a href="#${id}">${t}</a>`).join("")}</nav>`;
+      <nav class="rd-index" aria-label="Secciones de la lectura">${[["rd-sum","Resumen"],["rd-pts","Los 32 puntos"],["rd-prg","Programas"],["rd-cola","Cola kármica"],["rd-rep","Repeticiones"],["rd-aus","Ausentes"],["rd-ax","Ejes"],["rd-pat","Patrones globales"],["rd-int","Cómo se conecta todo"]].map(([id,t])=>`<a href="#${id}">${t}</a>`).join("")}</nav>`;
     // M · Resumen
     h+=`<section class="rd-sec" id="rd-sum"><h3>Las ocho preguntas de tu lectura</h3><div class="rd-qa">${summary(R).map(([q,a])=>`<div class="rd-card"><h4>${esc(q)}</h4><p>${esc(a)}</p></div>`).join("")}</div></section>`;
     // I · Puntos por zona
@@ -517,7 +544,7 @@
       const zon=DATA.zon[g.zon], q=zoneQ(g.q);
       h+=`<details class="rd-zone" ${g.id==="CENTRO"||g.id==="COLA"?"open":""}><summary><span><b>${esc(g.t)}</b> <span class="rd-code">${g.seq?DATA.seq.find(s=>s.id===g.seq).pts.map(P=>`${P} ${p[P]}`).join(" · "):seqVals.map(P=>`${P} ${p[P]}`).join(" · ")}</span></span>${prg.length?`<span class="rd-badge">${prg.length} programa${prg.length>1?"s":""}</span>`:""}</summary>
         <div class="rd-zone-b"><p class="rd-muted">${esc(zon?zon.lectura:"")}${q?" · "+esc(q):""}</p>
-        ${g.pts.map(P=>pointCard(R.reads[P],P==="E"||P==="D")).join("")}
+        ${g.pts.map(P=>pointCard(R.reads[P],P==="E"||P==="D",R)).join("")}
         ${(g.refs||[]).map(P=>`<p class="rd-ref">${P} = ${p[P]} (${esc(nm(p[P]))}) también forma parte de esta zona: <a href="#rd-pt-${P}">ver su lectura</a>.</p>`).join("")}
         ${prg.map(x=>`<p class="rd-ref">Programa activo en esta zona: <a href="#rd-p-${x.id}">«${esc(x.nombre)}» (${x.code})</a>.</p>`).join("")}</div></details>`;
     });
@@ -537,13 +564,18 @@
     const repCard=r=>`<article class="rd-card"><header><h4>${esc(r.name)} ${tag(r.a)}</h4><span class="rd-badge">${r.count} veces · ${r.level}</span></header>
       <p class="rd-dist">${r.pos.map(x=>`<span><b>${x.P}</b> <em>${esc(x.rol)}</em></span>`).join("")}</p>
       <p><b>Qué conecta estas posiciones.</b> ${esc(r.link)}</p><p><b>Qué puede repetirse.</b> ${esc(r.risk)}</p><p><b>Recurso transferible.</b> ${esc(r.transfer)}</p>
-      <p class="rd-muted">${esc(r.dicRep)}</p></article>`;
+      <p><b>Según la biblioteca.</b> ${esc(r.v2rep)}</p><p class="rd-muted">${esc(r.dicRep)}</p></article>`;
     const rep3=R.reps.filter(r=>r.count>=3), rep2=R.reps.filter(r=>r.count===2);
     h+=`<section class="rd-sec" id="rd-rep"><h3>Repeticiones</h3>`+(R.reps.length
       ?`<p class="rd-muted">Una energía repetida no es «más positiva» ni «más negativa»: tiene más ocasiones de expresarse, en sus dos extremos. Lo útil es ver qué conducta común une las posiciones.</p>`
         +(rep3.length?rep3.map(repCard).join(""):`<p>Ningún Arcano aparece tres veces o más.</p>`)
         +(rep2.length?`<details class="rd-zone"><summary><span><b>Otras repeticiones</b> <span class="rd-code">${rep2.map(r=>r.a).join(" · ")}</span></span><span class="rd-badge">${rep2.length} Arcanos × 2</span></summary><div class="rd-zone-b">${rep2.map(repCard).join("")}</div></details>`:"")
       :`<p>Ningún Arcano se repite en tus 32 puntos.</p>`)+`</section>`;
+    // Arcanos ausentes (nuevo cálculo: los que no aparecen en ninguno de los 32 puntos)
+    h+=`<section class="rd-sec" id="rd-aus"><h3>Arcanos ausentes</h3>`+(R.absent.length
+      ?`<p class="rd-muted">De los 22 Arcanos, ${R.absent.length===1?"uno no aparece":R.absent.length+" no aparecen"} en ninguno de tus 32 puntos. La ausencia no es una carencia fija: señala una cualidad que no te viene dada por estructura y que puede desarrollarse de forma consciente.</p><div class="rd-axes">`
+        +R.absent.map(x=>`<div class="rd-card"><h4>${esc(x.name)} ${tag(x.a)}</h4><p>${esc(x.txt)}</p></div>`).join("")+`</div>`
+      :`<p>Los 22 Arcanos aparecen al menos una vez en tus 32 puntos.</p>`)+`</section>`;
     // G · Ejes
     h+=`<section class="rd-sec" id="rd-ax"><h3>Ejes y combinaciones</h3><p class="rd-muted">No se suman definiciones: cada frase describe qué energía inicia el proceso, cuál responde y cuál compensa si la anterior se va a Hipo.</p><div class="rd-axes">${R.axes.map(a=>`<div class="rd-card"><h4>${esc(a.t)} <span class="rd-code">${a.code}</span></h4><p>${esc(a.txt)}</p></div>`).join("")}</div></section>`;
     // K · Patrones globales

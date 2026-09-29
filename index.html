@@ -242,7 +242,43 @@
   .chart-card{padding:14px 12px 8px;overflow-x:auto;position:sticky;top:72px}
   @media (max-width:900px){.chart-card{position:static}}
   .chart-cap{text-align:center;font-size:11px;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);margin:2px 0 6px}
-  svg#matrix{display:block;width:100%;height:auto;max-width:600px;margin:0 auto}
+  svg#matrix{display:block;width:100%;height:auto;max-width:640px;margin:0 auto}
+  /* — Carta celeste: mismo cielo en tema claro y oscuro — */
+  @font-face{font-family:"Numen Garamond";src:url(fonts/EBGaramond-SemiBold.ttf) format("truetype");font-weight:600 700;font-display:swap}
+  .chart-card,.ch-overlay{--ch-bg:#0b0a1a;--ch-bg2:#161330;--ch-gold:#d9b36c;--ch-text:#f6ecd6;--ch-muted:#b9a98a;
+    --ch-node:#f3e7cc;--ch-node-edge:#cdb68a;--ch-node-ink:#1d1526;--ch-pat:#8fa2ff;--ch-mat:#ff9a7a;--ch-money:#e6c15c;--ch-love:#ff8fb0;
+    background:radial-gradient(120% 90% at 50% 45%,var(--ch-bg2) 0%,var(--ch-bg) 62%,#07060f 100%);
+    border:1px solid color-mix(in srgb,var(--ch-gold) 38%,transparent);
+    box-shadow:0 24px 60px -24px rgba(8,6,20,.55),inset 0 0 0 1px rgba(255,236,190,.05),inset 0 0 80px rgba(217,179,108,.06);color:var(--ch-text)}
+  .chart-card .chart-cap{color:var(--ch-gold)}
+  .chart-card .legend{color:var(--ch-muted)}
+  .chart-top{display:flex;align-items:center;justify-content:center;gap:12px;position:relative}
+  .ch-zoom{position:absolute;right:6px;top:50%;transform:translateY(-50%);display:inline-flex;align-items:center;gap:6px;
+    font:600 12px/1 var(--sans);color:var(--ch-gold);background:rgba(217,179,108,.08);border:1px solid rgba(217,179,108,.35);
+    border-radius:999px;padding:7px 12px;cursor:pointer}
+  .ch-zoom:hover{background:rgba(217,179,108,.16)}
+  .ch-overlay{position:fixed;inset:0;z-index:100;overflow:auto;overscroll-behavior:contain;
+    background:radial-gradient(120% 90% at 50% 45%,var(--ch-bg2) 0%,var(--ch-bg) 62%,#07060f 100%)}
+  .ch-overlay svg{display:block;width:max(1150px,100%);height:auto;margin:0 auto}
+  .ch-overlay .ch-close{position:fixed;top:14px;right:14px;z-index:1;font:700 14px/1 var(--sans);color:#1d1526;background:var(--ch-gold);
+    border:0;border-radius:999px;padding:10px 16px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+  .ch-overlay .ch-hint{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);font:12px var(--sans);color:var(--ch-muted);
+    background:rgba(7,6,15,.75);padding:6px 12px;border-radius:999px;pointer-events:none}
+  .ch-note{margin:0 auto 10px;max-width:560px;padding:0 12px;text-align:center;font-size:11.5px;line-height:1.5;color:var(--ch-muted)}
+  .octo .num{font-family:"Numen Garamond",var(--serif);font-weight:700;font-variant-numeric:lining-nums;
+    paint-order:stroke;stroke:rgba(10,8,24,.55);stroke-width:1.6px;letter-spacing:-.01em}
+  .octo .num-dark{stroke:none}
+  .octo .nd.core .num{stroke:rgba(255,236,190,.4)}
+  .octo .pv{font-family:"Numen Garamond",var(--serif);font-weight:700;fill:var(--ch-text);font-variant-numeric:lining-nums;paint-order:stroke;stroke:var(--ch-bg);stroke-width:3px}
+  .octo .pv-mid{fill:#ffe3a6}
+  .octo .pa{fill:var(--ch-muted);font-family:var(--sans);paint-order:stroke;stroke:var(--ch-bg);stroke-width:2px}
+  .octo .va{fill:var(--ch-gold);font-family:var(--sans);font-size:9.5px;font-weight:800;paint-order:stroke;stroke:var(--ch-bg);stroke-width:3px}
+  .octo .ch-lbl{fill:var(--ch-gold);font-family:var(--sans);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase}
+  .octo .ch-line{font-family:var(--serif);font-style:italic;font-size:10.5px;letter-spacing:.02em}
+  .octo .orb-glow{opacity:.55}
+  .octo .tw{animation:tw 4.8s ease-in-out infinite}
+  @keyframes tw{0%,100%{opacity:.15}50%{opacity:.85}}
+  @media (prefers-reduced-motion:reduce){.octo .tw{animation:none}}
   .legend{display:flex;gap:10px 14px;flex-wrap:wrap;justify-content:center;font-size:11.5px;color:var(--muted);padding:10px 10px 12px}
   .legend span{display:inline-flex;align-items:center;gap:6px}
   .dot{width:10px;height:10px;border-radius:50%}
@@ -431,6 +467,14 @@
   .rd-chip{display:inline-block;font-family:var(--sans);font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;border-radius:6px;padding:1px 6px;margin-right:4px;border:1px solid var(--line);color:var(--muted);vertical-align:1px}
   .rd-chip.hipo{color:var(--hipo-ink);border-color:color-mix(in srgb,var(--k-ajna) 40%,transparent)}
   .rd-chip.hiper{color:var(--hiper-ink);border-color:color-mix(in srgb,var(--k-root) 40%,transparent)}
+  .rd-v2{margin-top:6px}
+  .rd-v2 + .rd-v2{margin-top:18px;padding-top:14px;border-top:1px dashed var(--line)}
+  .rd-ctx{margin:0 0 6px;font-size:12.5px;letter-spacing:.04em;color:var(--gold-strong)}
+  .rd-lead{font-family:var(--serif);font-size:1.13em;line-height:1.65}
+  .rd-q{margin:12px 0;padding:10px 14px;border-left:3px solid var(--gold);background:color-mix(in srgb,var(--gold) 7%,transparent);border-radius:0 10px 10px 0;font-style:italic}
+  .rd-q span{display:block;font-style:normal;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+  .rd-center{margin:10px 0 4px}
+  .rd-src-zone{border:1px solid color-mix(in srgb,var(--gold) 35%,var(--line));border-radius:10px;padding:9px 13px}
   .rd-action{border:1px solid color-mix(in srgb,var(--gold) 40%,var(--line));background:color-mix(in srgb,var(--gold) 9%,var(--paper));border-radius:10px;padding:10px 14px}
   .rd-src{margin-top:16px;border-top:1px dashed var(--line);padding-top:8px}
   .rd-src>summary{cursor:pointer;font-size:12.5px;color:var(--muted)}
@@ -625,8 +669,9 @@
 
   <div class="layout">
     <div class="card chart-card">
-      <p class="chart-cap">Tu octograma del destino</p>
-      <svg id="matrix" viewBox="-350 -368 700 736" role="img" aria-label="Octograma de la Matriz del Destino"></svg>
+      <div class="chart-top"><p class="chart-cap">Tu octograma del destino</p>
+        <button type="button" class="ch-zoom" id="chZoom" aria-haspopup="dialog">⤢ Ampliar</button></div>
+      <svg id="matrix" class="octo" viewBox="-362 -372 724 744" role="img" aria-label="Octograma de la Matriz del Destino"></svg>
       <div class="legend">
         <span><i class="dot" style="background:var(--k-crown)"></i>Corona (día · mes)</span>
         <span><i class="dot" style="background:var(--k-ajna)"></i>Ajna</span>
@@ -636,6 +681,7 @@
         <span><i class="dot" style="background:var(--k-svad)"></i>Svadhisthana</span>
         <span><i class="dot" style="background:var(--k-root)"></i>Raíz (año · bagaje kármico)</span>
       </div>
+      <p class="ch-note">Contorno: energía de cada tramo de 1,25 años (números pequeños = edad; en dorado, los vértices: 0, 10, 20… 70 años). <span style="color:var(--ch-money)">$</span> canal del dinero · <span style="color:var(--ch-love)">♥&#xFE0E;</span> canal del amor.</p>
     </div>
 
     <div class="card read" id="read">
@@ -817,145 +863,161 @@ function computeMatrix(day,month,year){
   return {W,N,E,S,C,NW,NE,SE,SW,sp,pts,cielo,tierra,personal,hombre,mujer,social,espiritual,planetario};
 }
 
-/* ===== Geometría del octograma ===== */
+/* ===== Geometría del octograma (carta celeste) =====
+   Diseño híbrido: el trazado canónico de la Matriz (32 puntos, perímetro de edades, propósitos) sobre un
+   panel astrológico oscuro con orbes de chakra, anillo zodiacal y campo de estrellas. Los números usan
+   numerales serif de alto contraste y un halo oscuro para leerse siempre sobre las líneas. */
 const R=210;
 // ang en grados matemáticos (0=derecha), y en pantalla hacia abajo -> negamos
 function P(angDeg,r){const a=angDeg*Math.PI/180;return [r*Math.cos(a), -r*Math.sin(a)];}
 const SPOKES=[ // [clave, ángulo]
   ["E",0],["NE",45],["N",90],["NW",135],["W",180],["SW",225],["S",270],["SE",315]
 ];
-// Esquema de color de la referencia: los 7 chakras se proyectan sobre los ejes
-// vertical (energía: N=corona … S=raíz) y horizontal (físico: W=corona … E=raíz).
-// N y W son corona (morado); E y S son raíz (rojo); las esquinas diagonales son blancas.
-const WHITE="var(--paper)";
+// Los 7 chakras se proyectan sobre los ejes vertical (energía: N=corona … S=raíz) y horizontal
+// (físico: W=corona … E=raíz). N y W son corona; E y S raíz; las esquinas diagonales son neutras.
+const WHITE="url(#o-neutral)";
+const ORB=k=>`url(#o-${k})`;
 function vertexColor(k){
-  if(k==="N"||k==="W") return "var(--k-crown)";
-  if(k==="E"||k==="S") return "var(--k-root)";
+  if(k==="N"||k==="W") return ORB("crown");
+  if(k==="E"||k==="S") return ORB("root");
   return WHITE;                       // NW, NE, SE, SW (linaje)
 }
-// color de cada subpunto del radio según chakra
 function dotColor(k,pos){            // pos: 'outer' | 'mid' | 'inner'
-  if(k==="N"||k==="W") return pos==="outer"?"var(--k-ajna)":pos==="mid"?"var(--k-vish)":"var(--k-ana)";
-  if(k==="S"||k==="E") return pos==="mid"?"var(--k-svad)":WHITE;
-  return WHITE;                       // diagonales: blancas
+  if(k==="N"||k==="W") return pos==="outer"?ORB("ajna"):pos==="mid"?ORB("vish"):ORB("ana");
+  if(k==="S"||k==="E") return pos==="mid"?ORB("svad"):WHITE;
+  return WHITE;
 }
-
-function node(x,y,val,fill,r,txtColor){
-  const fs=(r*0.92).toFixed(1);
-  return `<g><circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" stroke="var(--panel)" stroke-width="2"/>`
+const GLOW={"url(#o-crown)":"--k-crown","url(#o-ajna)":"--k-ajna","url(#o-vish)":"--k-vish","url(#o-ana)":"--k-ana",
+            "url(#o-svad)":"--k-svad","url(#o-root)":"--k-root","url(#o-manip)":"--k-manip"};
+function node(x,y,val,fill,r,txtColor,cls){
+  const fs=(r*(String(val).length>1?0.95:1.05)).toFixed(1), neutral=fill===WHITE;
+  const halo=GLOW[fill]?`<circle class="orb-glow" cx="${x}" cy="${y}" r="${(r*1.55).toFixed(1)}" fill="var(${GLOW[fill]})" filter="url(#glow)"/>`:"";
+  return halo+`<g class="nd${cls?" "+cls:""}"><circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" stroke="${neutral?"var(--ch-gold)":"rgba(255,244,220,.55)"}" stroke-width="${neutral?1.3:1.1}"/>`
     +`<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="central" font-size="${fs}"`
-    +` font-weight="700" fill="${txtColor||'#fff8ee'}">${val}</text></g>`;
+    +` class="num${neutral?" num-dark":""}" fill="${txtColor||(neutral?"var(--ch-node-ink)":"#fffaf0")}">${val}</text></g>`;
 }
-function seg(a,b,c,w,op){return `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${c}" stroke-width="${w}" opacity="${op}"/>`;}
-function lbl(x,y,t,dx,dy){return `<text x="${x+(dx||0)}" y="${y+(dy||0)}" text-anchor="middle" font-size="11" fill="var(--muted)" style="text-transform:uppercase;letter-spacing:.08em">${t}</text>`;}
+function seg(a,b,c,w,op,dash){return `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${c}" stroke-width="${w}" opacity="${op}"${dash?` stroke-dasharray="${dash}"`:""}/>`;}
+function lbl(x,y,t,anchor){return `<text class="ch-lbl" x="${x}" y="${y}" text-anchor="${anchor||"middle"}" dominant-baseline="central">${t}</text>`;}
+const fmtA=a=>(a%1?a.toFixed(2).replace(/0$/,""):String(a)).replace(".",",");
+// Estrellas deterministas (mismo cielo en cada cálculo)
+const STARS=(()=>{let s=7;const r=()=>(s=(s*16807)%2147483647)/2147483647;return Array.from({length:90},()=>[(r()*2-1)*345,(r()*2-1)*362,.35+r()*1.1,.25+r()*.6,(r()*6).toFixed(2)]);})();
+const ZODIAC=["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"];
 
 function drawMatrix(m){
   const svg=document.getElementById("matrix");
   const pos={}; SPOKES.forEach(([k,a])=>pos[k]=P(a,R));
-  let s="";
-  s+=`<defs>`
-    +`<marker id="arrPat" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#5b6bd0"/></marker>`
-    +`<marker id="arrMat" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#d06a4a"/></marker></defs>`;
-  // Octógono exterior (recorrido de la línea de la vida) + anillo interior
-  s+=`<polygon points="${SPOKES.map(([k])=>pos[k].join(",")).join(" ")}" fill="none" stroke="var(--star)" stroke-width="1.4" opacity=".85"/>`;
-  s+=`<circle cx="0" cy="0" r="${R*0.55}" fill="none" stroke="var(--star)" stroke-width="1" opacity=".55"/>`;
+  const orbDef=(id,c)=>`<radialGradient id="o-${id}" cx="36%" cy="30%" r="78%"><stop offset="0" stop-color="color-mix(in srgb,var(${c}) 45%,#fff)"/><stop offset=".45" stop-color="var(${c})"/><stop offset="1" stop-color="color-mix(in srgb,var(${c}) 62%,#000)"/></radialGradient>`;
+  let s=`<defs>`
+    +orbDef("crown","--k-crown")+orbDef("ajna","--k-ajna")+orbDef("vish","--k-vish")+orbDef("ana","--k-ana")
+    +orbDef("manip","--k-manip")+orbDef("svad","--k-svad")+orbDef("root","--k-root")
+    +`<radialGradient id="o-neutral" cx="38%" cy="32%" r="75%"><stop offset="0" stop-color="#fffdf6"/><stop offset=".7" stop-color="var(--ch-node)"/><stop offset="1" stop-color="var(--ch-node-edge)"/></radialGradient>`
+    +`<radialGradient id="ch-core" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="var(--k-manip)" stop-opacity=".45"/><stop offset=".45" stop-color="var(--k-manip)" stop-opacity=".12"/><stop offset="1" stop-color="var(--k-manip)" stop-opacity="0"/></radialGradient>`
+    +`<filter id="glow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="5"/></filter>`
+    +`<marker id="arrPat" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="var(--ch-pat)"/></marker>`
+    +`<marker id="arrMat" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="var(--ch-mat)"/></marker></defs>`;
+  // Cielo: estrellas que titilan + resplandor del centro
+  s+=`<g class="ch-sky" aria-hidden="true">${STARS.map(([x,y,r,o,d])=>`<circle class="tw" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(2)}" fill="#fff6dc" opacity="${o.toFixed(2)}" style="animation-delay:-${d}s"/>`).join("")}</g>`;
+  s+=`<circle cx="0" cy="0" r="${R*0.62}" fill="url(#ch-core)"/>`;
+  // Anillo zodiacal (gira lentamente; las marcas cada 5°, los signos cada 30°)
+  let z=`<g class="ch-zodiac" aria-hidden="true"><circle cx="0" cy="0" r="326" fill="none" stroke="var(--ch-gold)" stroke-width=".8" opacity=".45"/><circle cx="0" cy="0" r="352" fill="none" stroke="var(--ch-gold)" stroke-width=".8" opacity=".3"/>`;
+  for(let d=0;d<360;d+=5){const a=P(d,326),b=P(d,d%30?331:336);z+=`<line x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${b[0].toFixed(1)}" y2="${b[1].toFixed(1)}" stroke="var(--ch-gold)" stroke-width=".7" opacity=".45"/>`;}
+  ZODIAC.forEach((g,i)=>{const p=P(15+i*30,343);z+=`<text x="${p[0].toFixed(1)}" y="${p[1].toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-size="11" fill="var(--ch-gold)" opacity=".7">${g}&#xFE0E;</text>`;});
+  s+=z+`</g>`;
+  // Marco: octógono de la línea de la vida, anillos concéntricos y los dos cuadrados
+  s+=`<polygon points="${SPOKES.map(([k])=>pos[k].join(",")).join(" ")}" fill="none" stroke="var(--ch-gold)" stroke-width="1.5" opacity=".9"/>`;
+  [[.33,.28],[.55,.42],[.68,.22]].forEach(([k,o])=>s+=`<circle cx="0" cy="0" r="${R*k}" fill="none" stroke="var(--ch-gold)" stroke-width="1" opacity="${o}"/>`);
+  const poly=ks=>`<polygon points="${ks.map(k=>pos[k].join(",")).join(" ")}" fill="none" stroke="var(--ch-gold)" stroke-width="1.2" opacity=".55"/>`;
+  s+=poly(["N","E","S","W"])+poly(["NE","SE","SW","NW"]);
+  s+=seg(pos.N,pos.S,"var(--ch-gold)",1,.35)+seg(pos.W,pos.E,"var(--ch-gold)",1,.35);
 
-  // === Línea de la vida (0-80 años) sobre el perímetro ===
-  // Esquinas en orden horario desde W(0): W,NW,N,NE,E,SE,S,SW  (cada arista = 10 años)
+  // === Línea de la vida (0-80 años) sobre el perímetro: A(0) F(10) B(20) G(30) C(40) Y(50) D(60) K(70) ===
   const RING=[["W",0],["NW",10],["N",20],["NE",30],["E",40],["SE",50],["S",60],["SW",70]];
   RING.forEach(([k,age],i)=>{
     const nk=RING[(i+1)%8][0], A=pos[k], B=pos[nk];
     const vals=subdivide(m[k], m[nk]);          // 9 valores (2 esquinas + 7 interiores)
     for(let j=1;j<=7;j++){
       const t=j/8, x=A[0]+t*(B[0]-A[0]), y=A[1]+t*(B[1]-A[1]);
-      const nx=x/R, ny=y/R;                      // dirección radial para desplazar etiquetas
-      s+=`<circle cx="${x}" cy="${y}" r="2.4" fill="var(--star)"/>`;
-      const t2=(j===4);                          // punto medio de la arista (edad múltiplo de 5)
-      s+=`<text x="${x+nx*21}" y="${y+ny*21}" text-anchor="middle" dominant-baseline="central" `
-        +`font-size="${t2?13:11}" font-weight="${t2?700:600}" fill="var(--ink)">${vals[j]}</text>`;
-      const ageP=(age+t*10);
-      s+=`<text x="${x+nx*35}" y="${y+ny*35}" text-anchor="middle" dominant-baseline="central" `
-        +`font-size="7.5" fill="var(--muted)">${ageP%1?ageP.toFixed(2).replace(/0$/,''):ageP}</text>`;
+      const nx=x/R, ny=y/R, mid=(j===4);
+      s+=`<circle cx="${x}" cy="${y}" r="${mid?3:2.2}" fill="var(--ch-gold)"/>`;
+      s+=`<text class="pv${mid?" pv-mid":""}" x="${x+nx*23}" y="${y+ny*23}" text-anchor="middle" dominant-baseline="central" font-size="${mid?13.5:12}">${vals[j]}</text>`;
+      s+=`<text class="pa" x="${x+nx*39}" y="${y+ny*39}" text-anchor="middle" dominant-baseline="central" font-size="7.6">${fmtA(age+t*10)}</text>`;
     }
+    // edad del vértice, en la misma fila que las demás edades
+    const va=P(SPOKES.find(q=>q[0]===k)[1],R+37);
+    s+=`<text class="va" x="${va[0].toFixed(1)}" y="${va[1].toFixed(1)}" text-anchor="middle" dominant-baseline="central">${age}</text>`;
   });
-  // Círculos de eje: propósito planetario = R22(espiritual+social) (arriba) y espiritual (abajo).
-  s+=node(0,-R-98,m.planetario,"var(--paper)",20,"var(--ink)");
-  s+=lbl(0,-R-98,"Planetario",0,-30);
-  s+=node(0,R+98,m.espiritual,"var(--paper)",20,"var(--ink)");
-  s+=lbl(0,R+98,"Espiritual",0,32);
-  // === Círculos generacionales (orla exterior) — verificado en 31/01/2003 y 01/01/2008 ===
-  //  Arriba-der = propósito personal {cielo,tierra,personal}; abajo-der = social {hombre,mujer,social}
-  //  Arriba-izq = {NW,SE,hombre}; abajo-izq = {NE,SW,mujer}. El 3er valor (combinado) es el círculo mayor.
+  // Propósitos: planetario (arriba) y espiritual (abajo), con su rótulo al costado
+  s+=node(0,-R-98,m.planetario,WHITE,20);
+  s+=lbl(28,-R-98,"Planetario","start");
+  s+=node(0,R+98,m.espiritual,WHITE,20);
+  s+=lbl(28,R+98,"Espiritual","start");
+  // Círculos generacionales: personal {cielo,tierra,personal}, social {masc,fem,social} y líneas del linaje
   const GEN={ NW:[m.NW,m.SE,m.hombre], NE:[m.cielo,m.tierra,m.personal],
               SW:[m.NE,m.SW,m.mujer],  SE:[m.hombre,m.mujer,m.social] };
-  // g0 hacia el eje vertical, g1 hacia el eje horizontal, g2 (combinado) recto y mayor
-  const GA={NW:[135,127,144],NE:[45,53,37],SW:[225,233,217],SE:[315,307,323]};
+  const GA={NW:[135,127,143],NE:[45,53,37],SW:[225,233,217],SE:[315,307,323]};
   Object.keys(GEN).forEach(k=>{
     const g=GEN[k], [ac,a0,a1]=GA[k];
-    s+=node(...P(a0,R*1.37),g[0],WHITE,11,"var(--ink)");
-    s+=node(...P(a1,R*1.37),g[1],WHITE,11,"var(--ink)");
-    s+=node(...P(ac,R*1.20),g[2],WHITE,13,"var(--ink)");
+    s+=node(...P(a0,R*1.44),g[0],WHITE,11);
+    s+=node(...P(a1,R*1.44),g[1],WHITE,11);
+    s+=node(...P(ac,R*1.30),g[2],WHITE,13);
   });
-  // Dos cuadrados del octograma (neutros, como la referencia)
-  const sq1=["N","E","S","W"], sq2=["NE","SE","SW","NW"];
-  const poly=ks=>`<polygon points="${ks.map(k=>pos[k].join(",")).join(" ")}" fill="none" stroke="var(--star)" stroke-width="1.2" opacity=".5"/>`;
-  s+=poly(sq1)+poly(sq2);
-  // Ejes central (vertical + horizontal)
-  s+=seg(pos.N,pos.S,"var(--star)",1,.35)+seg(pos.W,pos.E,"var(--star)",1,.35);
-  // Flechas de las líneas paterna (NW-SE, azul) y materna (NE-SW, roja), desde el centro
-  const arrow=(ang,col,mk)=>{const e=P(ang,R*0.66);return `<line x1="0" y1="0" x2="${e[0]}" y2="${e[1]}" stroke="${col}" stroke-width="1.4" opacity=".85" marker-end="url(#${mk})"/>`;};
-  s+=arrow(135,"#5b6bd0","arrPat")+arrow(315,"#5b6bd0","arrPat")+arrow(45,"#d06a4a","arrMat")+arrow(225,"#d06a4a","arrMat");
-  // Línea punteada del dinero ($): del 7 (mid_E, derecha) al 3 (mid_S, abajo), cruzando la esquina SE.
-  // Pasa exactamente por el 17 (dinero) y el 13 (amor).
-  s+=`<line x1="${P(0,R*0.68)[0]}" y1="${P(0,R*0.68)[1]}" x2="${P(270,R*0.68)[0]}" y2="${P(270,R*0.68)[1]}" stroke="var(--muted)" stroke-width="1" stroke-dasharray="4 3" opacity=".7"/>`;
-  // Centro / sexualidad: E1 y E2, «interior derecha del centro» (Biblioteca Maestra, 02_PUNTOS).
-  //   E1 = R22(F+G+K+Y) (junto al centro) · E2 = R22(E+E1) (hacia el anillo).
-  s+=node(...P(0,R*0.19),m.pts.E1,WHITE,10,"var(--ink)");
-  s+=node(...P(0,R*0.33),m.pts.E2,WHITE,10,"var(--ink)");
-  // Ejes (N,S,W,E): inner .33R (dentro del anillo, coloreado por chakra), mid .68R, outer .83R.
-  // Diagonales (NW,NE,SE,SW): DOS puntos blancos — anillo (.70R) = R22(E1+vértice) (S1/P1/P3/S3)
-  //   y subpunto (.82R) = R22(anillo+vértice) (S2/P2/P4/S4). Coincide con 01/01/2001 y 31/01/2003.
+  // Flechas de las líneas paterna (NW-SE) y materna (NE-SW), desde el centro
+  const arrow=(ang,col,mk)=>{const e=P(ang,R*0.62);return `<line x1="0" y1="0" x2="${e[0]}" y2="${e[1]}" stroke="${col}" stroke-width="1.3" opacity=".8" marker-end="url(#${mk})"/>`;};
+  s+=arrow(135,"var(--ch-pat)","arrPat")+arrow(315,"var(--ch-pat)","arrPat")+arrow(45,"var(--ch-mat)","arrMat")+arrow(225,"var(--ch-mat)","arrMat");
+  // Canal del dinero y del amor: recta C1 → X1 → X → X2 → D1 (X en su punto medio)
+  const C1p=P(0,R*0.68), D1p=P(270,R*0.68), lerp=t=>[C1p[0]+t*(D1p[0]-C1p[0]),C1p[1]+t*(D1p[1]-C1p[1])];
+  const Xp=lerp(.5), X1p=lerp(.25), X2p=lerp(.75);
+  s+=seg(C1p,Xp,"var(--ch-money)",1.4,.9,"5 4")+seg(Xp,D1p,"var(--ch-love)",1.4,.9,"5 4");
+  // Ejes (N,S,W,E): inner .33R, mid .68R, outer .83R. Diagonales: anillo .70R (S1/P1/P3/S3) y subpunto .82R (S2/P2/P4/S4)
   SPOKES.forEach(([k,a])=>{
     const sp=m.sp[k];
     if(k.length===2){
-      // Diagonal: dos círculos sobre la LÍNEA RECTA (no sobre el anillo) — el punto donde la diagonal
-      // cruza el rombo (~.70R, fin de la flecha) y el subpunto (~.82R, hacia el vértice).
       const DG={NW:["S1","S2"],NE:["P1","P2"],SW:["P3","P4"],SE:["S3","S4"]}[k];
-      const ring=m.pts[DG[0]], sub=m.pts[DG[1]];     // R22(E1+vértice) y R22(anillo+vértice)
-      s+=node(...P(a,R*0.70),ring,WHITE,10,"var(--ink)");
-      s+=node(...P(a,R*0.82),sub,WHITE,11,"var(--ink)");
+      s+=node(...P(a,R*0.70),m.pts[DG[0]],WHITE,11);
+      s+=node(...P(a,R*0.82),m.pts[DG[1]],WHITE,11);
     } else {
-      const co=dotColor(k,"outer"), cm=dotColor(k,"mid"), ci=dotColor(k,"inner");
-      s+=node(...P(a,R*0.83),sp.outer,co,10,co===WHITE?"var(--ink)":"#fff8ee");
-      s+=node(...P(a,R*0.68),sp.mid,cm,12,cm===WHITE?"var(--ink)":"#fff8ee");
-      if(!(k==="E"||k==="S"))   // en la referencia, E y S no llevan punto interior (lo ocupan amor/dinero)
-        s+=node(...P(a,R*0.33),sp.inner,ci,9,ci===WHITE?"var(--ink)":"#fff8ee");
+      s+=node(...P(a,R*0.83),sp.outer,dotColor(k,"outer"),11);
+      s+=node(...P(a,R*0.68),sp.mid,dotColor(k,"mid"),13);
+      if(!(k==="E"||k==="S")) s+=node(...P(a,R*0.33),sp.inner,dotColor(k,"inner"),11);
     }
   });
-  // Vértices: N y W = corona (morado), E y S = raíz (rojo), diagonales = blancas
-  [...sq1,...sq2].forEach(k=>{
-    const c=vertexColor(k), big=(k.length===1);
-    s+=node(...pos[k],m[k],c,big?18:16,c===WHITE?"var(--ink)":"#fff8ee");
+  // Centro / sexualidad: E1 = R22(F+G+K+Y) junto al centro · E2 = R22(E+E1) hacia el anillo (02_PUNTOS)
+  s+=node(...P(0,R*0.205),m.pts.E1,WHITE,10);
+  s+=node(...P(0,R*0.33),m.pts.E2,WHITE,10);
+  // Vértices: N y W = corona, E y S = raíz, diagonales neutras
+  ["N","E","S","W","NE","SE","SW","NW"].forEach(k=>{
+    const c=vertexColor(k); s+=node(...pos[k],m[k],c,k.length===1?17:15);
   });
-  // Canal del dinero ($) y del amor (♥) — en la esquina sureste (donde están los iconos).
-  // X = R22(D1+C1) es el nodo amor-dinero (sobre la diagonal SE, cerca del centro);
-  // X1 = trabajo/flujo (rama del $) y X2 = pareja (rama del ♥).
-  const base=m.pts.X, money=m.pts.X1, amor=m.pts.X2;
-  s+=node(...P(315,R*0.37),base,WHITE,9,"var(--ink)");
-  s+=node(R*0.45,R*0.22,money,WHITE,9,"var(--ink)");
-  s+=node(R*0.25,R*0.42,amor,WHITE,9,"var(--ink)");
-  // Centro / alma (Manipura, dorado)
-  s+=node(0,0,m.C,"var(--k-manip)",26,"#3a2a08");
-  // Iconos de canal en su posición exacta (según la referencia)
-  s+=`<text x="${R*0.14}" y="${R*0.31}" font-size="16" text-anchor="middle" dominant-baseline="central" fill="#d0552e">♥</text>`;
-  s+=`<text x="${R*0.32}" y="${R*0.12}" font-size="15" font-weight="700" text-anchor="middle" dominant-baseline="central" fill="#8ab933">$</text>`;
-  // Etiquetas de las líneas (itálica serif, DIBUJADAS AL FINAL para que no las tape nada)
-  const lp=P(135,R*0.34), lm=P(45,R*0.34);
-  s+=`<text x="${lp[0]}" y="${lp[1]}" font-family="var(--serif)" font-style="italic" font-size="10.5" fill="#5b6bd0" text-anchor="middle" dominant-baseline="central" transform="rotate(45 ${lp[0]} ${lp[1]})">Línea Paterna</text>`;
-  s+=`<text x="${lm[0]}" y="${lm[1]}" font-family="var(--serif)" font-style="italic" font-size="10.5" fill="#d06a4a" text-anchor="middle" dominant-baseline="central" transform="rotate(-45 ${lm[0]} ${lm[1]})">Línea Materna</text>`;
+  // Nodos del canal (sobre la recta) + iconos
+  s+=node(...Xp,m.pts.X,WHITE,11);
+  s+=node(...X1p,m.pts.X1,WHITE,10);
+  s+=node(...X2p,m.pts.X2,WHITE,10);
+  s+=`<text x="${X1p[0]+15}" y="${X1p[1]-16}" font-size="14" font-weight="700" text-anchor="middle" dominant-baseline="central" fill="var(--ch-money)">$</text>`;
+  s+=`<text x="${X2p[0]-17}" y="${X2p[1]+14}" font-size="14" text-anchor="middle" dominant-baseline="central" fill="var(--ch-love)">♥&#xFE0E;</text>`;
+  // Centro / alma
+  s+=`<circle class="core-pulse" cx="0" cy="0" r="40" fill="var(--k-manip)" opacity=".28" filter="url(#glow)"/>`;
+  s+=node(0,0,m.C,ORB("manip"),25,"#2a1a02","core");
+  // Rótulos de las líneas del linaje
+  const lp=P(135,R*0.40), lm=P(45,R*0.40);
+  s+=`<text class="ch-line" x="${lp[0]}" y="${lp[1]}" fill="var(--ch-pat)" text-anchor="middle" dominant-baseline="central" transform="rotate(45 ${lp[0]} ${lp[1]})">Línea paterna</text>`;
+  s+=`<text class="ch-line" x="${lm[0]}" y="${lm[1]}" fill="var(--ch-mat)" text-anchor="middle" dominant-baseline="central" transform="rotate(-45 ${lm[0]} ${lm[1]})">Línea materna</text>`;
   svg.innerHTML=s;
   if(window.__afterDraw) window.__afterDraw(svg);   // gancho de animación (GSAP)
 }
+
+// Vista ampliada de la carta (útil en móvil: se puede desplazar y hacer zoom con los dedos)
+document.getElementById("chZoom").addEventListener("click",()=>{
+  const src=document.getElementById("matrix"), ov=document.createElement("div");
+  ov.className="ch-overlay"; ov.setAttribute("role","dialog"); ov.setAttribute("aria-modal","true"); ov.setAttribute("aria-label","Carta ampliada");
+  const cl=src.cloneNode(true); cl.removeAttribute("id"); cl.removeAttribute("style");
+  cl.querySelectorAll("[style]").forEach(el=>{ if(!el.classList.contains("tw")) el.removeAttribute("style"); });
+  ov.innerHTML=`<button type="button" class="ch-close">Cerrar ✕</button><p class="ch-hint">Desliza para recorrer la carta</p>`; ov.appendChild(cl);
+  const close=()=>{ ov.remove(); document.removeEventListener("keydown",esc); document.body.style.overflow=""; document.getElementById("chZoom").focus(); };
+  const esc=e=>{ if(e.key==="Escape") close(); };
+  ov.querySelector(".ch-close").addEventListener("click",close); document.addEventListener("keydown",esc);
+  document.body.appendChild(ov); document.body.style.overflow="hidden";
+  ov.scrollLeft=(ov.scrollWidth-ov.clientWidth)/2; ov.querySelector(".ch-close").focus();
+});
 
 /* ===== Lectura ===== */
 function mainRow(num,tag){const[n,mean]=ARCANA[num];
@@ -1041,7 +1103,7 @@ function render(m,d,mo,y){
     el.classList.remove("reveal"); void el.offsetWidth; el.classList.add("reveal");
   });
   if(window.__afterRender) window.__afterRender();   // gancho de animación (medallón 3D)
-  window.__lastDate={d,mo,y};                        // motor de interpretación MATRIX
+  window.__lastDate={d,mo,y,g:gender};               // motor de interpretación MATRIX (con género)
   if(window.MatrixReading) window.MatrixReading.render(window.__lastDate);
 }
 
@@ -1182,19 +1244,32 @@ document.addEventListener("DOMContentLoaded",()=>{
     if(!el) return;
     const frame=[], nodes=[];
     el.querySelectorAll("polygon, circle, line").forEach(s=>{
-      if(s.closest("g")) return;                    // saltar los círculos de los nodos
-      if(s.getAttribute("stroke-dasharray")) return; // conservar la línea punteada del dinero
+      if(s.closest("g")) return;                    // saltar nodos, estrellas y zodiaco (van en grupos)
+      if(s.classList.contains("orb-glow")||s.classList.contains("core-pulse")) return;
+      if(s.getAttribute("stroke-dasharray")) return; // conservar los canales punteados de dinero y amor
       let len; try{ len=s.getTotalLength(); }catch(e){ return; }
       if(!len || len<30) return;                    // saltar los puntitos de la línea de la vida
       gsap.set(s,{strokeDasharray:len,strokeDashoffset:len});
       frame.push(s);
     });
-    el.querySelectorAll("g").forEach(g=>nodes.push(g));
+    el.querySelectorAll("g.nd").forEach(g=>nodes.push(g));
     return gsap.timeline()
       .set(el,{autoAlpha:1},0)
+      .from(el.querySelector(".ch-zodiac"),{autoAlpha:0,rotation:-40,svgOrigin:"0 0",duration:1.6,ease:"expo.out"},0)
       .to(frame,{strokeDashoffset:0,duration:.9,ease:"power2.inOut",stagger:.02},0)
       .from(nodes,{autoAlpha:0,scale:.5,transformOrigin:"50% 50%",duration:.5,
-                   ease:"back.out(1.7)",stagger:{each:.012,from:"random"}},.25);
+                   ease:"back.out(1.7)",stagger:{each:.012,from:"random"}},.25)
+      .from(el.querySelectorAll(".orb-glow, .core-pulse"),{autoAlpha:0,duration:.8,ease:"power2.out"},.55)
+      .from(el.querySelectorAll(".pv, .pa, .va"),{autoAlpha:0,duration:.35,ease:"power1.out",stagger:{amount:.6}},.5);
+  }
+  // Movimiento ambiental: el zodiaco gira, el centro respira y los orbes laten. Nunca mueve los números.
+  let amb=[];
+  function ambient(el){
+    amb.forEach(t=>t.kill()); amb=[];
+    const z=el.querySelector(".ch-zodiac"), core=el.querySelector(".core-pulse"), glows=el.querySelectorAll(".orb-glow");
+    if(z) amb.push(gsap.to(z,{rotation:"+=360",svgOrigin:"0 0",duration:240,ease:"none",repeat:-1}));
+    if(core) amb.push(gsap.to(core,{scale:1.22,svgOrigin:"0 0",opacity:.42,duration:3.2,ease:"sine.inOut",yoyo:true,repeat:-1}));
+    if(glows.length) amb.push(gsap.to(glows,{opacity:.3,duration:2.4,ease:"sine.inOut",yoyo:true,repeat:-1,stagger:{each:.18,from:"random"}}));
   }
 
   const mm=gsap.matchMedia();
@@ -1207,7 +1282,8 @@ document.addEventListener("DOMContentLoaded",()=>{
     // Gancho invocado por drawMatrix en cada (re)cálculo.
     window.__afterDraw=function(el){
       if(reduce){ gsap.set(el,{autoAlpha:1}); return; }
-      if(window.__animChart){ animateChart(el); chartIn(); } else gsap.set(el,{autoAlpha:1});
+      if(window.__animChart){ animateChart(el).eventCallback("onComplete",()=>ambient(el)); chartIn(); }
+      else { gsap.set(el,{autoAlpha:1}); ambient(el); }
       ScrollTrigger.refresh();
     };
     // Gancho invocado por render(): el medallón gira como una moneda al revelar el arcano.
@@ -1228,7 +1304,7 @@ document.addEventListener("DOMContentLoaded",()=>{
       .from(".hero .trust",{autoAlpha:0,y:10,duration:.5},.6);
 
     // Trazado inicial del octograma (ya dibujado en la carga).
-    gsap.set(svg(),{autoAlpha:0}); animateChart(svg()); chartIn(); coinFlip();
+    gsap.set(svg(),{autoAlpha:0}); animateChart(svg()).eventCallback("onComplete",()=>ambient(svg())); chartIn(); coinFlip();
 
     // Reveals al hacer scroll (batch, una sola vez).
     const items=gsap.utils.toArray(REVEAL);

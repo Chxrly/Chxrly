@@ -87,6 +87,8 @@
       {t:"p",x:`Lo que mueve esta energía es la necesidad de ${e.nec}. Lo que más cuesta enfrentar es ${e.miedo}. Cuando esa necesidad se siente amenazada —por ejemplo, cuando ${e.trig[0]} o cuando ${e.trig[1]}— puede ponerse en marcha un ciclo que organiza buena parte de tu manera de funcionar:`},
       {t:"chain",items:e.ciclo},
       {t:"p",x:e.cicloTxt},
+      {t:"box",title:"Tu centro según la biblioteca MATRIX",blocks:[{t:"p",x:R.center.cNuc},{t:"kv",items:[["Sombra",R.center.cSom],["Clave estratégica",R.center.cClave]]}]},
+      {t:"p",x:R.reads.E.v2[0].interp},
       hhei(p.E,`Tu centro · ${nm(p.E)}`),
       {t:"p",x:`El centro se prolonga en la intimidad. E1 = ${A(p.E1)} describe cómo la vives por dentro, y E2 = ${A(p.E2)}, cómo la expresas. ${axis("Centro y sexualidad")}`},
       {t:"p",x:`${axis("Línea del Cielo (B + D)")} ${axis("Línea de la Tierra (A + C)")} Cuando lo que buscas y lo que haces se desconectan, el primer síntoma suele ser ${e.kern}.`}
@@ -108,11 +110,17 @@
     reps3.forEach(r=>repBlocks.push({t:"box",title:`${r.name} (${r.a}) · ${r.count} veces`,blocks:[
       {t:"p",x:`Aparece en ${join(r.pos.map(x=>`${x.P} (${x.rol})`))}, es decir, en ${join(areasOf(r.pos.map(x=>x.P)).map(low))}. ${r.link}`},
       {t:"p",x:`${r.risk} ${r.transfer}`},
+      {t:"p",x:`**Según la biblioteca.** ${r.v2rep}`},
       {t:"p",x:`*${cap(DATA.dic[r.a].repeticion)}*`}]}));
     const reps2=R.reps.filter(r=>r.count===2);
     if(reps2.length) repBlocks.push({t:"h",x:"Energías que aparecen dos veces"},{t:"list",items:reps2.map(r=>`**${r.name} (${r.a})** en ${r.pos.map(x=>`${x.P} (${x.rol})`).join(" y ")}: une ${C(r.a).kern}. ${r.transfer}`)});
     if(!R.reps.length) repBlocks.push({t:"p",x:"Ningún Arcano se repite en tus 32 puntos: la energía se reparte entre muchas cualidades distintas."});
-    S.push({id:"repeticiones",title:"Patrones repetidos",blocks:repBlocks});
+    if(R.absent.length){
+      repBlocks.push({t:"h",x:"Arcanos ausentes"},
+        {t:"p",x:`De los 22 Arcanos, ${R.absent.length===1?"uno no aparece":R.absent.length+" no aparecen"} en ninguno de tus 32 puntos. La ausencia no es una carencia fija: es una cualidad que no llega dada por estructura y que puede entrenarse de forma consciente.`},
+        {t:"list",items:R.absent.map(x=>`**${x.name} (${x.a}).** ${x.txt}`)});
+    } else repBlocks.push({t:"h",x:"Arcanos ausentes"},{t:"p",x:"Los 22 Arcanos aparecen al menos una vez en tus 32 puntos."});
+    S.push({id:"repeticiones",title:"Patrones repetidos y ausentes",blocks:repBlocks});
 
     /* ---- 5 · Cola kármica ---- */
     const k=R.cola, [d1,d2,d]=k.vals, c1=C(d1),c2=C(d2),c3=C(d);
@@ -143,6 +151,7 @@
       ["Qué significa",g.nucleo],
       ["Dónde aparece",`${g.zona}: ${g.dist.map(x=>`${x.P} = ${nm(x.a)} (${x.a}, ${x.rol})`).join(" → ")}.`],
       ["Cómo cambia por esta zona",`${g.contexto} ${g.enfasis}`],
+      ...(g.fuenteZona?[["Lectura documentada para esta zona",g.fuenteZona]]:[]),
       ["Potencial positivo",g.potencial],["Qué puede volverse negativo",g.sombra],
       ["Disparadores",`${cap(join(g.trig))}.`],
       ["Hipo",g.hipo],["Híper",g.hiper],
@@ -226,6 +235,17 @@
       {t:"kv",items:nine(R,pats,res,{C,nm,rol})},
       {t:"p",x:"*Herramienta simbólica de autoconocimiento. No sustituye consejo médico, psicológico, legal ni financiero, no describe hechos y no predice acontecimientos.*"}
     ]});
+
+    /* ---- Anexo · los 32 puntos con la biblioteca v2 ---- */
+    const anexo=[{t:"p",x:"Cada punto se lee como Arcano × posición × zona, con la biblioteca de 770 interpretaciones MATRIX. D1, X y C1 participan en dos zonas y se leen en ambas."}];
+    LIB().GROUPS.forEach(g=>g.pts.forEach(P=>{
+      const r=R.reads[P];
+      anexo.push({t:"box",title:`${P} · ${r.name} (${r.a}) — ${r.v2[0].posf}`,blocks:r.v2.flatMap((v,i)=>[
+        ...(i?[{t:"p",x:`**También en ${v.zona} · ${v.posf}.**`}]:[]),
+        {t:"p",x:v.interp},
+        {t:"kv",items:[["Pregunta clave",v.preg],["Prueba de integración",v.integ]]}])});
+    }));
+    S.push({id:"anexo",title:"Anexo · Tus 32 puntos en detalle",blocks:anexo});
     return S;
   }
   const fmt=(x,d)=>(d?x.toFixed(d):(Math.round(x*100)/100).toString()).replace(".",",");
@@ -318,21 +338,33 @@
   /* =================================================================
      2. CARTA → imagen (única imagen del informe)
      ================================================================= */
-  const LIGHT={"--paper":"#fffdf8","--ink":"#241c33","--muted":"#6a6280","--star":"#3b2f66","--panel":"#fbf7ef",
-    "--k-crown":"#6d3f9c","--k-ajna":"#2f66c7","--k-vish":"#1596a3","--k-ana":"#2fa457","--k-manip":"#e0a63a","--k-svad":"#e2761c",
-    "--k-root":"#c0392b","--serif":"Georgia, 'Times New Roman', serif"};
+  // La carta celeste tal como se ve en pantalla: variables CSS resueltas, estilos de texto y numerales
+  // Garamond incrustados en el SVG (una imagen SVG no puede leer el CSS ni las fuentes de la página).
+  const CHART_CSS=`.num{font-family:NG,serif;font-weight:700;paint-order:stroke;stroke:rgba(10,8,24,.55);stroke-width:1.6px}.num-dark{stroke:none}
+    .pv{font-family:NG,serif;font-weight:700;fill:var(--ch-text);paint-order:stroke;stroke:var(--ch-bg);stroke-width:3px}.pv-mid{fill:#ffe3a6}
+    .pa{fill:var(--ch-muted);font-family:Helvetica,Arial,sans-serif;paint-order:stroke;stroke:var(--ch-bg);stroke-width:2px}
+    .va{fill:var(--ch-gold);font-family:Helvetica,Arial,sans-serif;font-size:9.5px;font-weight:800}
+    .ch-lbl{fill:var(--ch-gold);font-family:Helvetica,Arial,sans-serif;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase}
+    .ch-line{font-family:NG,serif;font-style:italic;font-size:10.5px}.orb-glow{opacity:.55}`;
   function chartImage(){
     return new Promise(res=>{
-      const svg=document.getElementById("matrix"); if(!svg) return res(null);
+      const svg=document.getElementById("matrix"), card=document.querySelector(".chart-card"); if(!svg||!card) return res(null);
+      const cs=getComputedStyle(card), cv=v=>(cs.getPropertyValue(v)||"").trim()||"#888";
       const cl=svg.cloneNode(true);
       cl.querySelectorAll("*").forEach(el=>{["stroke-dasharray","stroke-dashoffset","opacity","visibility","transform","translate","rotate","scale"]
         .forEach(pr=>el.style&&el.style.removeProperty(pr)); if(el.getAttribute("style")==="") el.removeAttribute("style");});
+      cl.querySelectorAll(".ch-sky circle").forEach(c=>c.removeAttribute("style"));
       cl.removeAttribute("style"); cl.setAttribute("xmlns","http://www.w3.org/2000/svg");
-      const W=1400,H=1472; cl.setAttribute("width",W); cl.setAttribute("height",H);
-      let src=new XMLSerializer().serializeToString(cl).replace(/var\((--[\w-]+)\)/g,(m,v)=>LIGHT[v]||"#333");
+      const vb=svg.viewBox.baseVal, W=1400, H=Math.round(W*vb.height/vb.width); cl.setAttribute("width",W); cl.setAttribute("height",H);
+      const font=window.pdfMake&&window.pdfMake.vfs&&window.pdfMake.vfs["EBGaramond-SemiBold.ttf"];
+      const st=document.createElementNS("http://www.w3.org/2000/svg","style");
+      st.textContent=(font?`@font-face{font-family:NG;src:url(data:font/ttf;base64,${font}) format("truetype");font-weight:700}`:"")+CHART_CSS;
+      cl.insertBefore(st,cl.firstChild);
+      const src=new XMLSerializer().serializeToString(cl).replace(/var\((--[\w-]+)\)/g,(m,v)=>cv(v));
       const img=new Image();
       img.onload=()=>{const c=document.createElement("canvas");c.width=W;c.height=H;const g=c.getContext("2d");
-        g.fillStyle="#fbf7ef";g.fillRect(0,0,W,H);g.drawImage(img,0,0,W,H);res(c.toDataURL("image/jpeg",.9));};
+        const gr=g.createRadialGradient(W/2,H*.45,0,W/2,H*.45,W*.75); gr.addColorStop(0,cv("--ch-bg2")); gr.addColorStop(.62,cv("--ch-bg")); gr.addColorStop(1,"#07060f");
+        g.fillStyle=gr; g.fillRect(0,0,W,H); g.drawImage(img,0,0,W,H); res(c.toDataURL("image/jpeg",.9));};
       img.onerror=()=>res(null);
       img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(src);
     });
@@ -369,7 +401,7 @@
         out.push({table:{headerRows:b.head?1:0,widths:b.widths,body},layout:{hLineColor:()=>K.line,vLineWidth:()=>0,hLineWidth:(i)=>i===0?0:.6,paddingTop:()=>4,paddingBottom:()=>4,
           fillColor:(i)=>b.head&&i===0?K.paper:null},margin:[0,2,0,12]});
       }
-      else if(b.t==="img"&&img) out.push({image:img,width:380,alignment:"center",margin:[0,0,0,14]});
+      else if(b.t==="img"&&img) out.push({image:img,width:400,alignment:"center",margin:[0,0,0,14]});
     });
     return out;
     function cell(t,x,col,bg){return {stack:[{text:t.toUpperCase(),fontSize:7.5,bold:true,color:col,characterSpacing:.8,margin:[0,0,0,3]},{text:x,fontSize:10,lineHeight:1.28}],fillColor:bg};}
@@ -435,7 +467,7 @@
   async function generate(opts){
     const date=opts&&opts.date||window.__lastDate; if(!date||!window.MatrixReading) throw new Error("Primero calcula una matriz.");
     await ensureLibs();
-    const R=window.MatrixReading.compute(date.d,date.mo,date.y);                // fuente única de verdad
+    const R=window.MatrixReading.compute(date.d,date.mo,date.y,null,{gender:date.g});   // fuente única de verdad
     const name=(opts&&opts.name||"").trim().slice(0,60);
     const birth=`${pad(date.d)}/${pad(date.mo)}/${date.y}`, today=new Date();
     const meta={name,birth,issued:today.toLocaleDateString("es",{day:"numeric",month:"long",year:"numeric"}),center:`${R.p.E} · ${LIB().DATA.arc[R.p.E].n}`};

@@ -60,6 +60,8 @@ const DOM_N=+(process.argv[3]||400), URL=process.argv[4]||'http://127.0.0.1:8123
       // repeticiones (≥2 apariciones en los 32 puntos)
       const c={}; PTS.forEach(P=>c[o[P]]=(c[o[P]]||0)+1);
       const er=Object.entries(c).filter(([a,n])=>n>=2).map(([a,n])=>a+'×'+n).sort().join();
+      const pres=new Set(PTS.map(P=>o[P])), aus=[];for(let a=1;a<=22;a++) if(!pres.has(a)) aus.push(a);
+      chk('arcanos ausentes',R.absent.map(x=>x.a).join(),aus.join(),f);
       chk('repeticiones',R.reps.map(x=>x.a+'×'+x.count).sort().join(),er,f);
       // ciclo activo: en cumpleaños exactos y a mitad de tramo
       const per=perim(o);
@@ -78,20 +80,23 @@ const DOM_N=+(process.argv[3]||400), URL=process.argv[4]||'http://127.0.0.1:8123
       document.getElementById('d').value=d; document.getElementById('m').value=mo; document.getElementById('y').value=y;
       syncCalFromParts(); calc(false);
       // nodos de la carta por posición
-      const nodes={}; document.querySelectorAll('#matrix g').forEach(g=>{const c=g.querySelector('circle'),t=g.querySelector('text'); if(c&&t) nodes[key(+c.getAttribute('cx'),+c.getAttribute('cy'))]=+t.textContent;});
+      const nodes={}; document.querySelectorAll('#matrix g.nd').forEach(g=>{const c=g.querySelector('circle'),t=g.querySelector('text'); if(c&&t) nodes[key(+c.getAttribute('cx'),+c.getAttribute('cy'))]=+t.textContent;});
       const E=[["C",0],["G",45],["B",90],["F",135],["A",180],["K",225],["D",270],["Y",315]];
       const expN={}; E.forEach(([P,a])=>expN[key(...pos(a,Rr))]=[P,o[P]]);
       [["B1",90,.83],["B2",90,.68],["B3",90,.33],["A1",180,.83],["A2",180,.68],["A3",180,.33],["C2",0,.83],["C1",0,.68],["D2",270,.83],["D1",270,.68],
-       ["S1",135,.70],["S2",135,.82],["P1",45,.70],["P2",45,.82],["P3",225,.70],["P4",225,.82],["S3",315,.70],["S4",315,.82],["X",315,.37],["E1",0,.19],["E2",0,.33]]
+       ["S1",135,.70],["S2",135,.82],["P1",45,.70],["P2",45,.82],["P3",225,.70],["P4",225,.82],["S3",315,.70],["S4",315,.82],["E1",0,.205],["E2",0,.33]]
         .forEach(([P,a,k])=>expN[key(...pos(a,Rr*k))]=[P,o[P]]);
-      expN[key(0,0)]=["E",o.E]; expN[key(Rr*.45,Rr*.22)]=["X1",o.X1]; expN[key(Rr*.25,Rr*.42)]=["X2",o.X2];
+      expN[key(0,0)]=["E",o.E];
+      // canal C1 → X1 → X → X2 → D1 sobre la recta entre C1 (0°, .68R) y D1 (270°, .68R)
+      const c1=pos(0,Rr*.68), d1=pos(270,Rr*.68), L=t=>[c1[0]+t*(d1[0]-c1[0]),c1[1]+t*(d1[1]-c1[1])];
+      expN[key(...L(.5))]=["X",o.X]; expN[key(...L(.25))]=["X1",o.X1]; expN[key(...L(.75))]=["X2",o.X2];
       expN[key(0,-Rr-98)]=["planetario",pr.planetario]; expN[key(0,Rr+98)]=["espiritual",pr.espiritual];
-      [["F",127,1.37],["Y",144,1.37],["masc",135,1.2],["cielo",53,1.37],["tierra",37,1.37],["personal",45,1.2],["G",233,1.37],["K",217,1.37],["fem",225,1.2],["masc",307,1.37],["fem",323,1.37],["social",315,1.2]]
+      [["F",127,1.44],["Y",143,1.44],["masc",135,1.3],["cielo",53,1.44],["tierra",37,1.44],["personal",45,1.3],["G",233,1.44],["K",217,1.44],["fem",225,1.3],["masc",307,1.44],["fem",323,1.44],["social",315,1.3]]
         .forEach(([P,a,k])=>expN[key(...pos(a,Rr*k))]=[P,P in o?o[P]:pr[P]]);
-      Object.entries(expN).forEach(([k,[P,v]])=>chk('carta · 50 círculos',nodes[k],v,`${f} ${P}`));
+      Object.entries(expN).forEach(([k,[P,v]])=>chk('carta · 46 círculos',nodes[k],v,`${f} ${P}`));
       chk('carta · sin círculos de más',Object.keys(nodes).length,Object.keys(expN).length,f);
       // etiquetas del perímetro (56 intermedias)
-      const per=perim(o), vs=[...document.querySelectorAll('#matrix text')].filter(t=>/^(13|11)$/.test(t.getAttribute('font-size'))&&!t.closest('g')&&/^\d+$/.test(t.textContent)).map(t=>+t.textContent);
+      const per=perim(o), vs=[...document.querySelectorAll('#matrix text.pv')].map(t=>+t.textContent);
       const expP=[]; for(let e=0;e<8;e++) for(let j=1;j<=7;j++) expP.push(per[e*8+j]);
       chk('carta · 56 etiquetas del perímetro',vs.join(),expP.join(),f);
       // tarjeta destacada, energías principales, salud, propósitos
