@@ -7,7 +7,11 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_ES">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#efe9dd">
+<meta name="theme-color" content="#f4eee4">
+<script>/* Cielo inicial (día/noche) antes del primer pintado: evita el destello del tema equivocado */
+(function(){var d=document.documentElement,t=null;try{t=localStorage.getItem("md-theme")}catch(e){}
+if(t)d.setAttribute("data-theme",t);var n=t?t==="dark":(window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches);
+d.setAttribute("data-sky",n?"night":"day");})();</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='-12%20-12%2024%2024'%3E%3Cg%20fill='none'%20stroke='%23a9793a'%20stroke-width='2'%3E%3Crect%20x='-8'%20y='-8'%20width='16'%20height='16'/%3E%3Crect%20x='-8'%20y='-8'%20width='16'%20height='16'%20transform='rotate(45)'/%3E%3C/g%3E%3C/svg%3E">
 <!-- Al conectar tu dominio, añade aquí:
      <link rel="canonical" href="https://TU-DOMINIO/">
@@ -15,58 +19,61 @@
      <meta property="og:image" content="https://TU-DOMINIO/og-image.png"> -->
 <style>
   :root{
-    /* — Astrolabio · tema claro (pergamino) — */
-    --bg:#efe9dd; --bg-2:#e8e0d0; --panel:#fbf7ef; --paper:#fffdf8; --card-2:#f5efe3;
-    --ink:#241c33; --ink-soft:#443a5c; --muted:#6a6280; --sub:#8a8398; --line:#e2d7c2;
-    --gold:#a9793a; --gold-strong:#8a5f28; --gold-soft:#e7d4b0;
-    --violet:#4b3b7a; --crimson:#9a2f47; --amber:#e0a63a; --star:#3b2f66;
-    --cosmos:#3a4fb0; /* enlaces / interacción */
+    /* — Cielo de día: amanecer celeste, tinta índigo y oro de astrolabio — */
+    --bg:#f4eee4; --bg-2:#ebe1d0; --panel:#fffaf2; --paper:#fffdf8; --card-2:#f7f0e4;
+    --ink:#1f1838; --ink-soft:#3f3666; --muted:#655d85; --sub:#8a8398; --line:#e3d6bf;
+    --gold:#a8742a; --gold-strong:#865720; --gold-soft:#ecd8b2;
+    --violet:#5b47a8; --crimson:#9a2f47; --amber:#e0a63a; --star:#4a3a8a;
+    --cosmos:#3f4fb8; /* enlaces / interacción */
     /* 7 chakras (constantes en ambos temas) — usados por la carta y la tabla */
     --c-root:#c0392b; --c-sacral:#e67e22; --c-solar:#f1c40f; --c-heart:#27ae60;
     --c-throat:#2980b9; --c-brow:#3f3f9e; --c-crown:#7d3c98;
     --k-crown:#6d3f9c; --k-ajna:#2f66c7; --k-vish:#1596a3; --k-ana:#2fa457;
     --k-manip:#e0a63a; --k-svad:#e2761c; --k-root:#c0392b;
-    --shadow:0 1px 2px rgba(36,28,51,.06), 0 14px 40px rgba(36,28,51,.10);
-    --shadow-lg:0 2px 6px rgba(36,28,51,.08), 0 30px 70px rgba(36,28,51,.16);
-    --ring:rgba(169,121,58,.35); --on-gold:#fffaf0; --seg-on:#8a5f28; --hipo-ink:#2d56ad; --hiper-ink:#b0392b;
+    --sky-1:#dde5f8; --sky-2:#ece7f4; --sky-3:#f7efe3; --sky-4:#f1e1c8;
+    --neb-1:rgba(255,190,100,.34); --neb-2:rgba(150,130,230,.20); --neb-3:rgba(255,150,165,.16);
+    --glass:rgba(255,250,242,.72); --glass-2:rgba(255,250,242,.55); --glass-line:rgba(168,116,42,.26);
+    --glow:rgba(214,160,70,.38); --btn-a:#c99a4f; --btn-b:#8c5b22; --btn-ink:#fffaf0;
+    --shadow:0 1px 2px rgba(31,24,56,.05), 0 14px 40px rgba(60,40,90,.10);
+    --shadow-lg:0 2px 6px rgba(31,24,56,.08), 0 30px 70px rgba(60,40,90,.16);
+    --ring:rgba(168,116,42,.35); --on-gold:#fffaf0; --seg-on:#865720; --hipo-ink:#2d56ad; --hiper-ink:#b0392b;
     --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,"Times New Roman",serif;
     --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    --radius:18px; --radius-sm:12px;
+    --radius:20px; --radius-sm:12px;
   }
   @media (prefers-color-scheme:dark){
-    :root{
-      --bg:#120e1a; --bg-2:#0d0a14; --panel:#1e1826; --paper:#251e31; --card-2:#241d30;
-      --ink:#ece7f5; --ink-soft:#cabce6; --muted:#a99fc4; --sub:#7c7594; --line:#352b48;
-      --gold:#d7a75f; --gold-strong:#e8bd77; --gold-soft:#5a4526;
-      --violet:#a394dd; --crimson:#e0768e; --amber:#f0b94a; --star:#c9bdf0;
-      --cosmos:#8ea2ff;
+    :root:not([data-theme="light"]){
+      /* — Cielo de noche: espacio profundo, nebulosas y oro estelar — */
+      --bg:#07061a; --bg-2:#0b0924; --panel:#13102e; --paper:#1a1640; --card-2:#17133a;
+      --ink:#f1ecff; --ink-soft:#d4caf5; --muted:#a79fd0; --sub:#7d76a8; --line:#2c2660;
+      --gold:#e2b96b; --gold-strong:#f2cd86; --gold-soft:#5a4526;
+      --violet:#a594ff; --crimson:#ff8aa6; --amber:#f6c35a; --star:#dcd4ff; --cosmos:#a6b6ff;
+      --sky-1:#04030d; --sky-2:#090722; --sky-3:#0f0a2e; --sky-4:#06051a;
+      --neb-1:rgba(118,72,230,.40); --neb-2:rgba(214,72,160,.26); --neb-3:rgba(46,130,230,.26);
+      --glass:rgba(19,16,46,.70); --glass-2:rgba(19,16,46,.52); --glass-line:rgba(226,185,107,.22);
+      --glow:rgba(150,120,255,.42); --btn-a:#f8e2a8; --btn-b:#d6a352; --btn-ink:#1b1433;
       --shadow:0 1px 2px rgba(0,0,0,.4), 0 16px 46px rgba(0,0,0,.55);
       --shadow-lg:0 2px 8px rgba(0,0,0,.5), 0 34px 80px rgba(0,0,0,.6);
-      --ring:rgba(215,167,95,.4); --on-gold:#1d1526; --seg-on:#d7a75f; --hipo-ink:#9db8ff; --hiper-ink:#ffa596;
+      --ring:rgba(226,185,107,.4); --on-gold:#1b1433; --seg-on:#e2b96b; --hipo-ink:#a8c0ff; --hiper-ink:#ffa99b;
     }
   }
-  :root[data-theme="light"]{
-    --bg:#efe9dd; --bg-2:#e8e0d0; --panel:#fbf7ef; --paper:#fffdf8; --card-2:#f5efe3;
-    --ink:#241c33; --ink-soft:#443a5c; --muted:#6a6280; --sub:#8a8398; --line:#e2d7c2;
-    --gold:#a9793a; --gold-strong:#8a5f28; --gold-soft:#e7d4b0; --violet:#4b3b7a;
-    --star:#3b2f66; --cosmos:#3a4fb0;
-    --shadow:0 1px 2px rgba(36,28,51,.06), 0 14px 40px rgba(36,28,51,.10);
-    --shadow-lg:0 2px 6px rgba(36,28,51,.08), 0 30px 70px rgba(36,28,51,.16);
-    --ring:rgba(169,121,58,.35); --on-gold:#fffaf0; --seg-on:#8a5f28; --hipo-ink:#2d56ad; --hiper-ink:#b0392b;
-  }
   :root[data-theme="dark"]{
-    --bg:#120e1a; --bg-2:#0d0a14; --panel:#1e1826; --paper:#251e31; --card-2:#241d30;
-    --ink:#ece7f5; --ink-soft:#cabce6; --muted:#a99fc4; --sub:#7c7594; --line:#352b48;
-    --gold:#d7a75f; --gold-strong:#e8bd77; --gold-soft:#5a4526; --violet:#a394dd;
-    --star:#c9bdf0; --cosmos:#8ea2ff;
+    --bg:#07061a; --bg-2:#0b0924; --panel:#13102e; --paper:#1a1640; --card-2:#17133a;
+    --ink:#f1ecff; --ink-soft:#d4caf5; --muted:#a79fd0; --sub:#7d76a8; --line:#2c2660;
+    --gold:#e2b96b; --gold-strong:#f2cd86; --gold-soft:#5a4526;
+    --violet:#a594ff; --crimson:#ff8aa6; --amber:#f6c35a; --star:#dcd4ff; --cosmos:#a6b6ff;
+    --sky-1:#04030d; --sky-2:#090722; --sky-3:#0f0a2e; --sky-4:#06051a;
+    --neb-1:rgba(118,72,230,.40); --neb-2:rgba(214,72,160,.26); --neb-3:rgba(46,130,230,.26);
+    --glass:rgba(19,16,46,.70); --glass-2:rgba(19,16,46,.52); --glass-line:rgba(226,185,107,.22);
+    --glow:rgba(150,120,255,.42); --btn-a:#f8e2a8; --btn-b:#d6a352; --btn-ink:#1b1433;
     --shadow:0 1px 2px rgba(0,0,0,.4), 0 16px 46px rgba(0,0,0,.55);
     --shadow-lg:0 2px 8px rgba(0,0,0,.5), 0 34px 80px rgba(0,0,0,.6);
-    --ring:rgba(215,167,95,.4); --on-gold:#1d1526; --seg-on:#d7a75f; --hipo-ink:#9db8ff; --hiper-ink:#ffa596;
+    --ring:rgba(226,185,107,.4); --on-gold:#1b1433; --seg-on:#e2b96b; --hipo-ink:#a8c0ff; --hiper-ink:#ffa99b;
   }
 
   /* El esquema de color nativo (calendario, scrollbars) sigue al tema */
   :root{color-scheme:light}
-  @media (prefers-color-scheme:dark){:root{color-scheme:dark}}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark}}
   :root[data-theme="light"]{color-scheme:light}
   :root[data-theme="dark"]{color-scheme:dark}
 
@@ -524,11 +531,245 @@
     .reveal{animation:fadeUp .5s cubic-bezier(.2,.7,.3,1) both}
   }
   @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+  /* =====================================================================
+     COSMOS · capa astrológica de toda la página (día = amanecer celeste,
+     noche = espacio profundo). El 3D (#bg3d) va encima de esta capa.
+     ===================================================================== */
+  body{
+    background:
+      radial-gradient(60% 45% at 84% 4%, var(--neb-1), transparent 70%),
+      radial-gradient(55% 42% at 6% 30%, var(--neb-2), transparent 70%),
+      radial-gradient(60% 45% at 72% 94%, var(--neb-3), transparent 70%),
+      linear-gradient(180deg,var(--sky-1) 0%,var(--sky-2) 26%,var(--sky-3) 62%,var(--sky-4) 100%);
+    background-attachment:fixed;
+  }
+  body::before{display:none}
+  ::selection{background:color-mix(in srgb,var(--gold) 35%,transparent);color:var(--ink)}
+  html{scrollbar-color:color-mix(in srgb,var(--gold) 55%,transparent) transparent}
+
+  .cosmos{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+  .cosmos > *{position:absolute}
+  .sky-glow{inset:0;background:radial-gradient(40% 30% at 50% 0%,color-mix(in srgb,var(--gold) 14%,transparent),transparent 70%)}
+  /* Sol (día): halo + rayos girando */
+  .sun{top:-150px;right:-120px;width:460px;height:460px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,226,160,.95) 0 11%,rgba(255,206,120,.55) 16%,rgba(255,196,110,.18) 36%,transparent 62%)}
+  .sun i{position:absolute;inset:-40px;border-radius:50%;
+    background:repeating-conic-gradient(from 0deg,rgba(255,200,110,.20) 0 2deg,transparent 2deg 15deg);
+    -webkit-mask:radial-gradient(circle,transparent 20%,#000 30%,transparent 70%);mask:radial-gradient(circle,transparent 20%,#000 30%,transparent 70%);
+    animation:spin 120s linear infinite}
+  /* Luna (noche) */
+  .moon{top:56px;right:7vw;width:78px;height:78px;border-radius:50%;opacity:0;
+    background:radial-gradient(circle at 36% 34%,#fffaf0 0,#efe4cb 45%,#c9b995 100%);
+    box-shadow:0 0 40px 10px rgba(255,236,190,.25),0 0 120px 40px rgba(170,150,255,.15);
+    -webkit-mask:radial-gradient(circle at 70% 36%,transparent 34%,#000 35%);mask:radial-gradient(circle at 70% 36%,transparent 34%,#000 35%)}
+  /* Vía Láctea (noche) */
+  .milky{left:-20%;right:-20%;top:38%;height:34vh;opacity:0;transform:rotate(-24deg);filter:blur(28px);
+    background:radial-gradient(50% 50% at 50% 50%,rgba(215,200,255,.26),rgba(160,120,255,.12) 45%,transparent 70%),
+      linear-gradient(90deg,transparent,rgba(255,220,240,.10) 30%,rgba(190,170,255,.16) 50%,rgba(255,220,240,.10) 70%,transparent)}
+  /* Constelaciones: tinta dorada de día, plata de noche */
+  .constel{inset:0;width:100%;height:100%;stroke:var(--gold);stroke-width:.08;fill:var(--gold);opacity:.35;vector-effect:non-scaling-stroke}
+  .constel line{vector-effect:non-scaling-stroke;stroke-width:.8}
+  /* Polvo de estrellas: dos capas que titilan desfasadas */
+  .dust{inset:0}
+  .dust.d1{background-image:
+      radial-gradient(1.6px 1.6px at 12% 22%,var(--dust),transparent),radial-gradient(1.2px 1.2px at 78% 16%,var(--dust),transparent),
+      radial-gradient(1.8px 1.8px at 62% 62%,var(--dust),transparent),radial-gradient(1.2px 1.2px at 32% 74%,var(--dust),transparent),
+      radial-gradient(1.4px 1.4px at 90% 82%,var(--dust),transparent),radial-gradient(1.1px 1.1px at 46% 38%,var(--dust),transparent),
+      radial-gradient(1.5px 1.5px at 20% 55%,var(--dust),transparent),radial-gradient(1.2px 1.2px at 70% 44%,var(--dust),transparent);
+    background-size:640px 640px}
+  .dust.d2{background-image:
+      radial-gradient(1.3px 1.3px at 8% 8%,var(--dust),transparent),radial-gradient(1px 1px at 58% 28%,var(--dust),transparent),
+      radial-gradient(1.6px 1.6px at 38% 88%,var(--dust),transparent),radial-gradient(1px 1px at 84% 58%,var(--dust),transparent),
+      radial-gradient(1.2px 1.2px at 26% 42%,var(--dust),transparent);
+    background-size:430px 430px}
+  :root{--dust:rgba(168,116,42,.55)}
+  /* Estrellas fugaces (noche) */
+  .meteor{top:0;left:0;width:160px;height:1.5px;opacity:0;border-radius:2px;
+    background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,244,214,.95));transform-origin:right center}
+  .meteor::after{content:"";position:absolute;right:-2px;top:-2px;width:5px;height:5px;border-radius:50%;background:#fff;box-shadow:0 0 10px 3px rgba(255,236,190,.8)}
+
+  /* — Noche — */
+  :root[data-sky="night"]{--dust:rgba(235,228,255,.85)}
+  :root[data-sky="night"] .sun{opacity:0}
+  :root[data-sky="night"] .moon{opacity:1}
+  :root[data-sky="night"] .milky{opacity:1}
+  :root[data-sky="night"] .constel{stroke:#cfc6ff;fill:#fff;opacity:.28}
+  :root[data-sky="night"] .sky-glow{background:radial-gradient(45% 32% at 50% 0%,rgba(150,120,255,.20),transparent 70%)}
+  @media (prefers-reduced-motion:no-preference){
+    .dust.d1{animation:twk 6s ease-in-out infinite alternate}
+    .dust.d2{animation:twk 4.4s ease-in-out -2s infinite alternate}
+    :root[data-sky="night"] .meteor.m1{animation:meteor 9s ease-in 2s infinite}
+    :root[data-sky="night"] .meteor.m2{animation:meteor 13s ease-in 7s infinite}
+    :root[data-sky="night"] .meteor.m3{animation:meteor 17s ease-in 12s infinite}
+    .milky{animation:drift 40s ease-in-out infinite alternate}
+  }
+  .meteor.m1{--mx:70vw;--my:6vh}.meteor.m2{--mx:30vw;--my:14vh}.meteor.m3{--mx:88vw;--my:32vh}
+  @keyframes meteor{0%{opacity:0;transform:translate(var(--mx),var(--my)) rotate(-32deg) translateX(0)}
+    3%{opacity:1}12%{opacity:0;transform:translate(var(--mx),var(--my)) rotate(-32deg) translateX(-460px)}100%{opacity:0}}
+  @keyframes twk{from{opacity:.35}to{opacity:1}}
+  @keyframes drift{from{transform:rotate(-24deg) translateX(-3%)}to{transform:rotate(-21deg) translateX(3%)}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes shine{to{background-position:200% center}}
+
+  /* — Barra superior de cristal — */
+  .topbar{background:var(--glass-2);border-bottom:1px solid var(--glass-line);
+    -webkit-backdrop-filter:blur(16px) saturate(1.3);backdrop-filter:blur(16px) saturate(1.3)}
+  .brand-mark{position:relative;display:inline-grid;place-items:center;width:30px;height:30px}
+  .brand-mark i{position:absolute;inset:0;border-radius:50%;border:1px dashed color-mix(in srgb,var(--gold) 60%,transparent)}
+  .brand-mark i::after{content:"";position:absolute;top:-2.5px;left:50%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold)}
+  @media (prefers-reduced-motion:no-preference){.brand-mark i{animation:spin 14s linear infinite}}
+  .theme-toggle{position:relative;border-radius:50%;width:40px;height:40px;background:var(--glass);border-color:var(--glass-line);overflow:hidden}
+  .theme-toggle svg{position:absolute;width:20px;height:20px;transition:transform .6s cubic-bezier(.34,1.56,.64,1),opacity .35s}
+  .theme-toggle .ic-sun{color:#e3a33a}
+  .theme-toggle .ic-moon{color:#cdbcff;transform:translateY(26px) rotate(-60deg);opacity:0}
+  :root[data-sky="night"] .theme-toggle .ic-sun{transform:translateY(-26px) rotate(90deg);opacity:0}
+  :root[data-sky="night"] .theme-toggle .ic-moon{transform:none;opacity:1}
+  .theme-toggle:hover{box-shadow:0 0 0 4px color-mix(in srgb,var(--gold) 18%,transparent),0 0 20px var(--glow)}
+
+  /* — Héroe: orrery zodiacal — */
+  .hero{position:relative}
+  .hero-orrery{position:absolute;left:50%;top:50%;width:min(820px,128vw);transform:translate(-50%,-52%);z-index:-1;
+    pointer-events:none;fill:none;stroke:var(--gold);stroke-width:1;opacity:.5}
+  .hero-orrery .zod circle{stroke-opacity:.55}.hero-orrery .zod .thin{stroke-opacity:.25}
+  .hero-orrery .ticks line{stroke-opacity:.45}
+  .hero-orrery .zg text{fill:var(--gold-strong);stroke:none;font-size:17px;text-anchor:middle;dominant-baseline:central;opacity:.85}
+  .hero-orrery .orbit{stroke-opacity:.28;stroke-dasharray:2 6}
+  .hero-orrery .pl{fill:var(--glass);stroke:var(--gold);stroke-opacity:.8}
+  .hero-orrery .pg{fill:var(--gold-strong);stroke:none;font-size:13px;text-anchor:middle;dominant-baseline:central}
+  .hero-orrery .oct{stroke-opacity:.22}
+  .hero-orrery .zod,.hero-orrery .orb{transform-box:view-box;transform-origin:50% 50%}
+  @media (prefers-reduced-motion:no-preference){
+    .hero-orrery .zod{animation:spin 240s linear infinite}
+    .hero-orrery .o1{animation:spin 26s linear infinite}.hero-orrery .o2{animation:spin 48s linear infinite reverse}
+    .hero-orrery .o3{animation:spin 70s linear infinite}.hero-orrery .o4{animation:spin 110s linear infinite reverse}
+  }
+  :root[data-sky="night"] .hero-orrery{opacity:.62}
+  h1 .em{background:linear-gradient(90deg,var(--gold-strong),#f5d58e 30%,var(--gold) 55%,var(--gold-strong) 80%);
+    background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:none;filter:drop-shadow(0 2px 14px color-mix(in srgb,var(--gold) 30%,transparent))}
+  @media (prefers-reduced-motion:no-preference){h1 .em{animation:shine 7s linear infinite}}
+  .hero .trust{display:inline-flex;gap:8px;align-items:center}
+  .hero .trust::before,.hero .trust::after{content:"✦";color:var(--gold);font-size:10px}
+
+  /* — Encabezados de sección con ornamento celeste — */
+  .section-head .eyebrow::before,.section-head .eyebrow::after{content:"";width:34px;height:1px;
+    background:linear-gradient(90deg,transparent,currentColor)}
+  .section-head .eyebrow::after{background:linear-gradient(270deg,transparent,currentColor)}
+  .section-head h2::after{content:"✦  ✧  ✦";display:block;margin-top:10px;font-size:10px;letter-spacing:.5em;
+    color:var(--gold);font-family:var(--sans);opacity:.8}
+
+  /* — Botones: oro estelar con destello — */
+  .btn{border-radius:999px;position:relative;isolation:isolate;overflow:hidden;letter-spacing:.01em}
+  .btn--primary{color:var(--btn-ink);border:1px solid color-mix(in srgb,var(--btn-b) 80%,#000 0%);
+    background:linear-gradient(135deg,var(--btn-a) 0%,color-mix(in srgb,var(--btn-a) 50%,var(--btn-b)) 48%,var(--btn-b) 100%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.45),inset 0 -8px 16px rgba(0,0,0,.10),0 10px 28px -8px var(--glow),0 0 0 1px rgba(255,255,255,.06)}
+  .btn--primary::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+    background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.6) 48%,transparent 62%);transform:translateX(-130%);transition:transform .9s cubic-bezier(.16,1,.3,1)}
+  .btn--primary::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.8;
+    background-image:radial-gradient(1.4px 1.4px at 18% 30%,#fff,transparent),radial-gradient(1.2px 1.2px at 82% 26%,#fff,transparent),
+      radial-gradient(1.1px 1.1px at 64% 78%,#fff,transparent),radial-gradient(1px 1px at 34% 72%,#fff,transparent);opacity:0;transition:opacity .4s}
+  .btn--primary:hover{filter:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 14px 34px -8px var(--glow),0 0 0 4px color-mix(in srgb,var(--gold) 16%,transparent),0 0 30px -4px var(--glow)}
+  .btn--primary:hover::before{transform:translateX(130%)}
+  .btn--primary:hover::after{opacity:.9}
+  .btn--ghost{color:var(--ink);background:var(--glass);border:1px solid var(--glass-line);
+    -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+  .btn--ghost:hover{border-color:var(--gold);color:var(--gold-strong);box-shadow:0 0 0 4px color-mix(in srgb,var(--gold) 12%,transparent),0 0 24px -6px var(--glow)}
+  .btn--primary .glyph{display:inline-block}
+  @media (prefers-reduced-motion:no-preference){.btn--primary:hover .glyph{animation:spin 1.6s linear infinite}}
+
+  /* — Tarjetas de cristal con filo dorado — */
+  .card:not(.chart-card){background:var(--glass);border:1px solid var(--glass-line);
+    -webkit-backdrop-filter:blur(16px) saturate(1.25);backdrop-filter:blur(16px) saturate(1.25);
+    box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.10)}
+  .has-3d .feature,.has-3d .step,.has-3d .why > .card,.has-3d .faq details{background:var(--glass)}
+  .feature,.step,.why > .card{transition:border-color .3s,box-shadow .3s}
+  .feature:hover,.step:hover,.why > .card:hover{border-color:color-mix(in srgb,var(--gold) 55%,transparent);
+    box-shadow:var(--shadow),0 0 36px -10px var(--glow)}
+  .consult{border-color:color-mix(in srgb,var(--gold) 38%,transparent)!important}
+  .consult::before{content:"";position:absolute;right:-70px;top:-70px;width:200px;height:200px;border-radius:50%;pointer-events:none;
+    border:1px dashed color-mix(in srgb,var(--gold) 40%,transparent);
+    background:radial-gradient(circle,color-mix(in srgb,var(--gold) 12%,transparent),transparent 65%)}
+  input,select{background:color-mix(in srgb,var(--card-2) 80%,transparent)}
+  .seg{border-radius:999px;background:color-mix(in srgb,var(--card-2) 75%,transparent);border-color:var(--glass-line)}
+  .seg button{border-radius:999px}
+  .seg button[aria-pressed="true"]{background:linear-gradient(135deg,var(--btn-a),var(--btn-b));color:var(--btn-ink);box-shadow:0 4px 14px -4px var(--glow)}
+  .seg button[aria-pressed="true"]:hover{color:var(--btn-ink)}
+  .chip-ex{background:var(--glass);border-color:var(--glass-line)}
+  .chip-ex::before{content:"☽\FE0E";margin-right:5px;color:var(--gold)}
+  .chip-ex:hover{box-shadow:0 0 16px -4px var(--glow)}
+
+  /* — Facetas: insignias planetarias con órbita — */
+  .feature .ic{position:relative;border-radius:50%;width:48px;height:48px;border:1px solid color-mix(in srgb,var(--gold) 70%,transparent);
+    background:radial-gradient(circle at 35% 30%,color-mix(in srgb,var(--gold) 28%,transparent),color-mix(in srgb,var(--gold) 6%,transparent) 70%);
+    box-shadow:0 0 22px -6px var(--glow)}
+  .feature .ic::after{content:"";position:absolute;inset:-7px;border-radius:50%;border:1px dashed color-mix(in srgb,var(--gold) 45%,transparent)}
+  .feature .ic::before{content:"";position:absolute;top:-9px;left:50%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;
+    background:var(--gold);box-shadow:0 0 8px var(--gold);transform-origin:2.5px 33px}
+  @media (prefers-reduced-motion:no-preference){.feature .ic::before{animation:spin 9s linear infinite}
+    .feature:nth-child(2n) .ic::before{animation-duration:12s;animation-direction:reverse}}
+
+  /* — Pasos como fases lunares — */
+  .step .no{position:relative;width:40px;height:40px;border:1px solid var(--gold);overflow:hidden;color:var(--gold-strong)}
+  .step .no span{position:relative;z-index:1}
+  .step .no.moon-nueva{background:radial-gradient(circle at 35% 35%,color-mix(in srgb,var(--ink) 14%,transparent),transparent 70%)}
+  .step .no.moon-creciente{background:linear-gradient(90deg,transparent 50%,color-mix(in srgb,var(--gold) 55%,transparent) 50%)}
+  .step .no.moon-llena{background:radial-gradient(circle at 38% 34%,#fff4d6,var(--gold) 70%);color:#2a1a02;box-shadow:0 0 20px -2px var(--glow)}
+
+  /* — Por qué: glifos planetarios — */
+  .glyph-orb{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;font-size:14px;
+    border:1px solid color-mix(in srgb,var(--gold) 60%,transparent);background:color-mix(in srgb,var(--gold) 12%,transparent);box-shadow:0 0 14px -4px var(--glow)}
+
+  /* — Preguntas: estrella que gira al abrir — */
+  .faq summary::after{content:"✦";font-size:15px;transition:transform .45s cubic-bezier(.34,1.56,.64,1)}
+  .faq details[open] summary::after{content:"✦";transform:rotate(135deg) scale(1.15)}
+  .faq details[open]{border-color:color-mix(in srgb,var(--gold) 45%,transparent)}
+
+  /* — Franja final con galaxia espiral — */
+  .cta-band{isolation:isolate;border-color:color-mix(in srgb,var(--gold) 40%,transparent)!important;
+    background:radial-gradient(120% 140% at 50% 110%,color-mix(in srgb,var(--violet) 22%,transparent),transparent 60%),var(--glass-2)!important}
+  .galaxy{position:absolute;left:50%;top:50%;width:720px;height:720px;margin:-360px 0 0 -360px;z-index:-1;pointer-events:none;opacity:.95;transform:scaleY(.42) rotate(-14deg)}
+  .galaxy i{position:absolute;inset:0;border-radius:50%;
+    background:conic-gradient(from 0deg,transparent 0 6%,color-mix(in srgb,var(--gold) 90%,transparent) 13%,transparent 24%,transparent 39%,color-mix(in srgb,var(--violet) 90%,transparent) 46%,transparent 58%,transparent 72%,color-mix(in srgb,var(--crimson) 75%,transparent) 79%,transparent 90%);
+    -webkit-mask:radial-gradient(circle,#000 0 8%,rgba(0,0,0,.85) 24%,transparent 66%);mask:radial-gradient(circle,#000 0 8%,rgba(0,0,0,.85) 24%,transparent 66%);filter:blur(3px)}
+  .galaxy i:nth-child(2){transform:rotate(60deg) scale(.7);opacity:.8}
+  .galaxy i:nth-child(3){inset:41%;background:radial-gradient(circle,#fff6dc,color-mix(in srgb,var(--gold) 70%,transparent) 40%,transparent 70%);-webkit-mask:none;mask:none;filter:blur(6px)}
+  @media (prefers-reduced-motion:no-preference){.galaxy i:nth-child(1){animation:spin 60s linear infinite}.galaxy i:nth-child(2){animation:spin 90s linear infinite reverse}}
+  .cta-band h2,.cta-band p,.cta-band .btn,.cta-band .star{position:relative}
+
+  /* — Resultado destacado: medallón con anillo zodiacal — */
+  .featured{background:radial-gradient(120% 140% at 0% 0%,color-mix(in srgb,var(--gold) 14%,transparent),transparent 60%),var(--glass)!important}
+  .medallion{box-shadow:0 10px 30px -6px var(--glow),0 0 40px -8px color-mix(in srgb,var(--gold) 60%,transparent),inset 0 0 0 3px rgba(255,255,255,.25)}
+  .medallion .halo{inset:-13px;border:none;opacity:.9;
+    background:repeating-conic-gradient(from 0deg,var(--gold) 0 1.2deg,transparent 1.2deg 30deg);
+    -webkit-mask:radial-gradient(circle,transparent 62%,#000 63% 68%,transparent 69%);mask:radial-gradient(circle,transparent 62%,#000 63% 68%,transparent 69%)}
+  .medallion .halo::after{content:"";position:absolute;inset:0;border-radius:50%;border:1px solid color-mix(in srgb,var(--gold) 55%,transparent)}
+  @media (prefers-reduced-motion:no-preference){.medallion .halo{animation:spin 50s linear infinite}}
+  .fstat{background:var(--glass);border-color:var(--glass-line)}
+
+  /* — Pie con zodiaco — */
+  footer{border-top:1px solid var(--glass-line)}
+  .zodiac-row{margin:0 0 14px;font-size:18px;letter-spacing:.55em;color:var(--gold);opacity:.8}
+
+  /* — Chispas del cursor — */
+  .spark{position:fixed;z-index:60;pointer-events:none;left:0;top:0;color:var(--gold);font-size:10px;line-height:1;
+    text-shadow:0 0 6px var(--gold);animation:sparkle .9s ease-out forwards}
+  @keyframes sparkle{from{opacity:1;transform:translate(var(--x),var(--y)) scale(1) rotate(0)}
+    to{opacity:0;transform:translate(calc(var(--x) + var(--dx)),calc(var(--y) + var(--dy))) scale(.2) rotate(140deg)}}
+  @media (max-width:560px){.sun{width:320px;height:320px;top:-120px;right:-110px}.moon{width:56px;height:56px;top:70px}
+    .galaxy{width:420px;height:420px;margin:-210px 0 0 -210px}.zodiac-row{letter-spacing:.3em;font-size:15px}}
 </style>
 
+<div class="cosmos" aria-hidden="true">
+  <div class="sky-glow"></div><div class="milky"></div>
+  <div class="sun"><i></i></div><div class="moon"></div>
+  <svg class="constel" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="8" y1="14" x2="12" y2="10"/><line x1="12" y1="10" x2="17" y2="12"/><line x1="17" y1="12" x2="21" y2="9"/><line x1="21" y1="9" x2="25" y2="13"/><line x1="25" y1="13" x2="27" y2="19"/><line x1="27" y1="19" x2="22" y2="22"/><line x1="22" y1="22" x2="25" y2="13"/><circle cx="8" cy="14" r="0.42"/><circle cx="12" cy="10" r="0.28"/><circle cx="17" cy="12" r="0.42"/><circle cx="21" cy="9" r="0.28"/><circle cx="25" cy="13" r="0.42"/><circle cx="27" cy="19" r="0.28"/><circle cx="22" cy="22" r="0.42"/><line x1="78" y1="62" x2="81" y2="58"/><line x1="81" y1="58" x2="84" y2="62"/><line x1="84" y1="62" x2="87" y2="57"/><line x1="87" y1="57" x2="90" y2="61"/><circle cx="78" cy="62" r="0.42"/><circle cx="81" cy="58" r="0.28"/><circle cx="84" cy="62" r="0.42"/><circle cx="87" cy="57" r="0.28"/><circle cx="90" cy="61" r="0.42"/><line x1="60" y1="10" x2="63" y2="15"/><line x1="63" y1="15" x2="58" y2="19"/><line x1="63" y1="15" x2="66" y2="19"/><line x1="58" y1="19" x2="61" y2="23"/><line x1="66" y1="19" x2="61" y2="23"/><line x1="61" y1="23" x2="64" y2="28"/><line x1="61" y1="23" x2="59" y2="30"/><line x1="64" y1="28" x2="67" y2="31"/><circle cx="60" cy="10" r="0.42"/><circle cx="63" cy="15" r="0.28"/><circle cx="58" cy="19" r="0.42"/><circle cx="66" cy="19" r="0.28"/><circle cx="61" cy="23" r="0.42"/><circle cx="64" cy="28" r="0.28"/><circle cx="59" cy="30" r="0.42"/><circle cx="67" cy="31" r="0.28"/><line x1="14" y1="74" x2="18" y2="70"/><line x1="18" y1="70" x2="23" y2="72"/><line x1="23" y1="72" x2="26" y2="77"/><line x1="26" y1="77" x2="22" y2="82"/><line x1="22" y1="82" x2="17" y2="80"/><line x1="17" y1="80" x2="14" y2="74"/><circle cx="14" cy="74" r="0.42"/><circle cx="18" cy="70" r="0.28"/><circle cx="23" cy="72" r="0.42"/><circle cx="26" cy="77" r="0.28"/><circle cx="22" cy="82" r="0.42"/><circle cx="17" cy="80" r="0.28"/><line x1="88" y1="20" x2="92" y2="24"/><line x1="92" y1="24" x2="90" y2="30"/><line x1="90" y1="30" x2="95" y2="33"/><circle cx="88" cy="20" r="0.42"/><circle cx="92" cy="24" r="0.28"/><circle cx="90" cy="30" r="0.42"/><circle cx="95" cy="33" r="0.28"/></svg>
+  <div class="dust d1"></div><div class="dust d2"></div>
+  <i class="meteor m1"></i><i class="meteor m2"></i><i class="meteor m3"></i>
+</div>
 <header class="topbar">
   <a class="brand" href="#top" aria-label="Numen, inicio">
-    <svg class="star" viewBox="-12 -12 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6"><rect x="-8" y="-8" width="16" height="16"/><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)"/></g></svg>
+    <span class="brand-mark" aria-hidden="true"><svg class="star" viewBox="-12 -12 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6"><rect x="-8" y="-8" width="16" height="16"/><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)"/></g></svg><i></i></span>
     <b>Numen</b>
   </a>
   <nav class="topnav">
@@ -536,17 +777,21 @@
     <a href="#como">Cómo funciona</a>
     <a href="#faq">Preguntas</a>
     <a href="#calc" class="btn btn--primary btn--sm">Trazar mi matriz</a>
-    <button class="icon-btn" id="themeBtn" type="button" aria-label="Cambiar entre tema claro y oscuro" title="Cambiar tema">◐</button>
+    <button class="icon-btn theme-toggle" id="themeBtn" type="button" aria-label="Cambiar entre modo día y modo noche" title="Modo día / noche">
+      <svg class="ic-sun" viewBox="-12 -12 24 24" aria-hidden="true"><circle r="4.6" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M0-10v2.6M0 7.4V10M-10 0h2.6M7.4 0H10M-7.1-7.1l1.8 1.8M5.3 5.3l1.8 1.8M-7.1 7.1l1.8-1.8M5.3-5.3l1.8-1.8"/></g></svg>
+      <svg class="ic-moon" viewBox="-12 -12 24 24" aria-hidden="true"><path d="M4.5 6.8A8 8 0 0 1-3.2-8.6 8.4 8.4 0 1 0 8.4 3.6a8 8 0 0 1-3.9 3.2z" fill="currentColor"/><circle cx="6.5" cy="-6" r=".9" fill="currentColor"/><circle cx="9" cy="-1.5" r=".6" fill="currentColor"/></svg>
+    </button>
   </nav>
 </header>
 
 <main class="wrap" id="top">
   <section class="hero">
-    <svg class="hero-motif" viewBox="-110 -110 220 220" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.1">
-      <circle r="96"/><circle r="60"/>
-      <rect x="-68" y="-68" width="136" height="136"/>
-      <rect x="-68" y="-68" width="136" height="136" transform="rotate(45)"/>
-      <line x1="-96" y1="0" x2="96" y2="0"/><line x1="0" y1="-96" x2="0" y2="96"/>
+    <svg class="hero-orrery" viewBox="-300 -300 600 600" aria-hidden="true">
+      <defs><radialGradient id="orSun" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="var(--gold)" stop-opacity=".35"/><stop offset="1" stop-color="var(--gold)" stop-opacity="0"/></radialGradient></defs>
+      <circle r="140" fill="url(#orSun)" stroke="none"/>
+      <g class="zod"><circle r="250"/><circle r="280"/><circle r="286" class="thin"/><g class="ticks"><line x1="250.0" y1="0.0" x2="280.0" y2="0.0"/><line x1="249.0" y1="21.8" x2="261.0" y2="22.8"/><line x1="246.2" y1="43.4" x2="258.0" y2="45.5"/><line x1="241.5" y1="64.7" x2="253.1" y2="67.8"/><line x1="234.9" y1="85.5" x2="246.2" y2="89.6"/><line x1="226.6" y1="105.7" x2="237.5" y2="110.7"/><line x1="216.5" y1="125.0" x2="242.5" y2="140.0"/><line x1="204.8" y1="143.4" x2="214.6" y2="150.3"/><line x1="191.5" y1="160.7" x2="200.7" y2="168.4"/><line x1="176.8" y1="176.8" x2="185.3" y2="185.3"/><line x1="160.7" y1="191.5" x2="168.4" y2="200.7"/><line x1="143.4" y1="204.8" x2="150.3" y2="214.6"/><line x1="125.0" y1="216.5" x2="140.0" y2="242.5"/><line x1="105.7" y1="226.6" x2="110.7" y2="237.5"/><line x1="85.5" y1="234.9" x2="89.6" y2="246.2"/><line x1="64.7" y1="241.5" x2="67.8" y2="253.1"/><line x1="43.4" y1="246.2" x2="45.5" y2="258.0"/><line x1="21.8" y1="249.0" x2="22.8" y2="261.0"/><line x1="0.0" y1="250.0" x2="0.0" y2="280.0"/><line x1="-21.8" y1="249.0" x2="-22.8" y2="261.0"/><line x1="-43.4" y1="246.2" x2="-45.5" y2="258.0"/><line x1="-64.7" y1="241.5" x2="-67.8" y2="253.1"/><line x1="-85.5" y1="234.9" x2="-89.6" y2="246.2"/><line x1="-105.7" y1="226.6" x2="-110.7" y2="237.5"/><line x1="-125.0" y1="216.5" x2="-140.0" y2="242.5"/><line x1="-143.4" y1="204.8" x2="-150.3" y2="214.6"/><line x1="-160.7" y1="191.5" x2="-168.4" y2="200.7"/><line x1="-176.8" y1="176.8" x2="-185.3" y2="185.3"/><line x1="-191.5" y1="160.7" x2="-200.7" y2="168.4"/><line x1="-204.8" y1="143.4" x2="-214.6" y2="150.3"/><line x1="-216.5" y1="125.0" x2="-242.5" y2="140.0"/><line x1="-226.6" y1="105.7" x2="-237.5" y2="110.7"/><line x1="-234.9" y1="85.5" x2="-246.2" y2="89.6"/><line x1="-241.5" y1="64.7" x2="-253.1" y2="67.8"/><line x1="-246.2" y1="43.4" x2="-258.0" y2="45.5"/><line x1="-249.0" y1="21.8" x2="-261.0" y2="22.8"/><line x1="-250.0" y1="0.0" x2="-280.0" y2="0.0"/><line x1="-249.0" y1="-21.8" x2="-261.0" y2="-22.8"/><line x1="-246.2" y1="-43.4" x2="-258.0" y2="-45.5"/><line x1="-241.5" y1="-64.7" x2="-253.1" y2="-67.8"/><line x1="-234.9" y1="-85.5" x2="-246.2" y2="-89.6"/><line x1="-226.6" y1="-105.7" x2="-237.5" y2="-110.7"/><line x1="-216.5" y1="-125.0" x2="-242.5" y2="-140.0"/><line x1="-204.8" y1="-143.4" x2="-214.6" y2="-150.3"/><line x1="-191.5" y1="-160.7" x2="-200.7" y2="-168.4"/><line x1="-176.8" y1="-176.8" x2="-185.3" y2="-185.3"/><line x1="-160.7" y1="-191.5" x2="-168.4" y2="-200.7"/><line x1="-143.4" y1="-204.8" x2="-150.3" y2="-214.6"/><line x1="-125.0" y1="-216.5" x2="-140.0" y2="-242.5"/><line x1="-105.7" y1="-226.6" x2="-110.7" y2="-237.5"/><line x1="-85.5" y1="-234.9" x2="-89.6" y2="-246.2"/><line x1="-64.7" y1="-241.5" x2="-67.8" y2="-253.1"/><line x1="-43.4" y1="-246.2" x2="-45.5" y2="-258.0"/><line x1="-21.8" y1="-249.0" x2="-22.8" y2="-261.0"/><line x1="-0.0" y1="-250.0" x2="-0.0" y2="-280.0"/><line x1="21.8" y1="-249.0" x2="22.8" y2="-261.0"/><line x1="43.4" y1="-246.2" x2="45.5" y2="-258.0"/><line x1="64.7" y1="-241.5" x2="67.8" y2="-253.1"/><line x1="85.5" y1="-234.9" x2="89.6" y2="-246.2"/><line x1="105.7" y1="-226.6" x2="110.7" y2="-237.5"/><line x1="125.0" y1="-216.5" x2="140.0" y2="-242.5"/><line x1="143.4" y1="-204.8" x2="150.3" y2="-214.6"/><line x1="160.7" y1="-191.5" x2="168.4" y2="-200.7"/><line x1="176.8" y1="-176.8" x2="185.3" y2="-185.3"/><line x1="191.5" y1="-160.7" x2="200.7" y2="-168.4"/><line x1="204.8" y1="-143.4" x2="214.6" y2="-150.3"/><line x1="216.5" y1="-125.0" x2="242.5" y2="-140.0"/><line x1="226.6" y1="-105.7" x2="237.5" y2="-110.7"/><line x1="234.9" y1="-85.5" x2="246.2" y2="-89.6"/><line x1="241.5" y1="-64.7" x2="253.1" y2="-67.8"/><line x1="246.2" y1="-43.4" x2="258.0" y2="-45.5"/><line x1="249.0" y1="-21.8" x2="261.0" y2="-22.8"/></g><g class="zg"><text x="69.4" y="-258.9">♈&#xFE0E;</text><text x="189.5" y="-189.5">♉&#xFE0E;</text><text x="258.9" y="-69.4">♊&#xFE0E;</text><text x="258.9" y="69.4">♋&#xFE0E;</text><text x="189.5" y="189.5">♌&#xFE0E;</text><text x="69.4" y="258.9">♍&#xFE0E;</text><text x="-69.4" y="258.9">♎&#xFE0E;</text><text x="-189.5" y="189.5">♏&#xFE0E;</text><text x="-258.9" y="69.4">♐&#xFE0E;</text><text x="-258.9" y="-69.4">♑&#xFE0E;</text><text x="-189.5" y="-189.5">♒&#xFE0E;</text><text x="-69.4" y="-258.9">♓&#xFE0E;</text></g></g>
+      <g class="orb o1"><circle r="118" class="orbit"/><g transform="translate(102.2 -59.0)"><circle r="11" class="pl"/><text class="pg">☿&#xFE0E;</text></g></g><g class="orb o2"><circle r="168" class="orbit"/><g transform="translate(-157.9 -57.5)"><circle r="13" class="pl"/><text class="pg">♀&#xFE0E;</text></g></g><g class="orb o3"><circle r="212" class="orbit"/><g transform="translate(106.0 183.6)"><circle r="13" class="pl"/><text class="pg">♂&#xFE0E;</text></g></g><g class="orb o4"><circle r="236" class="orbit"/><g transform="translate(-193.3 135.4)"><circle r="14" class="pl"/><text class="pg">♃&#xFE0E;</text></g></g>
+      <g class="oct"><rect x="-70" y="-70" width="140" height="140"/><rect x="-70" y="-70" width="140" height="140" transform="rotate(45)"/><circle r="99"/></g>
     </svg>
     <p class="eyebrow">
       <svg class="star" viewBox="-12 -12 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8"><rect x="-8" y="-8" width="16" height="16"/><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)"/></g></svg>
@@ -570,17 +815,17 @@
       <p>Un octograma vivo con cada energía de tu vida, calculado punto por punto a partir de tu fecha.</p>
     </div>
     <div class="features" style="margin-top:26px">
-      <div class="feature card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/></svg></div>
+      <div class="feature card"><div class="ic"><svg viewBox="-12 -12 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle r="8.5"/><circle r="2.4" fill="currentColor" stroke="none"/><g stroke-linecap="round"><path d="M0-11.5v-1M0 11.5v1M-11.5 0h-1M11.5 0h1"/></g></svg></div>
         <h3>Arcano central · el alma</h3><p>El número que rige tu esencia y el propósito profundo de tu encarnación.</p></div>
-      <div class="feature card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 5l6 6M5 5v4.5M5 5h4.5"/><path d="M19 19l-6-6M19 19v-4.5M19 19h-4.5"/></svg></div>
+      <div class="feature card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 18l5-6 5 3 4-8 4 3" opacity=".75"/><g fill="currentColor" stroke="none"><circle cx="3" cy="18" r="1.7"/><circle cx="8" cy="12" r="1.4"/><circle cx="13" cy="15" r="1.6"/><circle cx="17" cy="7" r="1.9"/><circle cx="21" cy="10" r="1.3"/></g></svg></div>
         <h3>Línea del linaje</h3><p>Las herencias paterna y materna que traes contigo, y lo que vienes a sanar.</p></div>
-      <div class="feature card"><div class="ic"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></div>
+      <div class="feature card"><div class="ic"><svg viewBox="0 0 24 24" stroke="none"><circle cx="12" cy="2.8" r="1.6" fill="#8e5fd0"/><circle cx="12" cy="6" r="1.6" fill="#4d7fe0"/><circle cx="12" cy="9.2" r="1.6" fill="#1fb0bd"/><circle cx="12" cy="12.4" r="1.6" fill="#3bbd6a"/><circle cx="12" cy="15.6" r="1.6" fill="#eab04a"/><circle cx="12" cy="18.8" r="1.6" fill="#ef8a36"/><circle cx="12" cy="22" r="1.6" fill="#e0513f"/></svg></div>
         <h3>Los 7 chakras</h3><p>Tu tabla de salud energética: cuerpo, energía y emoción, chakra por chakra.</p></div>
-      <div class="feature card"><div class="ic"><svg viewBox="-12 -12 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="-8" y="-8" width="16" height="16"/><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)"/></svg></div>
+      <div class="feature card"><div class="ic"><svg viewBox="-12 -12 24 24" fill="currentColor"><path d="M0-11l2.2 6.3 6.6.2-5.2 4 1.9 6.4L0 2.1-5.5 5.9l1.9-6.4-5.2-4 6.6-.2z"/></svg></div>
         <h3>Propósitos de vida</h3><p>Personal, social y espiritual: qué resolver y qué dar en cada etapa.</p></div>
-      <div class="feature card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 17a9 9 0 0 1 18 0"/><circle cx="3" cy="17" r="1.7" fill="currentColor" stroke="none"/><circle cx="21" cy="17" r="1.7" fill="currentColor" stroke="none"/></svg></div>
+      <div class="feature card"><div class="ic"><svg viewBox="-12 -12 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><ellipse rx="10.5" ry="4.2" transform="rotate(-20)"/><circle r="3.6" fill="currentColor" stroke="none" opacity=".85"/><circle cx="9.3" cy="-3.6" r="1.6" fill="currentColor" stroke="none"/></svg></div>
         <h3>Línea de la vida</h3><p>Tus ciclos de los 0 a los 80 años trazados sobre el perímetro del octograma.</p></div>
-      <div class="feature card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 20s-7-4.6-7-9.3A3.7 3.7 0 0 1 12 8a3.7 3.7 0 0 1 7 2.7C19 15.4 12 20 12 20z"/></svg></div>
+      <div class="feature card"><div class="ic"><svg viewBox="-12 -12 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cy="-3.5" r="6"/><path d="M0 2.5v9M-3.8 7.5h7.6"/></svg></div>
         <h3>Canales de amor y dinero</h3><p>Los puntos que muestran tu relación con el vínculo y con la abundancia.</p></div>
     </div>
   </section>
@@ -592,9 +837,9 @@
       <p>De tu fecha de nacimiento a tu lectura completa, sin fricción y sin registro.</p>
     </div>
     <div class="steps" style="margin-top:26px">
-      <div class="step card"><div class="no">1</div><div><h4>Ingresa tu fecha</h4><p>Día, mes y año de nacimiento. Nada más: sin correo ni registro.</p></div></div>
-      <div class="step card"><div class="no">2</div><div><h4>Trazamos tu octograma</h4><p>Calculamos los 22 arcanos, el linaje, los 7 chakras y la línea de la vida.</p></div></div>
-      <div class="step card"><div class="no">3</div><div><h4>Interpreta tu lectura</h4><p>Tu arcano central, tu tabla de salud y tus tres propósitos, explicados.</p></div></div>
+      <div class="step card"><div class="no moon-nueva" title="Luna nueva"><span>1</span></div><div><h4>Ingresa tu fecha</h4><p>Día, mes y año de nacimiento. Nada más: sin correo ni registro.</p></div></div>
+      <div class="step card"><div class="no moon-creciente" title="Luna creciente"><span>2</span></div><div><h4>Trazamos tu octograma</h4><p>Calculamos los 22 arcanos, el linaje, los 7 chakras y la línea de la vida.</p></div></div>
+      <div class="step card"><div class="no moon-llena" title="Luna llena"><span>3</span></div><div><h4>Interpreta tu lectura</h4><p>Tu arcano central, tu tabla de salud y tus tres propósitos, explicados.</p></div></div>
     </div>
   </section>
 
@@ -744,19 +989,19 @@
     </div>
     <div class="why" style="margin-top:26px">
       <div class="card">
-        <span class="wk"><svg class="star" viewBox="-12 -12 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8"><rect x="-8" y="-8" width="16" height="16"/><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)"/></g></svg>Exactitud</span>
+        <span class="wk"><span class="glyph-orb" aria-hidden="true">☉&#xFE0E;</span>Exactitud</span>
         <h3>Verificado punto por punto</h3><p>Cada número está comprobado contra el método original de Natalia Ladini.</p>
       </div>
       <div class="card">
-        <span class="wk"><svg class="star" viewBox="-12 -12 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8"><rect x="-8" y="-8" width="16" height="16"/><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)"/></g></svg>Privacidad</span>
+        <span class="wk"><span class="glyph-orb" aria-hidden="true">☽&#xFE0E;</span>Privacidad</span>
         <h3>Privado de verdad</h3><p>Todo el cálculo ocurre en tu navegador. No guardamos ni enviamos tu fecha.</p>
       </div>
       <div class="card">
-        <span class="wk"><svg class="star" viewBox="-12 -12 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8"><rect x="-8" y="-8" width="16" height="16"/><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)"/></g></svg>Acceso</span>
+        <span class="wk"><span class="glyph-orb" aria-hidden="true">✦&#xFE0E;</span>Acceso</span>
         <h3>Gratis y sin registro</h3><p>Sin correo, sin cuenta, sin costo. Tu matriz completa en segundos.</p>
       </div>
       <div class="card">
-        <span class="wk"><svg class="star" viewBox="-12 -12 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8"><rect x="-8" y="-8" width="16" height="16"/><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)"/></g></svg>Claridad</span>
+        <span class="wk"><span class="glyph-orb" aria-hidden="true">☿&#xFE0E;</span>Claridad</span>
         <h3>Hecho en español</h3><p>Arcanos, chakras y propósitos explicados con claridad, pensados para ti.</p>
       </div>
     </div>
@@ -785,12 +1030,13 @@
       <details><summary>¿Cómo se calcula, exactamente?</summary>
         <p>Con la reducción numérica de los arcanos (se suman los dígitos hasta quedar entre 1 y 22) y la
         geometría del octograma. Encontrarás el detalle completo bajo “¿Cómo se calcula?” junto a tu lectura,
-        verificado punto por punto contra los ejemplos de dinaraaxanova.com.</p></details>
+        verificado punto por punto contra la Biblioteca Maestra MATRIX.</p></details>
     </div>
   </section>
 
   <section class="sec">
     <div class="cta-band">
+      <div class="galaxy" aria-hidden="true"><i></i><i></i><i></i></div>
       <svg class="star" viewBox="-12 -12 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6"><rect x="-8" y="-8" width="16" height="16"/><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)"/></g></svg>
       <h2>Tu matriz ya está escrita. Solo falta leerla.</h2>
       <p>Descubre tu arcano central, tus chakras y tu propósito de vida en segundos, gratis.</p>
@@ -799,6 +1045,7 @@
   </section>
 
   <footer>
+    <p class="zodiac-row" aria-hidden="true">♈&#xFE0E; ♉&#xFE0E; ♊&#xFE0E; ♋&#xFE0E; ♌&#xFE0E; ♍&#xFE0E; ♎&#xFE0E; ♏&#xFE0E; ♐&#xFE0E; ♑&#xFE0E; ♒&#xFE0E; ♓&#xFE0E;</p>
     <div class="fbrand">
       <svg class="star" viewBox="-12 -12 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6"><rect x="-8" y="-8" width="16" height="16"/><rect x="-8" y="-8" width="16" height="16" transform="rotate(45)"/></g></svg>
       Numen
@@ -1163,7 +1410,13 @@ const root=document.documentElement, themeBtn=document.getElementById("themeBtn"
 root.lang="es";   // idioma del documento (accesibilidad y SEO)
 function prefDark(){return window.matchMedia&&window.matchMedia("(prefers-color-scheme:dark)").matches;}
 function curTheme(){return root.getAttribute("data-theme")||(prefDark()?"dark":"light");}
-function applyTheme(){const t=curTheme();themeBtn.textContent=t==="dark"?"☀":"☾";root.style.colorScheme=t;}
+function applyTheme(){
+  const t=curTheme(), night=t==="dark";
+  root.setAttribute("data-sky",night?"night":"day"); root.style.colorScheme=t;
+  themeBtn.setAttribute("aria-label",night?"Cambiar a modo día":"Cambiar a modo noche");
+  const mc=document.querySelector('meta[name="theme-color"]'); if(mc) mc.content=night?"#07061a":"#f4eee4";
+}
+if(window.matchMedia) matchMedia("(prefers-color-scheme:dark)").addEventListener?.("change",applyTheme);
 (function initTheme(){ try{const t=localStorage.getItem("md-theme"); if(t) root.setAttribute("data-theme",t);}catch(e){} applyTheme(); })();
 themeBtn.addEventListener("click",()=>{
   const next=curTheme()==="dark"?"light":"dark";
@@ -1296,7 +1549,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 
     // Entrada del héroe (una sola timeline).
     gsap.timeline({defaults:{ease:"power3.out"}})
-      .from(".hero-motif",{autoAlpha:0,scale:.85,rotation:-10,duration:1.4,ease:"expo.out"},0)
+      .from(".hero-orrery",{autoAlpha:0,scale:.8,duration:1.8,ease:"expo.out"},0)
       .from(".hero .eyebrow",{autoAlpha:0,y:14,duration:.6},.15)
       .from(".hero h1",{autoAlpha:0,y:18,duration:.7},.25)
       .from(".hero .lede",{autoAlpha:0,y:16,duration:.6},.38)
@@ -1331,6 +1584,19 @@ document.addEventListener("DOMContentLoaded",()=>{
       });
     }
   });
+
+  // Rastro de chispas doradas bajo el cursor (solo puntero fino y si se permite el movimiento).
+  if(window.matchMedia("(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference)").matches){
+    let last=0; const G=["✦","✧","⋆","·"];
+    addEventListener("pointermove",e=>{
+      const now=performance.now(); if(now-last<45) return; last=now;
+      const sp=document.createElement("span"); sp.className="spark"; sp.textContent=G[(Math.random()*G.length)|0];
+      sp.style.setProperty("--x",e.clientX+"px"); sp.style.setProperty("--y",e.clientY+"px");
+      sp.style.setProperty("--dx",((Math.random()-.5)*36).toFixed(0)+"px"); sp.style.setProperty("--dy",(8+Math.random()*26).toFixed(0)+"px");
+      sp.style.fontSize=(7+Math.random()*7).toFixed(0)+"px";
+      document.body.appendChild(sp); sp.addEventListener("animationend",()=>sp.remove());
+    },{passive:true});
+  }
 
   // La carta entra con perspectiva, como una lámina que se asienta sobre la mesa.
   function chartIn(){
@@ -1473,6 +1739,43 @@ document.addEventListener("DOMContentLoaded",()=>{
     const starMat=reg(new T.PointsMaterial({size:small?.09:.07,map:starTex,depthWrite:false}),.45,.9);
     const stars=new T.Points(starGeo,starMat); scene.add(stars);
 
+    /* — Galaxia espiral (partículas): violeta y rosa de noche, polvo dorado de día — */
+    const GN=small?2600:7200, gPos=new Float32Array(GN*3), gMix=new Float32Array(GN);
+    for(let i=0;i<GN;i++){
+      const r=Math.pow(Math.random(),1.5)*7, br=(i%3)/3*Math.PI*2, spn=r*.95;
+      const rnd=()=>Math.pow(Math.random(),3)*(Math.random()<.5?1:-1)*(.35+r*.18);
+      gPos[i*3]=Math.cos(br+spn)*r+rnd(); gPos[i*3+1]=rnd()*.45; gPos[i*3+2]=Math.sin(br+spn)*r+rnd();
+      gMix[i]=r/7;
+    }
+    const gGeo=new T.BufferGeometry(); gGeo.setAttribute("position",new T.BufferAttribute(gPos,3));
+    const gCol=new Float32Array(GN*3); gGeo.setAttribute("color",new T.BufferAttribute(gCol,3));
+    const galMat=new T.PointsMaterial({size:small?.11:.085,map:starTex,vertexColors:true,transparent:true,depthWrite:false});
+    const galaxy=new T.Points(gGeo,galMat);
+    const galaxyG=new T.Group(); galaxyG.add(galaxy); scene.add(galaxyG);
+    galaxyG.position.set(small?2.5:10.5,small?6.5:4.6,-15); galaxyG.rotation.set(1.05,0,.45);
+    const galGlow=glow(0xffe2a8,6,.35,.55); galaxyG.add(galGlow);
+    function paintGalaxy(dark){
+      const a=new T.Color(dark?"#ffe1a6":"#d6a24c"), b=new T.Color(dark?"#8b6bff":"#e7a1a8"), c=new T.Color(dark?"#e05bb8":"#b98ae0"), t=new T.Color();
+      for(let i=0;i<GN;i++){ const m=gMix[i]; t.copy(a).lerp(m<.55?b:c,Math.min(1,m*1.5)); gCol[i*3]=t.r; gCol[i*3+1]=t.g; gCol[i*3+2]=t.b; }
+      gGeo.attributes.color.needsUpdate=true;
+      galMat.blending=dark?T.AdditiveBlending:T.NormalBlending; galMat.opacity=dark?.9:.42; galMat.needsUpdate=true;
+    }
+
+    /* — Estrellas que titilan (shader propio, independientes del recorrido) — */
+    const TN=small?260:700, tPos=new Float32Array(TN*3), tPh=new Float32Array(TN), tSz=new Float32Array(TN);
+    for(let i=0;i<TN;i++){ tPos[i*3]=(Math.random()-.5)*34; tPos[i*3+1]=(Math.random()-.5)*22; tPos[i*3+2]=-6-Math.random()*14;
+      tPh[i]=Math.random()*6.283; tSz[i]=.6+Math.pow(Math.random(),3)*2.2; }
+    const tGeo=new T.BufferGeometry(); tGeo.setAttribute("position",new T.BufferAttribute(tPos,3));
+    tGeo.setAttribute("phase",new T.BufferAttribute(tPh,1)); tGeo.setAttribute("size",new T.BufferAttribute(tSz,1));
+    const twMat=new T.ShaderMaterial({transparent:true,depthWrite:false,
+      uniforms:{uTime:{value:0},uColor:{value:new T.Color("#ffffff")},uOp:{value:.9},uMap:{value:starTex},uPx:{value:renderer.getPixelRatio()}},
+      vertexShader:`attribute float phase; attribute float size; uniform float uTime; uniform float uPx; varying float vA;
+        void main(){ vec4 mv=modelViewMatrix*vec4(position,1.0); gl_Position=projectionMatrix*mv;
+          float tw=.5+.5*sin(uTime*1.6+phase); vA=.35+.65*tw; gl_PointSize=size*uPx*(34.0/-mv.z)*(.75+.35*tw); }`,
+      fragmentShader:`uniform vec3 uColor; uniform float uOp; uniform sampler2D uMap; varying float vA;
+        void main(){ vec4 t=texture2D(uMap,gl_PointCoord); gl_FragColor=vec4(uColor,t.a*vA*uOp); }`});
+    const twinkle=new T.Points(tGeo,twMat); scene.add(twinkle);
+
     /* — Paleta ligada al tema claro/oscuro — */
     let themeF=1;
     function palette(){
@@ -1493,6 +1796,9 @@ document.addEventListener("DOMContentLoaded",()=>{
       sprites.forEach(m=>{ m.blending=dark?T.AdditiveBlending:T.NormalBlending; m.needsUpdate=true; });
       amb.intensity=dark?.45:.8; rimL.intensity=dark?1.6:.8;
       themeF=dark?1:.72;
+      paintGalaxy(dark);
+      twMat.uniforms.uColor.value.set(dark?"#fff8e6":"#b8862f"); twMat.uniforms.uOp.value=dark?.95:.55;
+      twMat.blending=dark?T.AdditiveBlending:T.NormalBlending; twMat.needsUpdate=true;
     }
     palette();
     new MutationObserver(palette).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
@@ -1579,6 +1885,8 @@ document.addEventListener("DOMContentLoaded",()=>{
       core.scale.setScalar(1+Math.sin(t*1.6)*.05);
       coreGlow.scale.setScalar(2.6+Math.sin(t*1.6)*.25);
       stars.rotation.y=t*.012; stars.rotation.x=Math.sin(t*.05)*.05;
+      galaxy.rotation.y=t*.035; twMat.uniforms.uTime.value=t;
+      galaxyG.position.y=(small?6.5:4.6)- (scrollY/Math.max(1,document.documentElement.scrollHeight-innerHeight))*2.5;
 
       mouse.x+=(mouse.tx-mouse.x)*.05; mouse.y+=(mouse.ty-mouse.y)*.05;
       camera.position.x=mouse.x*.9; camera.position.y=-mouse.y*.6;
@@ -1598,7 +1906,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     document.body.classList.add("has-3d");
     gsap.to(canvas,{autoAlpha:1,duration:1.2,ease:"power2.out"});
     gsap.to(intro,{s:1,f:1,duration:2.2,ease:"expo.out"});
-    gsap.to(".hero-motif",{autoAlpha:0,duration:1,overwrite:true});
+
   }
 })();
 </script>
